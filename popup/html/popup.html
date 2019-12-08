@@ -1,0 +1,393 @@
+<!--
+	Copyright(c) 2014-2016 Dinesh Rajkumar Bhosale of getmyscript.com
+	See license file for more information
+	Contact developers at mr.dinesh.bhosale@gmail.com
+-->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Toolkit For Facebook</title>
+		<script type="text/javascript" src="/global/js/jquery.js"></script>
+		<script type="text/javascript" src="/global/js/bootstrap.js"></script>
+
+		<script type="text/javascript" src="/global/js/global_var.js"></script>
+
+		<script type="text/javascript" src="/global/js/toastr.js"></script>
+		<script type="text/javascript" src="/global/js/global_func.js"></script>
+		<script type="text/javascript" src="../js/validate.js"></script>
+		<script type="text/javascript" src="../js/popup.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="/global/css/normalize.css">
+		<link rel="stylesheet" type="text/css" href="/global/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/global/css/toastr.css">
+		<link rel="stylesheet" type="text/css" href="../css/popup.css">
+	</head>
+	<body>
+		<!--height 60 px -->
+		<nav class="navbar navbar-default topNav">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="https://web.facebook.com/iSheheryarAli" target="_blank">Toolkit By Ali Haider
+						<span class="version" id="extensionVersion"></span>
+					</a>
+				</div>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Help<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="https://www.youtube.com/playlist?list=PL3cqJ_fgldQ1SrDP9WCS9rU7-QLPMeNwe" target="_blank">
+										Video Tutorials
+									</a>
+								</li>
+								<li role="separator" class="divider"></li>
+								<li id="menu-item-1037" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1037"><a target="_blank" href="http://fst.getmyscript.com/extract-emails-of-your-facebook-friends/">How To Extract Emails Of Your Facebook Friends</a></li>
+								<li id="menu-item-1038" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1038"><a target="_blank" href="http://fst.getmyscript.com/extract-facebook-group-emails-to-post-on-them/">How To Extract Facebook Group Emails To Post On Them</a></li>
+								<li id="menu-item-1039" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1039"><a target="_blank" href="http://fst.getmyscript.com/extract-facebook-group-member-emails/">How To Extract Facebook Group Member Emails</a></li>
+								<li id="menu-item-1040" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1040"><a target="_blank" href="http://fst.getmyscript.com/extract-facebook-group-member-ids/">How To Extract Facebook Group Member IDs</a></li>
+								<li id="menu-item-1041" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1041"><a target="_blank" href="http://fst.getmyscript.com/export-facebook-page-fans/">How To Extract IDs of Facebook Page Fans</a></li>
+								<li id="menu-item-1042" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1042"><a target="_blank" href="http://fst.getmyscript.com/extract-facebook-user-likes/">How To Extract Facebook User Likes</a></li>
+								<li id="menu-item-1043" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1043"><a target="_blank" href="http://fst.getmyscript.com/extract-group-ids-of-facebook-groups-you-have-joined/">How To Extract Group IDs of Facebook Groups Joined By Facebook User</a></li>
+								<li id="menu-item-1044" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1044"><a target="_blank" href="http://fst.getmyscript.com/extract-ids-of-your-facebook-friends/">How To Extract IDs Of Your Facebook Friends</a></li>
+								<li id="menu-item-1045" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1045"><a target="_blank" href="http://fst.getmyscript.com/extract-public-phone-numbers-of-facebook-friends/">How To Extract Public Phone Numbers Of Facebook Friends</a></li>
+								<li id="menu-item-1026" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1026"><a target="_blank" href="http://fst.getmyscript.com/accept-all-friend-requests-at-once/">How To Accept All Friend Requests At Once</a></li>
+								<li id="menu-item-1027" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1027"><a target="_blank" href="http://fst.getmyscript.com/add-all-facebook-friends-into-facebook-group/">How To Add All Facebook Friends Into Facebook Group</a></li>
+								<li id="menu-item-1028" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1028"><a target="_blank" href="http://fst.getmyscript.com/add-all-friends-as-group-admin/">How To Add All Facebook Friends As Group Admin</a></li>
+								<li id="menu-item-1035" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1035"><a target="_blank" href="http://fst.getmyscript.com/event-invitation-tool/">How To Invite All Facebook Friends To Facebook Event</a></li>
+								<li id="menu-item-1046" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1046"><a target="_blank" href="http://fst.getmyscript.com/facebook-account-manager/">How To Manage Multiple Facebook Accounts At Once</a></li>
+								<li id="menu-item-1032" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1032"><a target="_blank" href="http://fst.getmyscript.com/click-all-poke-and-poke-back-buttons/">How To Poke And Poke Back All Friends On Facebook</a></li>
+								<li id="menu-item-1057" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1057"><a target="_blank" href="http://fst.getmyscript.com/join-multiple-groups-using-group-ids/">How To Join Multiple Facebook Groups Using Group IDs</a></li>
+								<li id="menu-item-1055" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1055"><a target="_blank" href="http://fst.getmyscript.com/how-to-download-facebook-videos/">How To Download Facebook Videos</a></li>
+								<li id="menu-item-1056" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1056"><a target="_blank" href="http://fst.getmyscript.com/invite-your-friends-to-like-your-page/">How To Invite Your Friends To Like Your Facebook Page</a></li>
+								<li id="menu-item-1050" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1050"><a target="_blank" href="http://fst.getmyscript.com/facebook-id-extraction-tool-2/">Facebook ID Extraction Tool</a></li>
+								<li id="menu-item-1069" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1069"><a target="_blank" href="http://fst.getmyscript.com/send-birthday-wishes-to-your-friends-in-a-single-click/">How To Auto Send Birthday Wishes To Your Facebook Friends In A Single Click</a></li>
+								<li id="menu-item-1059" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1059"><a target="_blank" href="http://fst.getmyscript.com/click-all-post-like-and-comment-like-buttons/">How To Like All Facebook Posts And Comments</a></li>
+								<li id="menu-item-1070" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1070"><a target="_blank" href="http://fst.getmyscript.com/send-multiple-friend-requests-at-once/">How To Send Multiple Facebook Friend Requests At Once</a></li>
+								<li id="menu-item-1071" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1071"><a target="_blank" href="http://fst.getmyscript.com/suggest-your-friends-to-add-another-friend/">How To Suggest Your Facebook Friends To Add Another Friend</a></li>
+								<li id="menu-item-1068" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1068"><a target="_blank" href="http://fst.getmyscript.com/remove-facebook-page-likes/">How To Remove All Facebook Page Likes</a></li>
+								<li id="menu-item-1073" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1073"><a target="_blank" href="http://fst.getmyscript.com/unfollow-all-facebook-friends-at-once/">How To Unfollow All Facebook Friends At Once</a></li>
+								<li id="menu-item-1075" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1075"><a target="_blank" href="http://fst.getmyscript.com/unfriend-all-facebook-friends-at-once/">How To Unfriend All Facebook Friends At Once</a></li>
+								<li id="menu-item-1058" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1058"><a target="_blank" href="http://fst.getmyscript.com/leave-all-facebook-groups-at-once/">How To Leave All Facebook Groups At Once</a></li>
+								<li id="menu-item-1074" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1074"><a target="_blank" href="http://fst.getmyscript.com/unfollow-all-facebook-groups-at-once/">How Unfollow All Facebook Groups At Once</a></li>
+								<li id="menu-item-1034" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1034"><a target="_blank" href="http://fst.getmyscript.com/delete-all-comments-at-once/">How To Delete All Comments From Facebook Post</a></li>
+								<li id="menu-item-1067" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1067"><a target="_blank" href="http://fst.getmyscript.com/reject-all-friend-requests-at-once/">How To Reject All Facebook Friend Requests At Once</a></li>
+								<li id="menu-item-1030" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1030"><a target="_blank" href="http://fst.getmyscript.com/cancel-all-pending-friend-requests-on-facebook/">How To Cancel All Pending Friend Requests On Facebook</a></li>
+								<li id="menu-item-1077" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1077"><a target="_blank" href="http://fst.getmyscript.com/unlike-all-facebook-pages-at-once/">How To Unlike All Facebook Pages At Once</a></li>
+								<li id="menu-item-1047" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1047"><a target="_blank" href="http://fst.getmyscript.com/facebook-group-admin-transfer/">How To Transfer Ownership Of Your Facebook Groups To Your Friend</a></li>
+								<li id="menu-item-1060" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1060"><a target="_blank" href="http://fst.getmyscript.com/message-all-facebook-friends-at-once/">How To Send Messages To All Facebook Friends At Once</a></li>
+								<li id="menu-item-1061" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1061"><a target="_blank" href="http://fst.getmyscript.com/post-on-all-facebook-pages-that-you-own/">How To Post On All Facebook Pages That You Administer</a></li>
+								<li id="menu-item-1062" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1062"><a target="_blank" href="http://fst.getmyscript.com/post-on-all-pages-liked-by-facebook-user/">How To Post On All Pages Liked By Facebook User</a></li>
+								<li id="menu-item-1063" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1063"><a target="_blank" href="http://fst.getmyscript.com/post-on-multiple-groups-at-once/">How To Post On Multiple Facebook Groups At Once</a></li>
+								<li id="menu-item-1049" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1049"><a target="_blank" href="http://fst.getmyscript.com/facebook-group-transfer-tool/">Facebook Group Transfer Tool</a></li>
+								<li id="menu-item-1048" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1048"><a target="_blank" href="http://fst.getmyscript.com/facebook-group-member-tagger/">How To Tag Facebook Group Members</a></li>
+								<li id="menu-item-1031" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-1031"><a target="_blank" href="http://fst.getmyscript.com/claim-as-group-admin-tool/">How To Claim As Facebook Group Admin Tool</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="http://fst.getmyscript.com/contact-us/" target="_blank">Contact</a>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<form class="navbar-form navbar-left" role="search" id="mainSearch" action="*">
+								<div class="form-group">
+									<input id="searchText" type="text" class="form-control" placeholder="Search">
+								</div>
+								<button type="submit" class="btn btn-default">Search</button>
+							</form>
+						</li>
+					</ul>
+				</div>
+				<!-- /.navbar-collapse -->
+			</div>
+			<!-- /.container-fluid -->
+		</nav>
+		<div class="innerContainer">
+			<div id="content" class="mainBox">
+				<!-- tabs 50px height-->
+				<ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+					<li class="active"><a href="#Home" data-toggle="tab"><span class="glyphicon glyphicon-th-large"></span> Account Tools</a></li>
+					<li><a href="#ext" data-toggle="tab"><span class="glyphicon glyphicon-floppy-save"></span> Extraction Tools</a></li>
+					<li><a href="#rm" data-toggle="tab"><span class="glyphicon glyphicon-erase"></span> Removal Tools</a></li>
+					<li><a href="#Emoji" data-toggle="tab"><span class="glyphicon glyphicon-heart"></span> Emoji</a></li>
+					<li><a href="#background" data-toggle="tab"><span class="glyphicon glyphicon-th-list"></span> Background</a></li>
+					<li><a href="#other" data-toggle="tab"><span class="glyphicon glyphicon-th-list"></span> Other</a></li>
+				</ul>
+				<!-- tab-content start -->
+				<div id="my-tab-content" class="tab-content">
+					<!-- home tab start -->
+					<div class="tab-pane fade in active" id="Home">
+						<!--free facebook account tools -->
+						<div class="panel panel-default">
+							<div class="panel-heading">Free Tools For Facebook Account</div>
+							<div class="buttonContainer">
+								<button type="button" class="btn btn-default toolButtons" id="fbvid">
+									<span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+									Video Downloading Tool
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="iyftlyp">
+									<span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>
+									Invite Friends To Like Your Page
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="fbeit">
+									<span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>
+									Invite Friends To an Event
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="aafrao">
+									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+									Accept / Reject All Friend Requests At Once
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="clickpoke">
+									<span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>
+									Click All Poke + Poke Back buttons
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="caafb">
+									<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+									Click All Add Friend Buttons
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="calb">
+									<span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+									Click All Like Buttons
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="cajb">
+									<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+									Click All Join Buttons
+								</button>
+							</div>
+						</div>
+						<!--premium Facebook account tools -->
+						<div class="panel panel-default">
+							<div class="panel-heading">Premium Tools For Facebook Account</div>
+							<div class="buttonContainer">
+								<button type="button" class="btn btn-default toolButtons" id="gtt">
+									<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
+									Group Transfer Tool
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="gptto">
+									<span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+									Group Posting Tool
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="gpt">
+									<span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+									Group Posting Tool 1 (Graph API Explorer)
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="gpt2">
+									<span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span>
+									Group Posting Tool 2
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="poofp">
+									<span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>
+									Post On Own Facebook Pages
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="caga">
+									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+									Claim As Group Admin
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="maff">
+									<span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+									Message All Facebook Friends
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="sstaff">
+									<span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+									Send Stickers To All Facebook Friends
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="polp">
+									<span class="glyphicon glyphicon-flag" aria-hidden="true"></span>
+									Post On Liked Pages
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="jmugids">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+									Join Multiple Groups Using Group IDs
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="sbwish">
+									<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+									Send Birthday Wishes
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="syfaaf">
+									<span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+									Suggest Your Friends To Add Another Friend
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="iyftjyg">
+									<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+									Add All Facebook Friends As Group Member
+								</button>
+							</div>
+						</div>
+					</div>
+					<!--Home tab end-->
+					<!-- extraction starts-->
+					<div class="tab-pane" id="ext">
+						<!--free extraction tools-->
+						<div class="panel panel-default">
+							<div class="panel-heading">Free Extraction Tools</div>
+							<div class="buttonContainer">
+								<button type="button" class="btn btn-default toolButtons" id="idextractor">
+									<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+									ID Extractor
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="efids">
+									<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+									Extract Friend IDs
+								</button>
+							</div>
+						</div>
+						<!-- premium extraction tools-->
+						<div class="panel panel-default">
+							<div class="panel-heading">Premium Extraction Tools</div>
+							<div class="buttonContainer">
+								<!-- <button type="button" class="btn btn&#45;default toolButtons" id="efpfids"> -->
+								<!-- 	Extract Facebook Page Fan IDs -->
+								<!-- </button> -->
+								<button type="button" class="btn btn-default toolButtons" id="egemail">
+									<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+									Extract Group Emails
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="egids">
+									<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+									Extract Group IDs
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="eulikes">
+									<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+									Extract User Likes
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="eppnoff">
+									<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+									Extract Public Phone Numbers Of Friends
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="epeoff">
+									<span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span>
+									Extract Emails Of Friends
+								</button>
+							</div>
+						</div>
+					</div>
+					<!-- extraction tool ends-->
+					<!-- removal tools start -->
+					<div class="tab-pane" id="rm">
+						<!--free removal tools -->
+						<div class="panel panel-default">
+							<!-- <div class="panel-heading">Free Removal Tools</div> -->
+							<div class="buttonContainer">
+								<button type="button" class="btn btn-default toolButtons" id="uafpao">
+									<span class="glyphicon glyphicon-scissors" aria-hidden="true"></span>
+									Unlike All Facebook Pages
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="uaffao">
+									<span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+									Unfriend All Facebook Friends
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="uaff">
+									<span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+									Unfollow All Facebook Friends
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="dacao">
+									<span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
+									Delete All Comments
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="uafgao">
+									<span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+									Unfollow All Groups
+								</button>
+							</div>
+						</div>
+						<!--premium removal tools-->
+						<div class="panel panel-default">
+							<div class="panel-heading">Premium Removal Tools</div>
+							<div class="buttonContainer">
+								<button type="button" class="btn btn-default toolButtons" id="rafgao">
+									<span class="glyphicon glyphicon-scissors" aria-hidden="true"></span>
+									Leave All Facebook Groups
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="capfr">
+									<span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+									Cancel All Pending Friend Requests
+								</button>
+								<button type="button" class="btn btn-default toolButtons" id="iafsao">
+									<span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+									Ignore All Friend Suggestions
+								</button>
+							</div>
+						</div>
+					</div>
+					<!-- removal tools end -->
+					<!-- Background tools start -->
+					<div class="tab-pane" id="background">
+						<br>
+						<!--for hiding last seen for Facebook messages -->
+						<label>
+							<input type="checkbox" checked="checked" id="hideSeen"> Hide Seen For Facebook Messages
+						</label>
+					</div>
+					<!-- background tools end -->
+					<!-- emoticons start-->
+					<div class="tab-pane" id="Emoji">
+						<iframe class="popupFrame" src="/popup/html/emoji.html" frameborder="0"></iframe>
+					</div>
+					<!-- emoticons end -->
+					<!-- Other tools tab start-->
+					<div class="tab-pane" id="other">
+						<button type="button" class="btn btn-default toolButtons crx" data-href="https://chrome.google.com/webstore/detail/account-manager/cahmhpmgmcgbhafeickhklifhoonfala">
+							<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+							Account Manager
+						</button>
+						<button type="button" class="btn btn-default toolButtons crx" data-href="https://chrome.google.com/webstore/detail/toolkit-for-twitter/dbiignkcidbfecgjjmijcpmdlgblhdml">
+							<span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+							Toolkit For Twitter
+						</button>
+					</div>
+					<!-- background tools end -->
+				</div>
+				<!-- tab-content end -->
+			</div>
+			<!-- mainbox end-->
+		</div>
+		<!-- container -->
+		<!-- premium box start-->
+		<div id="log_in_box_parent">
+			<form role="form" id="license_log_in_box" action="*">
+				<h1 class="h3" style="
+				text-align: center;
+				">Log In To Unlock Premium Tools</h1>
+				<div class="form-group">
+					<label for="email">Email address:</label>
+					<input type="email" class="form-control" id="email" autocomplete="off">
+				</div>
+				<div class="form-group">
+					<label for="pwd">License Key:</label>
+					<input type="password" class="form-control" id="license_key" autocomplete="off">
+				</div>
+				<button type="submit" class="btn btn-default" id="log_in_unlock">
+					<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+					Log In</button>
+				<button type="submit" class="btn btn-default" id="resetKEY">
+					<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+					Reset License Key</button>
+				<button type="submit" class="btn btn-default" id="resetPWD">
+					<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+					Reset Password</button>
+				<button type="submit" class="btn btn-primary" id="buyPremium">
+					<span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+					Buy Premium Version</button>
+				<button type="submit" class="btn btn-danger" id="closeBtn">
+					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+					Close</button>
+				<br>
+			</form>
+		</div>
+		<!-- premium box end -->
+
+		<!--
+		-->
+
+	</body>
+</html>

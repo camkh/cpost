@@ -1,0 +1,123 @@
+<!--
+	Copyright(c) 2014-2016 Dinesh Rajkumar Bhosale of getmyscript.com
+	See license file for more information
+	Contact developers at mr.dinesh.bhosale@gmail.com
+-->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Send Sticker To All Friends</title>
+		<link rel="stylesheet" type="text/css" href="/global/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/global/css/bootstrap-theme.css">
+		<link rel="stylesheet" type="text/css" href="../css/imgpicker.css">
+		<link rel="stylesheet" type="text/css" href="../css/frame.css">
+	</head>
+	<body>
+		<div class="" id="fstToolBoxContainer">
+			<nav class="navbar navbar-default">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<a class="navbar-brand">
+							Send Sticker To All Friends
+						</a>
+					</div>
+					<div class="pull-right bottom_nav">
+						<button title="Scroll to bottom" type="button" class="btn btn-default pull-left topButtons" id="scroll-to-bottom">
+							<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+						</button>
+						<button title="Scroll to top" type="button" class="btn btn-default pull-left topButtons" id="scroll-to-top">
+							<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+						</button>
+						<button title="Restart tool" type="button" class="btn btn-default pull-left topButtons"
+							id="restartTool">
+							<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+						</button>
+						<button title="Close" type="button" class="btn btn-danger pull-right topButtons" id="close-button">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</button>
+						<button title="Minimize" type="button" class="btn btn-default pull-right topButtons" id="resize-button" style="display:block;">
+							<span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span>
+						</button>
+						<button title="Maximize" type="button" class="btn btn-default pull-right topButtons" id="maximize-button" style="display:none;">
+							<span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
+						</button>
+					</div>
+				</div>
+			</nav>
+			<div class="container">
+				<form class="navbar-form navbar-left" id="submitForm" action="#">
+					<!--stickers  -->
+					<div class="form-group">
+						<label for="sticker">Select Sticker</label>
+						<div id="stickerBox">
+							<select class="image-picker show-html" id="sticker">
+								<option data-img-src="../fst_emoji/126361874215276.png" value="126361874215276">Image</option>
+								<option data-img-src="../fst_emoji/126361884215275.png" value="126361884215275">Image</option>
+								<option data-img-src="../fst_emoji/126361890881941.png" value="126361890881941">Image</option>
+								<option data-img-src="../fst_emoji/126361900881940.png" value="126361900881940">Image</option>
+								<option data-img-src="../fst_emoji/126361910881939.png" value="126361910881939">Image</option>
+								<option data-img-src="../fst_emoji/126361920881938.png" value="126361920881938">Image</option>
+								<option data-img-src="../fst_emoji/126361957548601.png" value="126361957548601">Image</option>
+								<option data-img-src="../fst_emoji/126361967548600.png" value="126361967548600">Image</option>
+								<option data-img-src="../fst_emoji/126361974215266.png" value="126361974215266">Image</option>
+								<option data-img-src="../fst_emoji/126361987548598.png" value="126361987548598">Image</option>
+								<option data-img-src="../fst_emoji/126361994215264.png" value="126361994215264">Image</option>
+								<option data-img-src="../fst_emoji/126362007548596.png" value="126362007548596">Image</option>
+								<option data-img-src="../fst_emoji/126362027548594.png" value="126362027548594">Image</option>
+								<option data-img-src="../fst_emoji/126362034215260.png" value="126362034215260">Image</option>
+								<option data-img-src="../fst_emoji/126362044215259.png" value="126362044215259">Image</option>
+								<option data-img-src="../fst_emoji/126362064215257.png" value="126362064215257">Image</option>
+								<option data-img-src="../fst_emoji/126362074215256.png" value="126362074215256">Image</option>
+								<option data-img-src="../fst_emoji/126362080881922.png" value="126362080881922">Image</option>
+								<option data-img-src="../fst_emoji/126362087548588.png" value="126362087548588">Image</option>
+								<option data-img-src="../fst_emoji/126362100881920.png" value="126362100881920">Image</option>
+								<option data-img-src="../fst_emoji/126362107548586.png" value="126362107548586">Image</option>
+								<option data-img-src="../fst_emoji/126362117548585.png" value="126362117548585">Image</option>
+								<option data-img-src="../fst_emoji/126362124215251.png" value="126362124215251">Image</option>
+								<option data-img-src="../fst_emoji/126362130881917.png" value="126362130881917">Image</option>
+								<option data-img-src="../fst_emoji/126362137548583.png" value="126362137548583">Image</option>
+								<option data-img-src="../fst_emoji/126362160881914.png" value="126362160881914">Image</option>
+								<option data-img-src="../fst_emoji/126362167548580.png" value="126362167548580">Image</option>
+								<option data-img-src="../fst_emoji/126362180881912.png" value="126362180881912">Image</option>
+								<option data-img-src="../fst_emoji/126362187548578.png" value="126362187548578">Image</option>
+								<option data-img-src="../fst_emoji/126362197548577.png" value="126362197548577">Image</option>
+								<option data-img-src="../fst_emoji/126362207548576.png" value="126362207548576">Image</option>
+								<option data-img-src="../fst_emoji/126362230881907.png" value="126362230881907">Image</option> 
+							</select>	
+						</div>
+					</div>
+					<!-- delay between posting requests -->
+					<div class="form-group">
+						<label for="delay">Enter Delay</label>
+						<input type="number" class="form-control" placeholder="60" id="delay" autocomplete="off" min="1" max="9999" value="60">
+				</div>
+				<!--starting Friend number -->
+				<div class="form-group">
+					<label for="start">Enter Starting Friend Number</label>
+					<input type="number" class="form-control" placeholder="##########" id="start"
+					value="1"
+					autocomplete="on">
+				</div>
+				<!-- ending Friend number -->
+				<div class="form-group">
+					<label for="end">Enter Ending Friend Number</label>
+					<input type="number" class="form-control" placeholder="##########" id="end"
+					value="100"
+					autocomplete="on">
+				</div>
+				<button type="submit" class="btn btn-default fullWidth" id="submitButton" title="Send Sticker">
+					<span class="glyphicon glyphicon-send" aria-hidden="true"></span>
+					Send Sticker
+				</button>
+			</form>
+		</div>
+		<div class="container" id="resultDiv">
+		</div>
+	</div>
+	<script type="text/javascript" src="/global/js/jquery.js"></script>
+	<script type="text/javascript" src="/global/js/bootstrap.js"></script>
+	<script type="text/javascript" src="../js/imgpicker.js"></script>
+	<script type="text/javascript" src="../js/frame.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+/*
+ * Copyright(c) 2014-2016 Dinesh Rajkumar Bhosale of getmyscript.com
+ * See license file for more information
+ * Contact developers at mr.dinesh.bhosale@gmail.com
+ */
+/*
+ *
+ * Css of inner frame content 
+ */
+.bottom_nav{
+	display: inline-block;
+	padding-bottom: 10px;
+}
+.bottom_nav>button{
+	margin-left: 5px;
+}
+.navbar-header{
+	display: inline-block;
+}
+.fullWidth{
+	width: 100%;
+}
+.navbar{
+	margin-bottom: 0px;
+}
+.navbar-brand{
+	width:100%;
+	text-align:center;
+}
+.navbar-header{
+	width:100%;
+}
+#log{
+	padding-top:10px;
+	max-height:160px;
+	overflow:scroll;
+}
+#logParent{
+	display:none;
+}
+.navbar-form{
+	margin-top:0px;
+}

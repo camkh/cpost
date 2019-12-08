@@ -1,0 +1,86 @@
+<!--
+	Copyright(c) 2014-2016 Dinesh Rajkumar Bhosale of getmyscript.com
+	See license file for more information
+	Contact developers at mr.dinesh.bhosale@gmail.com
+-->
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Group Transfer Tool</title>
+		<link rel="stylesheet" type="text/css" href="/global/css/bootstrap.css">
+		<link rel="stylesheet" type="text/css" href="/global/css/bootstrap-theme.css">
+		<link rel="stylesheet" type="text/css" href="../css/frame.css">
+	</head>
+	<body>
+		<div class="" id="fstToolBoxContainer">
+			<nav class="navbar navbar-default">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<a class="navbar-brand">
+							Group Transfer Tool
+						</a>
+					</div>
+					<div class="pull-right bottom_nav">
+						<button title="Scroll to bottom" type="button" class="btn btn-default pull-left topButtons" id="scroll-to-bottom">
+							<span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+						</button>
+						<button title="Scroll to top" type="button" class="btn btn-default pull-left topButtons" id="scroll-to-top">
+							<span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+						</button>
+						<button title="Restart tool" type="button" class="btn btn-default pull-left topButtons"
+							id="restartTool">
+							<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+						</button>
+						<button title="Close" type="button" class="btn btn-danger pull-right topButtons" id="close-button">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</button>
+						<button title="Minimize" type="button" class="btn btn-default pull-right topButtons" id="resize-button" style="display:block;">
+							<span class="glyphicon glyphicon-resize-small" aria-hidden="true"></span>
+						</button>
+						<button title="Maximize" type="button" class="btn btn-default pull-right topButtons" id="maximize-button" style="display:none;">
+							<span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
+						</button>
+					</div>
+				</div>
+			</nav>
+			<div class="container">
+				<form class="navbar-form navbar-left" id="submitForm" action="#">
+					<div class="form-group">
+						<label for="urlInput">Enter ID of Facebook Friend</label>
+						<input type="number" class="form-control" placeholder="##########" id="idInput"
+						autocomplete="on">
+					</div>
+					<div class="form-group">
+						<label for="delayTime">Enter delay time between requests</label>
+						<input type="number" class="form-control" placeholder="60" id="delayTime" min="0" max="999"
+						autocomplete="on"
+						value="60">
+					</div>
+					<div class="form-group">
+						<label for="urlInput">Enter Starting Group Number</label>
+						<input type="number" class="form-control" placeholder="##########" id="staringNumber"
+						value="1"
+						autocomplete="on">
+					</div>
+					<div class="form-group">
+						<label for="urlInput">Enter Ending Group Number</label>
+						<input type="number" class="form-control" placeholder="##########" id="endingNumber"
+						value="100"
+						autocomplete="on">
+					</div>
+					<br>
+					<button type="submit" class="btn btn-default fullWidth" id="submitButton" title="Transfer Groups">
+						<span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
+						Transfer Groups
+					</button>
+				</form>
+			</div>
+			<div class="container" id="resultDiv">
+			</div>
+		</div>
+		<script type="text/javascript" src="/global/js/jquery.js"></script>
+		<script type="text/javascript" src="/global/js/bootstrap.js"></script>
+		<script type="text/javascript" src="../js/frame.js"></script>
+	</body>
+</html>

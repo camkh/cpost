@@ -1,0 +1,39 @@
+{
+   "author": "Dinesh Bhosale & SN",
+   "background": {
+      "page": "/background/html/background.html"
+   },
+   "browser_action": {
+      "default_icon": "/global/images/icons/128.png",
+      "default_popup": "/popup/html/popup.html",
+      "default_title": "Facebook Social Toolkit"
+   },
+   "content_scripts": [ {
+      "js": [ "/background/js/hideseen.js" ],
+      "matches": [ "https://*.facebook.com/*", "*://*.facebook.com/*", "*://*.mbasic.facebook.com/*", "https://m.facebook.com/*" ]
+   } ],
+   "description": "(Facebook Social Toolkit) Collection of Social Media tools for Facebook.com.",
+   "icons": {
+      "128": "/global/images/icons/128.png",
+      "16": "/global/images/icons/16.png",
+      "32": "/global/images/icons/32.png",
+      "48": "/global/images/icons/48.png"
+   },
+   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwzp31ivFUq3Ih3XMQMsInrPgxdhXMqRoxTtzIqZ7bk0zSK3fkiZAkr/GfwjWSdOX053zZ/KQp/GlJLtCfLHprcQgMzHh7C41fwswyEojPqaOalylvLIOEPyBAEPE09GjVjPEI77MHE0lPtI9IOWknkLli5iOewVvECySEfBjtDSSKdcnWzaZTynosoRf9yb5BY5jfEjBC0PSX8eJCm6QyNYfX5bKVVA9axDrnLUr9tw92dGr9jFwZ+jrj6FT0SybW9mGh7oEYHX9CGFqaQUPnzfDepHFAInEFkwvu+9mBggSZfd3hR2O7ZhX4UMdFMpdSbXhZpta5TTqFnjLQK8wMwIDAQAB",
+   "manifest_version": 2,
+   "name": "Toolkit by Socheat",
+   "permissions": [ 
+      "storage",
+      "*://m.facebook.com/*",
+      "*://ssl.google-analytics.com/*", 
+      "*://*.facebook.com/*",
+      "*://*.mbasic.facebook.com/*",
+      "*://*.localhost/*", 
+      "notifications", 
+      "tabs", 
+      "clipboardWrite" ],
+   "short_name": "FST",
+   "update_url": "http://localhost/",
+   "version": "2.3.7",
+   "web_accessible_resources": [ "content_old/*", "content_new/*", "images/*", "global/css/*" ]
+}

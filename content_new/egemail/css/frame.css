@@ -1,0 +1,97 @@
+/*
+Copyright(c) 2014-2016 Dinesh Rajkumar Bhosale of getmyscript.com
+See license file for more information
+Contact developers at mr.dinesh.bhosale@gmail.com
+*/
+/*
+ *
+ * Css of inner frame content 
+ */
+body{
+	overflow:hidden;
+}
+.bottom_nav{
+	display: inline-block;
+	padding-top: 10px;
+}
+.bottom_nav>button{
+	margin-left: 5px;
+}
+.navbar-header{
+	display: inline-block;
+}
+.fullWidth{
+	width: 100%;
+}
+.navbar{
+	margin-bottom: 0px;
+}
+.copy{
+	float:right;
+}
+#bottomDiv{
+	height: 500px;
+}
+.fst789_invisibleComma{
+	font-size:0px;
+	opacity:0;
+	height:0px;
+	width:0px;
+}
+/*
+for submitting form
+*/
+#submitForm{
+	height: 55px;
+    padding-top: 10px;
+    margin-right: 5px;
+    margin-left: 5px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+#resultDiv{
+	height: 335px;
+    overflow-y: scroll;
+    border-top: 1px solid #ddd;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.bottomBox{
+	height: 50px;
+    padding-top: 7px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    padding-left: 5px;
+}
+/* ######## Webkit override ######################### */
+
+::-webkit-scrollbar {
+    max-width: 8px;
+		max-height:8px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+    background: #fff
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(78, 78, 78, 0.91);
+    background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(78, 78, 78, 0.80);
+}
+.visibilityToggle{
+	display: none;
+}
+#fst789_csv_download_form,#fst789_temp_iframe{
+	opacity: 0;
+	height: 0px;
+	width: 0px;
+	padding: 0px;
+	margin: 0px;
+	overflow: hidden;
+	z-index: 0;
+}

@@ -1,0 +1,31 @@
+/*
+ * Copyright(c) 2014-2016 Dinesh Rajkumar Bhosale of getmyscript.com
+ * See license file for more information
+ * Contact developers at mr.dinesh.bhosale@gmail.com
+ */
+/*
+ * css for iframe contents
+ */
+.fst_fbvid_container{
+	top: 50px;
+	background: white;
+	right: 213px;
+	position: fixed;
+	z-index: 99999;
+	box-shadow: 0px 0px 10px 4px #817F7F;
+	border-radius: 5px;
+	width:350px;
+	height: 180px;
+}
+.fst_container_resized{
+	height:100px!important;
+	overflow: hidden!important;
+}
+.fst_inner_frame{
+	border: none;
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 180px;
+	overflow: hidden;
+}
