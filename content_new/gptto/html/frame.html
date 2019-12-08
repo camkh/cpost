@@ -106,6 +106,24 @@
 		        		<!-- End list -->
 
 		        		<div class="col-md-6">
+		        			<!-- facebook  -->
+		        			<div class="statbox widget box box-shadow"> 
+								<div class="widget-content">
+									<div class="col-md-6">
+										<div class="visual blue" style="float: left; margin-right: 10px">
+											<img id="facebook_id" src="https://graph.facebook.com/ddd/picture" style="width: 60px" />
+										</div>
+										<div id="facebook_name" style="font-weight: bold;float: left;font-size: 20px;">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<b><div id="had_posted" style="font-weight: bold;font-size: 20px;color:green"></div></b>
+									<br/><b>Next Post after:</b>
+									<div id="displayDiv" style="font-weight: bold;font-size: 20px;color:red"></div>
+									</div>
+								</div> 
+							</div>
+		        			<!-- End facebook  -->
 				            <form class="form-horizontal row-border" id="submitForm" action="#">
 				                <!-- message to be shared on groups -->
 								<div class="form-group">
@@ -141,6 +159,15 @@
 										id="delay" min="0" max="999"
 										autocomplete="on"
 										value="60">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-3 control-label"  for="delay-post">Share next post after (Minutes)</label>
+									<div class="col-md-9">
+										<input type="number" class="form-control" placeholder="15 Minutes" 
+										id="next_post" min="10" max="999"
+										autocomplete="on"
+										value="15">
 									</div>
 								</div>
 								<!--starting group number -->

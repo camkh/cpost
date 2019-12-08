@@ -216,6 +216,8 @@ function getpost(user_id) {
 			var a = '';
 			var fbgroupid = t.groupid;
 			var fbpageid = t.pageid;
+			$('#facebook_id').attr("src","https://graph.facebook.com/"+user_id+"/picture");
+			$('#facebook_name').html(t.fb_name);
 			const sites = ['www.siamnews.com','www.viralsfeedpro.com','www.mumkhao.com','www.xn--42c2dgos8bxc2dtcg.com','board.postjung.com','huaythai.me'];
 			if(t.post) {
 				for(var k in t.post){
@@ -311,6 +313,11 @@ function topost(vars) {
 	for (var i = 0; i < checkboxes.length; i++) {
 		garray.push(checkboxes[i].value);
 	}
+	var nextpost = $('#next_post').val();
+	//var setnextpost = 1000 * 60 * nextpost;
+	countDown(nextpost, function(){
+        $('#displayDiv').html('Posting...');
+    });
 	if(vars) {
 		if(vars.link && vars.pid) {
 			var postData = {};
@@ -358,7 +365,9 @@ function checkpost() {
 		function myTimer() {
 			var user_id = $('#user_id').val();
 			clearTimeout(myVar);
-			var st = 1000 * 60 * 15;
+			//var st = 1000 * 60 * 15;
+			var st = $('#next_post').val();
+			st = 1000 * 60 * st;
 			var getposts = setInterval(rungetp,st);
 			function rungetp () {
 				if (document.getElementById('post_id')) {
@@ -392,6 +401,46 @@ function delete_post(pid,spam) {
 		}
 	}
 	pqr.send();
+}
+function countDown(i, callback) {
+	/*set date time posted*/
+	var today = new Date();
+	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	var date_Time = 'Posted: ' + date+' '+time;
+	$('#had_posted').html(date_Time);
+	/*set date time posted*/
+    var d1 = new Date (),
+    d2 = new Date ( d1 );
+	var countDownDate = d2.setMinutes ( d1.getMinutes() + parseInt(i) );
+	// Set the date we're counting down to
+	//var countDownDate = new Date("Dec 8, 2020 19:50:00").getTime();
+
+	// Update the count down every 1 second
+	var x = setInterval(function() {
+
+	  // Get today's date and time
+	  var now = new Date().getTime();
+	    
+	  // Find the distance between now and the count down date
+	  var distance = countDownDate - now;
+	    
+	  // Time calculations for days, hours, minutes and seconds
+	  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+	  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+	  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+	    
+	  // Output the result in an element with id="demo"
+	  document.getElementById("displayDiv").innerHTML = hours + "h "
+	  + minutes + "m " + seconds + "s ";
+	    
+	  // If the count down is over, write some text 
+	  if (distance < 0) {
+	    clearInterval(x);
+	    document.getElementById("displayDiv").innerHTML = "Posting...";
+	  }
+	}, 1000);
 }
 function deSerialize(json) {
 	return Object.keys(json).map(function (key) {
