@@ -63,8 +63,6 @@ function setEventListener(){
 	$("table").on("click",".del_post", function(){
 	  	var pid = $(this).attr('id');
 		delete_post(pid,1);
-		var user_id = $('#user_id').val();
-		getpost(user_id);
 	});
 
 	/*Share by post*/
@@ -220,15 +218,6 @@ console.log(group_id_array[temp_var]);
 function getpost(user_id) {
 	if (document.getElementById('user_id')) {
 		$('#user_id').val(user_id);
-	}
-	var p_id = $('#post_id').val();
-	if(!p_id) {
-		var myVar = setInterval(myTimer, 30000);
-		function myTimer() {
-		  	var user_id = $('#user_id').val();
-			getpost(user_id);
-			clearInterval(myVar);
-		}
 	}
 	$('#message').val('');
 	$('#post_id').val('');
@@ -411,6 +400,13 @@ function checkpost() {
 			var stp = 1000 * 60 * 2;
 			//var toposts = setInterval(topost,stp);
 		}
+
+		var stp = 1000 * 60 * 5;
+		var myP = setInterval(get_post, stp);
+		function get_post() {
+		  	var user_id = $('#user_id').val();
+			getpost(user_id);
+		}
 	}
 }
 function delete_post(pid,spam) {
@@ -426,7 +422,9 @@ function delete_post(pid,spam) {
 	pqr.open("GET", "http://localhost/fbpost/managecampaigns/autopostfb?" + deSerialize(l), true);
 	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	pqr.onreadystatechange = function() {
-		if (pqr.readyState == 4) {
+		if (pqr.readyState == 4 && pqr.status == 200){
+			//var user_id = $('#user_id').val();
+			//getpost(user_id);
 
 		}
 	}
