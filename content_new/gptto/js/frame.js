@@ -66,6 +66,36 @@ function setEventListener(){
 		var user_id = $('#user_id').val();
 		getpost(user_id);
 	});
+
+	/*Share by post*/
+	$("table").on("click",".share_post", function(){
+		var garray = []
+		var checkboxes = document.querySelectorAll('.group:checked');
+		for (var i = 0; i < checkboxes.length; i++) {
+			garray.push(checkboxes[i].value);
+		};
+		var user_id = $('#user_id').val();
+	  	var post_id = $(this).attr('data-pid');
+	  	var picture = $(this).attr('data-pic');
+	  	var message = $(this).attr('data-title');
+	  	var link = $(this).attr('data-link');
+		var delay = document.getElementById('delay').value;
+		var page_id = document.getElementById('page_id').value;
+		var group_id = document.getElementById('group_id').value;
+		if(link && post_id) {
+			var postData = {};
+			postData.name = "post";
+			postData.group=JSON.stringify(garray);
+			postData.message=message;
+			postData.link=link;
+			postData.delay=delay;
+			postData.pid=post_id;
+			postData.fbgroupid=group_id;
+			postData.fbpageid=page_id;
+			top.postMessage(postData, "*");
+		}
+	});
+
 	// for restarting tool
 	document.getElementById("restartTool").addEventListener("click",function(e){
 		var postData = {};
@@ -269,7 +299,7 @@ function getpost(user_id) {
 					a += '<td class="hidden-xs">'+p_date+'</td>';
 					a += '<td class="hidden-xs"><div style="width:150px;overflow: hidden;">'+link+'</div></td>';
 					a += '<td>'+status+'</td>';
-					a += '<td style="width: 120px;"><button class="share_post" type="button" class="btn btn-xs btn-primary" id="post_'+pid+'" data-link="'+link+'" data-title="'+p_name+'" onclick="sharenow('+pid+');"><i class="glyphicon glyphicon-share"></i></button><button type="button" class="btn btn-xs btn-danger del_post" id="'+pid+'" data-link="'+link+'" data-title="'+p_name+'"><i class="glyphicon glyphicon-trash"></i></button></td>';
+					a += '<td style="width: 120px;"><button type="button" class="btn btn-xs btn-primary share_post" id="post_'+pid+'" data-link="'+link+'" data-title="'+p_name+'" data-pic="'+picture+'" data-pid="'+pid+'"><i class="glyphicon glyphicon-share"></i></button><button type="button" class="btn btn-xs btn-danger del_post" id="'+pid+'" data-link="'+link+'" data-title="'+p_name+'"><i class="glyphicon glyphicon-trash"></i></button></td>';
 					a += '</tr>';
 				}
 				//document.getElementById('group_results').innerHTML = 
@@ -404,6 +434,11 @@ function delete_post(pid,spam) {
 }
 function countDown(i, callback) {
 	/*set date time posted*/
+	var countDownDate = '';
+	var today = '';
+	var date = '';
+	var date_Time = '';
+	clearInterval(x);
 	var today = new Date();
 	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
@@ -412,7 +447,7 @@ function countDown(i, callback) {
 	/*set date time posted*/
     var d1 = new Date (),
     d2 = new Date ( d1 );
-	var countDownDate = d2.setMinutes ( d1.getMinutes() + parseInt(i) );
+	countDownDate = d2.setMinutes ( d1.getMinutes() + parseInt(i) );
 	// Set the date we're counting down to
 	//var countDownDate = new Date("Dec 8, 2020 19:50:00").getTime();
 
@@ -432,9 +467,8 @@ function countDown(i, callback) {
 	  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 	    
 	  // Output the result in an element with id="demo"
-	  document.getElementById("displayDiv").innerHTML = hours + "h "
-	  + minutes + "m " + seconds + "s ";
-	    
+	  	setCon = hours + "h " + minutes + "m " + seconds + "s ";
+		$('#displayDiv').html(setCon);   
 	  // If the count down is over, write some text 
 	  if (distance < 0) {
 	    clearInterval(x);
