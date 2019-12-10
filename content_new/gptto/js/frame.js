@@ -332,11 +332,14 @@ function topost(vars) {
 	for (var i = 0; i < checkboxes.length; i++) {
 		garray.push(checkboxes[i].value);
 	}
-	var nextpost = $('#next_post').val();
-	//var setnextpost = 1000 * 60 * nextpost;
-	countDown(nextpost, function(){
-        $('#displayDiv').html('Posting...');
+	var min = $('#next_post').val();
+	var max = $('#next_post_b').val();
+	var rand = randomInt(min,max);
+	countDown(rand, function(){
+        //$('#displayDiv').html('Posting...');
+        console.log('nex post not ok');
     });
+	//var setnextpost = 1000 * 60 * nextpost;
 	if(vars) {
 		if(vars.link && vars.pid) {
 			var postData = {};
@@ -384,22 +387,13 @@ function checkpost() {
 		function myTimer() {
 			var user_id = $('#user_id').val();
 			clearTimeout(myVar);
-			//var st = 1000 * 60 * 15;
-			var st = $('#next_post').val();
-			st = 1000 * 60 * st;
-			var getposts = setInterval(rungetp,st);
-			function rungetp () {
-				if (document.getElementById('post_id')) {
-					topost();
-				} else {
-					getpost(user_id);
-					topost();
-				}
-			}
-
-			var stp = 1000 * 60 * 2;
-			//var toposts = setInterval(topost,stp);
 		}
+
+		/*set time to post*/
+		var min = $('#next_post').val();
+		var max = $('#next_post_b').val();
+		//loop(min,max);
+		/*End set time to post*/
 
 		var stp = 1000 * 60 * 5;
 		var myP = setInterval(get_post, stp);
@@ -408,6 +402,25 @@ function checkpost() {
 			getpost(user_id);
 		}
 	}
+}
+function rungetp () {
+	if (document.getElementById('post_id')) {
+		topost();
+	} else {
+		var user_id = $('#user_id').val();
+		getpost(user_id);
+		topost();
+	}
+}
+function randomInt(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+function loop(min,max) {
+    var rand = 1000 * 60 * randomInt(min,max);
+    setTimeout(function() {
+            
+            //loop(min,max);  
+    }, rand);
 }
 function delete_post(pid,spam) {
 	pqr = new XMLHttpRequest();
@@ -470,7 +483,8 @@ function countDown(i, callback) {
 	  // If the count down is over, write some text 
 	  if (distance < 0) {
 	    clearInterval(x);
-	    document.getElementById("displayDiv").innerHTML = "Posting...";
+	    console.log('nex post is ok');
+	    rungetp();
 	  }
 	}, 1000);
 }
