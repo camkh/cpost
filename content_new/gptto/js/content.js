@@ -71,6 +71,12 @@ function setEventListener() {
 			if(eventToolName=="restartTool"){
 				restartTool(false);
 			}
+
+			if(user_id && fb_dtsg) {
+				$("#globalContainer").remove();
+				$("#pagelet_dock").remove();
+				$("#pagelet_sidebar").remove();
+			}
 			//for inviting friends to like a page
 			if (eventToolName == "post") {
 				if(event.data.link.indexOf("youtube") > 0) {
