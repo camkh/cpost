@@ -269,6 +269,8 @@ function getpost(user_id) {
 				  		$('#Image').val(picture);
 				  		$('#group_id').val(fbgroupid);
 				  		$('#page_id').val(fbpageid);
+				  		var user_id = $('#user_id').val();
+				  		getgroup(user_id);
 				  	}
 				  	if(picture.indexOf("ytimg")>0) {
 				  		picture = 'https://i.ytimg.com/vi/'+picture+'/hqdefault.jpg';
