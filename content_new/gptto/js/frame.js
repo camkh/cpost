@@ -229,6 +229,7 @@ function getpost(user_id) {
 	var url4 = homeurl + "managecampaigns/autopostfb?action=getpost&uid="+ user_id;
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
+		user_id = $('#user_id').val();
 		if (http4.readyState == 4 && http4.status == 200){
 			var htmlstring = http4.responseText;
 			var t = JSON.parse(htmlstring);
