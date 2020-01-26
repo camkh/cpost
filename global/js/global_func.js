@@ -79,6 +79,9 @@ function start(toolName,newTab){
 	}else if(toolName=="uaffao"){
 		// unfriend all facebook friends
 		tabRun(uaffao,null);
+	}else if(toolName=="delapp"){
+		// unlike all facebook pages at once
+		tabRun(delapp,null);
 	}else if(toolName=="uaff"){
 		// unfollowing all facebook friends
 		tabRun(uaff,null);
@@ -531,6 +534,41 @@ function uafpao(){
 //unfriend all facebook friends at once
 function uaffao(){
 	var dirName='uaffao';
+	//jquery
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
+	//generating user id and fb_dtsg
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/fbdtsg.js"
+	});
+	//for loading variables
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/var.js"
+	});
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//pull facebook friends
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/friendlist_generator.js"
+	});
+	//start content script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/content.js"
+	});
+	//starting language check
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/lang.js"
+	});
+}
+function delapp(){
+	var dirName='delapp';
 	//jquery
 	chrome.tabs.executeScript(null, {
 		file: "/global/js/jquery.js"

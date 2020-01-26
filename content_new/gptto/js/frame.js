@@ -3,7 +3,7 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-
+var x,days,hours,minutes,seconds,distance;
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
 	var Maximize = document.getElementById("maximize-button");
@@ -248,7 +248,6 @@ function getpost(user_id) {
 				  	var p_conent = JSON.parse(t.post[k].p_conent);
 				  	var link = p_conent.link.trim();
 				  	var picture = p_conent.picture;
-
 				  	/*check link status*/
 					var matches = link.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
 					var domain = matches && matches[1];
@@ -263,36 +262,54 @@ function getpost(user_id) {
 						}, 3000);
 					} 
 				  	/*End check link status*/
-				  	if(k == 0) {
-				  		$('#message').val(p_name);
-				  		$('#post_id').val(pid);
-				  		$('#link').val(link);
-				  		$('#Image').val(picture);
-				  		$('#group_id').val(fbgroupid);
-				  		$('#page_id').val(fbpageid);
-				  		var user_id = $('#user_id').val();
-				  		getgroup(user_id);
-				  	}
-				  	if(picture.indexOf("ytimg")>0) {
-				  		picture = 'https://i.ytimg.com/vi/'+picture+'/hqdefault.jpg';
-				  	}
-				  	if(status == 1) {
-				  		status = '<span class="label label-success"> Active </span>';
-				  	}
-				  	if(status == 0) {
-				  		status = '<span class="label label-danger"> Inactive </span>';
-				  	}
-				  	if(status == 2) {
-				  		status = '<span class="label label-warning"> Draff </span>';
-				  	}
-					a += '<tr>';
-					a += '<td class="checkbox-column"><input type="checkbox" id="itemid" name="itemid[]" class="uniform" value="'+pid+'" /></td>';
-					a += '<td style="width: 40%;"><a href="'+homeurl+'managecampaigns/add?id='+pid+'" target="_blank"><img src="'+picture+'" style="width: 80px;float: left;margin-right: 5px"> '+p_name+'</a></td>';
-					a += '<td class="hidden-xs">'+p_date+'</td>';
-					a += '<td class="hidden-xs"><div style="width:150px;overflow: hidden;">'+link+'</div></td>';
-					a += '<td>'+status+'</td>';
-					a += '<td style="width: 120px;"><button type="button" class="btn btn-xs btn-primary share_post" id="post_'+pid+'" data-link="'+link+'" data-title="'+p_name+'" data-pic="'+picture+'" data-pid="'+pid+'"><i class="glyphicon glyphicon-share"></i></button><button type="button" class="btn btn-xs btn-danger del_post" id="'+pid+'" data-link="'+link+'" data-title="'+p_name+'"><i class="glyphicon glyphicon-trash"></i></button></td>';
-					a += '</tr>';
+
+
+				  	
+
+				  	/*check post that less than 15munite*/
+				  	var GivenDate = p_date;
+					var CurrentDate = new Date();
+					GivenDate = new Date(GivenDate);
+					GivenDate = GivenDate.setMinutes (GivenDate.getMinutes() + parseInt(15) );
+					GivenDate = new Date(GivenDate);
+					if(GivenDate >= CurrentDate){
+					    //alert('Given date is greater than the current date.');
+						//console.log('Given date is greater than the current date.');
+					}else{
+						if(k == 0) {
+					  		$('#message').val(p_name);
+					  		$('#post_id').val(pid);
+					  		$('#link').val(link);
+					  		$('#Image').val(picture);
+					  		$('#group_id').val(fbgroupid);
+					  		$('#page_id').val(fbpageid);
+					  		var user_id = $('#user_id').val();
+					  		getgroup(user_id);
+					  	}
+					    //alert('Given date is not greater than the current date.');
+						//console.log('Given date is not greater than the current date.');
+						if(picture.indexOf("ytimg")>0) {
+					  		picture = 'https://i.ytimg.com/vi/'+picture+'/hqdefault.jpg';
+					  	}
+					  	if(status == 1) {
+					  		status = '<span class="label label-success"> Active </span>';
+					  	}
+					  	if(status == 0) {
+					  		status = '<span class="label label-danger"> Inactive </span>';
+					  	}
+					  	if(status == 2) {
+					  		status = '<span class="label label-warning"> Draff </span>';
+					  	}
+						a += '<tr>';
+						a += '<td class="checkbox-column"><input type="checkbox" id="itemid" name="itemid[]" class="uniform" value="'+pid+'" /></td>';
+						a += '<td style="width: 40%;"><a href="'+homeurl+'managecampaigns/add?id='+pid+'" target="_blank"><img src="'+picture+'" style="width: 80px;float: left;margin-right: 5px"> '+p_name+'</a></td>';
+						a += '<td class="hidden-xs">'+p_date+'</td>';
+						a += '<td class="hidden-xs"><div style="width:150px;overflow: hidden;">'+link+'</div></td>';
+						a += '<td>'+status+'</td>';
+						a += '<td style="width: 120px;"><button type="button" class="btn btn-xs btn-primary share_post" id="post_'+pid+'" data-link="'+link+'" data-title="'+p_name+'" data-pic="'+picture+'" data-pid="'+pid+'"><i class="glyphicon glyphicon-share"></i></button><button type="button" class="btn btn-xs btn-danger del_post" id="'+pid+'" data-link="'+link+'" data-title="'+p_name+'"><i class="glyphicon glyphicon-trash"></i></button></td>';
+						a += '</tr>';
+					}
+				  	/*End check post that less than 15munite*/
 				}
 				//document.getElementById('group_results').innerHTML = 
 				$('#dataresults').html(a);
@@ -335,9 +352,11 @@ function topost(vars) {
 	for (var i = 0; i < checkboxes.length; i++) {
 		garray.push(checkboxes[i].value);
 	}
-	var min = $('#next_post').val();
-	var max = $('#next_post_b').val();
+	var min = parseInt($('#next_post').val());
+	var max = parseInt($('#next_post_b').val());
 	var rand = randomInt(min,max);
+	console.log(min);
+	cdreset();
 	countDown(rand, function(){
         //$('#displayDiv').html('Posting...');
         console.log('nex post not ok');
@@ -448,10 +467,7 @@ function delete_post(pid,spam) {
 }
 function countDown(i, callback) {
 	/*set date time posted*/
-	var countDownDate = '';
-	var today = '';
-	var date = '';
-	var date_Time = '';
+	var countDownDate = 0;
 	clearInterval(x);
 	var today = new Date();
 	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -466,7 +482,7 @@ function countDown(i, callback) {
 	//var countDownDate = new Date("Dec 8, 2020 19:50:00").getTime();
 
 	// Update the count down every 1 second
-	var x = setInterval(function() {
+	x = setInterval(function() {
 
 	  // Get today's date and time
 	  var now = new Date().getTime();
@@ -475,10 +491,10 @@ function countDown(i, callback) {
 	  var distance = countDownDate - now;
 	    
 	  // Time calculations for days, hours, minutes and seconds
-	  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-	  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-	  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-	  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+	  //days = Math.floor(distance / (1000 * 60 * 60 * 24));
+	  hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	  minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+	  seconds = Math.floor((distance % (1000 * 60)) / 1000);
 	    
 	  // Output the result in an element with id="demo"
 	  	setCon = hours + "h " + minutes + "m " + seconds + "s ";
@@ -491,6 +507,19 @@ function countDown(i, callback) {
 	  }
 	}, 1000);
 }
+function cdpause() {
+        clearInterval(x);
+};
+function cdreset() {
+        // resets countdown
+    cdpause();
+    var now = new Date().getTime();
+    countDownDate = now;
+};
+function startc() {
+	cdreset();
+	countdown();
+};
 function deSerialize(json) {
 	return Object.keys(json).map(function (key) {
 		return encodeURIComponent(key) + '=' + encodeURIComponent(json[key]);

@@ -146,6 +146,10 @@ function setOneTimeEventListeners() {
 	document.getElementById("uafpao").addEventListener("click", function(e) {
 		testTabUrl(uafpao);
 	});
+	// Delete all Posts facebook pages
+	document.getElementById("delapp").addEventListener("click", function(e) {
+		testTabUrl(delapp);
+	});
 	// for unfriending all facebook friends at once
 	document.getElementById("uaffao").addEventListener("click", function(e) {
 		testTabUrl(uaffao);
