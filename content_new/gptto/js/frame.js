@@ -281,9 +281,14 @@ function getpost(user_id) {
 					  		$('#post_id').val(pid);
 					  		$('#link').val(link);
 					  		$('#Image').val(picture);
-					  		$('#group_id').val(fbgroupid);
+					  		
 					  		$('#page_id').val(fbpageid);
 					  		var user_id = $('#user_id').val();
+
+					  // 		var appendToG = '';
+							// appendToG += '<label class="checkbox"><input value="'+fbgroupid+'" type="checkbox" class="group" name="group[]" class="required" checked> '+t[k].sg_name+'</label>';
+							// $('#group_results').html(appendToG);
+							$('#group_id').val(fbgroupid);
 					  		getgroup(user_id);
 					  	}
 					    //alert('Given date is not greater than the current date.');
