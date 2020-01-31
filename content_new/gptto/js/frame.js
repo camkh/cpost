@@ -59,6 +59,11 @@ function setEventListener(){
 		var user_id = $('#user_id').val();
 		getpost(user_id);
 	});
+	//getgroups
+	$('#getgroups').click(function() {
+		var user_id = $('#user_id').val();
+		getgroups(user_id);
+	});
 	//del post
 	$("table").on("click",".del_post", function(){
 	  	var pid = $(this).attr('id');
@@ -153,6 +158,23 @@ function setEventListener(){
 	}
 	//event listeenrs for events from parent frame
 	window.addEventListener('message', handleSizingResponse, false);
+}
+
+//get all groups
+function getgroups() {
+	chrome.storage.local.get(['user_id'], function(result) {
+      	var dates1 = new Date();
+		var yur = dates1.getFullYear();
+		var dt = dates1.getDate();
+		var mon = dates1.getMonth();
+		var localname_group_ids = "fst_gid_" + result.user_id + dt + '_' + mon + '_' + yur;
+		var local_group = "fst_gid_" + result.user_id + dt + '_' + mon + '_' + yur;
+		if (document.getElementById('group_results')) {
+			getallgroups(local_group);
+		}
+		getpost(result.user_id);
+		getgroup(result.user_id);
+    });
 }
 
 
