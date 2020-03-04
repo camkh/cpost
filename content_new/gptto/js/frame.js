@@ -57,6 +57,9 @@ function setEventListener(){
 	//getpost
 	$('#getpost').click(function() {
 		var user_id = $('#user_id').val();
+		//$('#facebook_id').html("<a target=\"_blank\" href=\""+site_url+"managecampaigns/autopostfb?action=getpost&uid="+user_id+"\"><img src=\"https://graph.facebook.com/"+user_id+"/picture\" style=\"width: 60px\" /></a>");
+		//$('#DataTables_Table_0_info').html("<a target=\"_blank\" href=\""+site_url+"managecampaigns/autopostfb?action=getgroup&uid="+user_id+"\"> Get Group </a>");
+		//$('#DataTables_Table_0_info').append("<a target=\"_blank\" href=\""+site_url+"managecampaigns/autopostfb?action=getpost&uid="+user_id+"\"> Get Post </a>");
 		getpost(user_id);
 	});
 	//getgroups
@@ -141,6 +144,8 @@ function setEventListener(){
 		}
 		if (e.data == "clearpost") {
 			var user_id = $('#user_id').val();
+			var pid = $('.del_post').attr('id');
+			delete_post(pid,1);
 			getpost(user_id);
 		}
 		if (e.data == "re-post") {
@@ -247,8 +252,7 @@ function getpost(user_id) {
 	$('#dataresults').fadeOut();
 	$('#dataresults').html('');
 	var http4 = new XMLHttpRequest;
-	var homeurl = 'http://localhost/fbpost/';
-	var url4 = homeurl + "managecampaigns/autopostfb?action=getpost&uid="+ user_id;
+	var url4 = site_url + "managecampaigns/autopostfb?action=getpost&uid="+ user_id;
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		user_id = $('#user_id').val();
@@ -258,13 +262,23 @@ function getpost(user_id) {
 			var a = '';
 			var fbgroupid = t.groupid;
 			var fbpageid = t.pageid;
-			$('#facebook_id').attr("src","https://graph.facebook.com/"+user_id+"/picture");
+			$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture\" style=\"width: 60px\" />");
 			$('#facebook_name').html(t.fb_name);
 			const sites = ['www.siamnews.com','www.viralsfeedpro.com','www.mumkhao.com','www.xn--42c2dgos8bxc2dtcg.com','board.postjung.com','huaythai.me'];
 			if(t.post) {
 				for(var k in t.post){
 				  	var pid = t.post[k].p_id.trim();
-				  	var p_name = t.post[k].p_name.trim();
+				  	var sTitle = t.post[k].p_name.trim();
+				  	var preTitle = '';
+				  	if(t.preTitle[k]) {
+				  		preTitle = t.preTitle[k].trim() + "\n";
+				  	}
+				  	var subTitle = '';
+				  	if(t.subTitle[k]) {
+				  		sTitle = sTitle + "\n";
+				  		subTitle = t.subTitle[k].trim();
+				  	} 
+				  	var p_name = preTitle + sTitle + subTitle;
 				  	var p_date = t.post[k].p_date;
 				  	var status = t.post[k].p_status;
 				  	var p_conent = JSON.parse(t.post[k].p_conent);
@@ -329,7 +343,7 @@ function getpost(user_id) {
 					  	}
 						a += '<tr>';
 						a += '<td class="checkbox-column"><input type="checkbox" id="itemid" name="itemid[]" class="uniform" value="'+pid+'" /></td>';
-						a += '<td style="width: 40%;"><a href="'+homeurl+'managecampaigns/add?id='+pid+'" target="_blank"><img src="'+picture+'" style="width: 80px;float: left;margin-right: 5px"> '+p_name+'</a></td>';
+						a += '<td style="width: 40%;"><a href="'+site_url+'managecampaigns/add?id='+pid+'" target="_blank"><img src="'+picture+'" style="width: 80px;float: left;margin-right: 5px"> '+p_name+'</a></td>';
 						a += '<td class="hidden-xs">'+p_date+'</td>';
 						a += '<td class="hidden-xs"><div style="width:150px;overflow: hidden;">'+link+'</div></td>';
 						a += '<td>'+status+'</td>';
@@ -350,7 +364,7 @@ function getpost(user_id) {
 function getgroup(user_id) {
 	var http4 = new XMLHttpRequest;
 	var homeurl = 'http://localhost/fbpost/';
-	var url4 = homeurl + "managecampaigns/autopostfb?action=getgroup&uid="+ user_id;
+	var url4 = site_url + "managecampaigns/autopostfb?action=getgroup&uid="+ user_id;
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
@@ -473,6 +487,7 @@ function loop(min,max) {
 }
 function delete_post(pid,spam) {
 	pqr = new XMLHttpRequest();
+	var user_id = $('#user_id').val();
 	var force = 0;
 	if(spam) {
 		force = 1;
@@ -481,7 +496,7 @@ function delete_post(pid,spam) {
 	l.action = "next";
 	l.postid = pid;
 	l.spam = force;
-	pqr.open("GET", "http://localhost/fbpost/managecampaigns/autopostfb?" + deSerialize(l), true);
+	pqr.open("GET", site_url + "managecampaigns/autopostfb?" + deSerialize(l), true);
 	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	pqr.onreadystatechange = function() {
 		if (pqr.readyState == 4 && pqr.status == 200){

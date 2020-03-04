@@ -5,6 +5,7 @@ Contact developers at mr.dinesh.bhosale@gmail.com
 */
 //fb_dtsg and user_id are already loaded
 //remove duplicates from array
+var site_url="http://localhost/fbpost/";
 var unique_array = function (arr) {
 	var i, j, cur, found;
 	for (i = arr.length - 1; i >= 0; i--) {

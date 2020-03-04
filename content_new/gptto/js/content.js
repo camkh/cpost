@@ -84,7 +84,7 @@ function setEventListener() {
 					var force_delete = 1;
 					var vars = {};
 					vars.pid = event.data.pid;
-					vars.homeurl = 'http://localhost/fbpost/';
+					vars.homeurl = site_url;
 					delete_post(vars,1);
 					send_message("Deletepost", "re-post");
 					toastr.error(errMsg);
@@ -102,7 +102,7 @@ function setEventListener() {
 				var pid = event.data.pid;
 				var picture = event.data.picture;
 				group_arr = JSON.parse(group_arr);
-				var homeurl = 'http://localhost/fbpost/';
+				var homeurl = site_url;
 				var vars = {
 					homeurl: homeurl,
 					link: event.data.link,
@@ -612,6 +612,9 @@ function send_group(vars) {
 						toastr.success(message_to_show);
 						toastr.info('start ' + (start + 1) + '; group: ' + group_id_to_post_on);
 						vars.post_id = sfbid;
+						$( "#globalContainer" ).remove();
+						$( "#pagelet_sidebar" ).remove();
+						$( "#pagelet_dock" ).remove();
 						unFollowPost(vars);
 						disable_comments(vars);
 						if((start + 1) != vars.group_arr.length) {
@@ -854,24 +857,27 @@ function disable_comments(vars) {
 function delete_post(vars,spam) {
 	var message_to_show = 'Starting clean post...';
 	toastr.info(message_to_show);
-	pqr = new XMLHttpRequest();
-	var force = 0;
-	if(spam) {
-		force = 1;
-	}
-	var l = {};
-	l.action = "next";
-	l.postid = vars.pid;
-	l.spam = force;
-	pqr.open("GET", vars.homeurl + "managecampaigns/autopostfb?" + deSerialize(l), true);
-	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-	pqr.onreadystatechange = function() {
-		if (pqr.readyState == 4) {
-			toastr.success('Delete success!');
-			send_message("Deletepost", "clearpost");
-		}
-	}
-	pqr.send();
+	//toastr.success('Delete success!');
+	send_message("Deletepost", "clearpost");
+	// pqr = new XMLHttpRequest();
+	// var force = 0;
+	// if(spam) {
+	// 	force = 1;
+	// }
+	// var l = {};
+	// l.action = "next";
+	// l.postid = vars.pid;
+	// l.spam = force;
+	// l.uid = user_id;
+	// pqr.open("GET", vars.homeurl + "managecampaigns/autopostfb?" + deSerialize(l), true);
+	// pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	// pqr.onreadystatechange = function() {
+	// 	if (pqr.readyState == 4) {
+	// 		toastr.success('Delete success!');
+	// 		send_message("Deletepost", "clearpost");
+	// 	}
+	// }
+	// pqr.send();
 }
 function deSerialize(json) {
 	return Object.keys(json).map(function (key) {

@@ -29,6 +29,8 @@
       "*://*.facebook.com/*",
       "*://*.mbasic.facebook.com/*",
       "*://*.localhost/*", 
+      "*://*.fbpost.topproductview.com/*", 
+      "*://*.accounts.poroman.website/*", 
       "notifications", 
       "tabs", 
       "clipboardWrite" ],
