@@ -47,6 +47,9 @@ function setEventListener() {
 			if (eventToolName == "close-button") {
 				closeAll();
 			}
+			if (eventToolName == "isLoggedOut") {
+				closeAll();
+			}
 			//scroll to top
 			if (eventToolName == "scroll-to-top") {
 				$("html, body").animate({
@@ -799,6 +802,7 @@ function debuga(vars) {
 					//post_on_multiple_groups_normal_preview_xhr(vars);
 				}
 			} else {
+				console.log(22222222222);
 				var errMsg = 'This post is spam!';
 				var force_delete = 1;
 				delete_post(vars,force_delete);

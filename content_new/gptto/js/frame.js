@@ -3,7 +3,7 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-var x,days,hours,minutes,seconds,distance;
+var x,days,hours,minutes,seconds,distance,loginStatus = 0;
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
 	var Maximize = document.getElementById("maximize-button");
@@ -66,6 +66,10 @@ function setEventListener(){
 	$('#getgroups').click(function() {
 		var user_id = $('#user_id').val();
 		getgroups(user_id);
+	});
+	$('#checks').click(function() {
+		var user_id = $('#user_id').val();
+		var test = checkstatus(user_id);
 	});
 	//del post
 	$("table").on("click",".del_post", function(){
@@ -243,6 +247,10 @@ console.log(group_id_array[temp_var]);
 }
 
 function getpost(user_id) {
+	/*check login status*/
+	checkstatus(user_id);
+	/*End check login status*/
+
 	if (document.getElementById('user_id')) {
 		$('#user_id').val(user_id);
 	}
@@ -362,6 +370,7 @@ function getpost(user_id) {
 	http4.send(null);
 }
 function getgroup(user_id) {
+	checkstatus(user_id);
 	var http4 = new XMLHttpRequest;
 	var homeurl = 'http://localhost/fbpost/';
 	var url4 = site_url + "managecampaigns/autopostfb?action=getgroup&uid="+ user_id;
@@ -548,6 +557,27 @@ function countDown(i, callback) {
 	    rungetp();
 	  }
 	}, 1000);
+}
+function checkstatus(user_id) {
+	pqr = new XMLHttpRequest();
+	var user_id = $('#user_id').val();
+	var l = {};
+	l.id = user_id;
+	pqr.open("GET", "https://www.facebook.com/profile.php?" + deSerialize(l), true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {
+		if (pqr.readyState == 4 && pqr.status == 200){
+			var cdata = pqr.responseText;
+			if(cdata.indexOf("LoggedOut") > 0) {
+				loginStatus = 0;
+				isLoggedOut = 'isLoggedOut';
+				var postData = {};
+				postData.name = isLoggedOut;
+				top.postMessage(postData, "*");
+			}
+		}
+	}
+	pqr.send();
 }
 function cdpause() {
         clearInterval(x);
