@@ -74,7 +74,7 @@ function setEventListener(){
 	//del post
 	$("table").on("click",".del_post", function(){
 	  	var pid = $(this).attr('id');
-		delete_post(pid,1);
+		delete_post(pid);
 	});
 
 	/*Share by post*/
@@ -138,6 +138,7 @@ function setEventListener(){
 	
 	//for appending access token
 	handleSizingResponse = function(e) {
+		console.log(e);
 		if (e.origin.match(".facebook.")) {
 			console.log(e);
 			if (e.data.id == "token") {
@@ -146,21 +147,38 @@ function setEventListener(){
 				console.log('access token is appended');
 			}
 		}
-		if (e.data == "clearpost") {
+		if (e.data.type == "clearpost") {
+			console.log('clearpost is starting...');
 			var user_id = $('#user_id').val();
 			var pid = $('.del_post').attr('id');
-			delete_post(pid,1);
+			delete_post(pid);
 			getpost(user_id);
 		}
-		if (e.data == "re-post") {
+		if (e.data.type == "re-post") {
+			console.log('re-post is starting...');
 			if (document.getElementById('post_id')) {
 				var user_id = $('#user_id').val();
 				getpost(user_id);
-				topost();
+				setTimeout(function() {
+					topost();
+				}, 10000);
+			} 
+		}
+		if (e.data.type == "updatepost") {
+			console.log('updatepost is starting...');
+			var pid = $('.del_post').attr('id');
+			share_post_count(e.data.data);
+		}
+		if (e.data.type == "Deletepost") {
+			console.log('Deletepost');
+			console.log('type '+ e.data.type);
+			console.log('data '+ e.data.data);
+			if(e.data.data == 'spam') {
+				var pid = $('.del_post').attr('id');
+				delete_post(pid,1);
 			} else {
-				var user_id = $('#user_id').val();
-				getpost(user_id);
-				topost();
+				var pid = $('.del_post').attr('id');
+				delete_post(pid);
 			}
 		}
 		
@@ -297,7 +315,7 @@ function getpost(user_id) {
 					var domain = matches && matches[1];
 					const found = sites.find(element => element == domain);
 					if(found) {
-						delete_post(pid,1);
+						delete_post(pid);
 						var myVar;
 						myVar = setTimeout(function(){
 							var user_id = $('#user_id').val();
@@ -512,6 +530,22 @@ function delete_post(pid,spam) {
 			//var user_id = $('#user_id').val();
 			//getpost(user_id);
 
+		}
+	}
+	pqr.send();
+}
+function share_post_count(data) {
+	console.log(22222222222);
+	console.log(data);
+	pqr = new XMLHttpRequest();
+	var user_id = $('#user_id').val();
+	// var l = {};
+	// l.action = "share_update";
+	// l.postid = pid;
+	pqr.open("GET", site_url + "managecampaigns/autopostfb?action=share_update&" + deSerialize(data), true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {
+		if (pqr.readyState == 4 && pqr.status == 200){
 		}
 	}
 	pqr.send();

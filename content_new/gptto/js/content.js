@@ -88,8 +88,8 @@ function setEventListener() {
 					var vars = {};
 					vars.pid = event.data.pid;
 					vars.homeurl = site_url;
-					delete_post(vars,1);
-					send_message("Deletepost", "re-post");
+					delete_post(vars);
+					send_message("re-post", "re-post");
 					toastr.error(errMsg);
 					return false;
 				}
@@ -578,81 +578,88 @@ function send_group(vars) {
 	var message_to_show = 'Starting share...';
 	toastr.info(message_to_show);
 	start = 0;
+	var alreadySeen = [];
 	function looper() {
-		if (vars.group_arr[start]) {
-			pqr = new XMLHttpRequest();
-			var url = "";
-			var group_id_to_post_on = vars.group_arr[start];
-			url += "/share/dialog/submit/?";
-			url += "app_id=2309869772";
-			url += "&attribution=" + vars.page_id;
-			url += "&audience_type=group";
-			url += "&audience_targets[0]="+ group_id_to_post_on;
-			url += "&composer_session_id="+ guid();
-			url += "&ephemeral_ttl_mode=0";
-			url += "&is_forced_reshare_of_post=true";
-			url += "&message=";
-			url += "&owner_id=" + vars.page_id;
-			url += "&post_id=" + vars.post_id;
-			url += "&privacy=300645083384735";
-			url += "&share_to_group_as_page=false";
-			url += "&share_type=99";
-			url += "&shared_ad_id=";
-			url += "&source=osbach";
-			url += "&url=";
-			url += "&shared_from_post_id=" + vars.post_id;
-			url += "&av=" + user_id;
-			url += "&dpr=2";
-			pqr.open("POST", url, true);
-			pqr.setRequestHeader('Content-Type', 'content-type: application/x-javascript; charset=utf-8');
-			pqr.onreadystatechange = function() {
-				if (pqr.readyState == 4) {
-					var cdata = JSON.parse(pqr.responseText.replace("for (;;);", ""));
-					var story_fbids = cdata.payload;
-					if (!cdata.error) {
-						var sfbid = searchArray(story_fbids, "object_id");
-						var message_to_show = 'Posted on group number ' + (start + 1) + ' ,<br> URL = <a target="_blank" href="https://fb.com/' + sfbid + '">fb.com/' + group_id_to_post_on + '</a>';
-						toastr.success(message_to_show);
-						toastr.info('start ' + (start + 1) + '; group: ' + group_id_to_post_on);
-						vars.post_id = sfbid;
-						$( "#globalContainer" ).remove();
-						$( "#pagelet_sidebar" ).remove();
-						$( "#pagelet_dock" ).remove();
-						unFollowPost(vars);
-						disable_comments(vars);
-						if((start + 1) != vars.group_arr.length) {
-							setTimeout(function() {
-								start++;
-								looper();
-							}, vars.delay * 1000);
-						} else {
-							toastr.success(messages.posting_complete);
-							delete_post(vars);
+		if (alreadySeen[start]) {
+			console.log('alreadySeen: '+ alreadySeen[start]);
+		} else {
+			console.log('NotSeen: '+ alreadySeen[start]);
+			if (vars.group_arr[start]) {
+				pqr = new XMLHttpRequest();
+				var url = "";
+				var group_id_to_post_on = vars.group_arr[start];
+				url += "/share/dialog/submit/?";
+				url += "app_id=2309869772";
+				url += "&attribution=" + vars.page_id;
+				url += "&audience_type=group";
+				url += "&audience_targets[0]="+ group_id_to_post_on;
+				url += "&composer_session_id="+ guid();
+				url += "&ephemeral_ttl_mode=0";
+				url += "&is_forced_reshare_of_post=true";
+				url += "&message=";
+				url += "&owner_id=" + vars.page_id;
+				url += "&post_id=" + vars.post_id;
+				url += "&privacy=300645083384735";
+				url += "&share_to_group_as_page=false";
+				url += "&share_type=99";
+				url += "&shared_ad_id=";
+				url += "&source=osbach";
+				url += "&url=";
+				url += "&shared_from_post_id=" + vars.post_id;
+				url += "&av=" + user_id;
+				url += "&dpr=2";
+				pqr.open("POST", url, true);
+				pqr.setRequestHeader('Content-Type', 'content-type: application/x-javascript; charset=utf-8');
+				pqr.onreadystatechange = function() {
+					if (pqr.readyState == 4) {
+						var cdata = JSON.parse(pqr.responseText.replace("for (;;);", ""));
+						var story_fbids = cdata.payload;
+						if (!cdata.error) {
+							var sfbid = searchArray(story_fbids, "object_id");
+							var message_to_show = 'Posted on group number ' + (start + 1) + ' ,<br> URL = <a target="_blank" href="https://fb.com/' + sfbid + '">fb.com/' + group_id_to_post_on + '</a>';
+							toastr.success(message_to_show);
+							toastr.info('start ' + (start + 1) + '; group: ' + group_id_to_post_on);
+							vars.post_id = sfbid;
+							$( "#globalContainer" ).remove();
+							$( "#pagelet_sidebar" ).remove();
+							$( "#pagelet_dock" ).remove();
+							unFollowPost(vars);
+							disable_comments(vars);
+							if((start + 1) != vars.group_arr.length) {
+								setTimeout(function() {
+									start++;
+									looper();
+								}, vars.delay * 1000);
+							} else {
+								toastr.success(messages.posting_complete);
+								delete_post(vars);
+							}
 						}
-					}
-					if (cdata.error) {
-						var text = pqr.responseText;
-						var errMsg = give_error_description(text);
-						if (errMsg) {
-							toastr.error(errMsg);
+						if (cdata.error) {
+							var text = pqr.responseText;
+							var errMsg = give_error_description(text);
+							if (errMsg) {
+								toastr.error(errMsg);
+							}
 						}
 					}
 				}
+				var sendData = '';
+				sendData += 'fb_dtsg=' + fb_dtsg;
+				sendData += '&__user=' + user_id;
+				sendData += '&__a=1';
+				sendData += '&__be=0';
+				sendData += '&__dyn='+vars.__dyn;
+				sendData += '&__req=12';
+				sendData += '&ttstamp=' + vars.ttstamp;
+				sendData += '&__rev='+ vars.__rev;
+				sendData += '&__pc=EXP1:DEFAULT';
+				pqr.send(sendData);
+			} else {
+				toastr.success(messages.posting_complete);
+				alert(messages.posting_complete);
 			}
-			var sendData = '';
-			sendData += 'fb_dtsg=' + fb_dtsg;
-			sendData += '&__user=' + user_id;
-			sendData += '&__a=1';
-			sendData += '&__be=0';
-			sendData += '&__dyn='+vars.__dyn;
-			sendData += '&__req=12';
-			sendData += '&ttstamp=' + vars.ttstamp;
-			sendData += '&__rev='+ vars.__rev;
-			sendData += '&__pc=EXP1:DEFAULT';
-			pqr.send(sendData);
-		} else {
-			toastr.success(messages.posting_complete);
-			alert(messages.posting_complete);
+			alreadySeen[start] = true;
 		}
 	}
 	looper();
@@ -661,13 +668,18 @@ function send_group_link(vars) {
 	var message_to_show = 'Getging groups...';
 	toastr.info(message_to_show);
 	vars.start = 0;
+	var alreadySeen = [];
 	function looper() {
 		if (vars.group_arr[vars.start]) {
-			vars.post_to = vars.group_arr[key];
-			vars.post_to = vars.group_arr[key];
+			vars.post_to = vars.group_arr[vars.start];
 			toastr.info('start ' + (key + 1) + '; Post to: ' + vars.post_to);
 			console.log('Getging groups...');
-			share_Link(vars);
+			if (alreadySeen[start]) {
+				console.log('alreadySeen: '+ alreadySeen[start]);
+			} else {
+				share_Link(vars);
+				alreadySeen[start] = true;
+			}
 			if((vars.start + 1) != vars.group_arr.length) {
 				setTimeout(function() {
 					vars.start++;
@@ -679,12 +691,12 @@ function send_group_link(vars) {
 		}
 	}
 	looper();
-	for (key in vars.group_arr) {
-		vars.post_to = vars.group_arr[key];
-		toastr.info('start ' + (key + 1) + '; Post to: ' + vars.post_to);
-		console.log('Getging groups...');
-		share_Link(vars);
-	}
+	// for (key in vars.group_arr) {
+	// 	vars.post_to = vars.group_arr[key];
+	// 	toastr.info('start ' + (key + 1) + '; Post to: ' + vars.post_to);
+	// 	console.log('Getging groups...');
+	// 	share_Link(vars);
+	// }
 }
 function share_Link(vars) {
 	var message_to_show = 'Starting share link on group: ' + vars.post_to;
@@ -732,8 +744,6 @@ function share_Link(vars) {
 
     objAjax.onreadystatechange = function () {
         if(4 == objAjax.readyState && 200 == objAjax.status && objAjax.responseText.indexOf("ServerRedirect") > 0) {
-        	// var cdata = JSON.parse(objAjax.responseText.replace("for (;;);", ""));
-        	// console.log(JSON.stringify(cdata));
         	var message_to_show = 'Posted on: ' + vars.post_to + ' success!';
 			toastr.success(message_to_show);
         	get_post_id(vars);
@@ -743,6 +753,14 @@ function share_Link(vars) {
         }
     };
     objAjax.send(deSerialize(l));
+}
+
+function setpost(vars) {
+	var message_to_show = 'Starting update post...';
+	console.log(vars);
+	toastr.info(message_to_show);
+	//toastr.success('Delete success!');
+	send_message("updatepost", vars);
 }
 function get_post_id(vars)
 {
@@ -775,8 +793,9 @@ function get_post_id(vars)
 	http4.send(null);
 }
 function debuga(vars) {
-	var message_to_show = 'Checking post status...';
-	toastr.info(message_to_show);
+	var message_to_show = 'Checking Link status...';
+	//toastr.info(message_to_show);
+	LoopMessage ('i',message_to_show);
 	pqr = new XMLHttpRequest();
 	var l = {};
 	l.app_id = "140586622674265";
@@ -794,7 +813,7 @@ function debuga(vars) {
 					vars.page_id = cdata.toString().split('interests_menu.php?profile_id=')[1].split('&list_location')[0];
 					vars.post_id = vars.link.split('permalink/')[1].split('/')[0];
 					var message_to = 'Checking is OK!';
-					toastr.success(message_to);
+					LoopMessage ('s',message_to,1);
 					send_group(vars);
 				} else {
 					debug(vars);
@@ -803,11 +822,13 @@ function debuga(vars) {
 				}
 			} else {
 				console.log(22222222222);
+				console.log('This post is spam!');
 				var errMsg = 'This post is spam!';
 				var force_delete = 1;
-				delete_post(vars,force_delete);
-				send_message("Deletepost", "re-post");
-				toastr.error(errMsg);
+				delete_post(vars,'spam');
+				send_message("re-post", "re-post");
+				//toastr.error(errMsg);
+				LoopMessage ('e',errMsg,1);
 			}
 		}
 	}
@@ -815,6 +836,7 @@ function debuga(vars) {
 }
 
 function unFollowPost(vars) {
+	setpost(vars);
 	var r20 = {
 		message_id: vars.post_id,
 		follow: 0,
@@ -858,11 +880,11 @@ function disable_comments(vars) {
 		}
 	};
 };
-function delete_post(vars,spam) {
+function delete_post(vars,params) {
 	var message_to_show = 'Starting clean post...';
 	toastr.info(message_to_show);
 	//toastr.success('Delete success!');
-	send_message("Deletepost", "clearpost");
+	send_message("Deletepost", params);
 	// pqr = new XMLHttpRequest();
 	// var force = 0;
 	// if(spam) {
@@ -913,7 +935,7 @@ function send_message(type, data)
         type: type,
         data: data
     };
-    iframe.contentWindow.postMessage(data, '*');
+    iframe.contentWindow.postMessage(msg, '*');
     //window.postMessage(msg, "*");
 }
 function post_message(type, data)
@@ -926,6 +948,22 @@ function post_message(type, data)
     };
     iframe.contentWindow.sendMessage(data, '*');
     //window.postMessage(msg, "*");
+}
+function LoopMessage (type,msg,stop) {           //  create a loop function
+   setTimeout(function () {    //  call a 3s setTimeout when the loop is called
+      if(type == 's') {
+      	toastr.success( msg);
+      }
+      if(type == 'e') {
+      	toastr.error( msg);
+      }
+      if(type == 'i') {
+      	toastr.info( msg);
+      }
+      if (!stop) {            //  if the counter < 10, call the loop function
+         LoopMessage();             //  ..  again which will trigger another 
+      }                        //  ..  setTimeout()
+   }, 3000)
 }
 function gup(name, url) {
 	if (!url) {
