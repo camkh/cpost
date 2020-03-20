@@ -496,13 +496,13 @@ function checkpost() {
 	}
 }
 function rungetp () {
-	if (document.getElementById('post_id')) {
-		topost();
-	} else {
-		var user_id = $('#user_id').val();
-		getpost(user_id);
-		topost();
-	}
+	var user_id = $('#user_id').val();
+	/*check login status*/
+	checkstatus(user_id);
+	/*End check login status*/
+	
+	getpost(user_id);
+	topost();
 }
 function randomInt(min, max) { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min);
