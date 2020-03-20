@@ -170,6 +170,7 @@ function setEventListener(){
 			share_post_count(e.data.data);
 		}
 		if (e.data.type == "Deletepost") {
+			var user_id = $('#user_id').val();
 			console.log('Deletepost');
 			console.log('type '+ e.data.type);
 			console.log('data '+ e.data.data);
@@ -180,6 +181,7 @@ function setEventListener(){
 				var pid = $('.del_post').attr('id');
 				delete_post(pid);
 			}
+			getpost(user_id);
 		}
 		
 	}
