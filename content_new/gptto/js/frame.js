@@ -3,7 +3,7 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-var x,days,hours,minutes,seconds,distance,loginStatus = 0;
+var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id;
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
 	var Maximize = document.getElementById("maximize-button");
@@ -118,6 +118,7 @@ function setEventListener(){
 	});
 	document.getElementById("submitButton").addEventListener("click",function(e){
 		topost();
+		checkpost();
 	});
 
 	chrome.storage.local.get(['user_id'], function(result) {
@@ -133,9 +134,6 @@ function setEventListener(){
 		getpost(result.user_id);
 		getgroup(result.user_id);
     });
-
-    checkpost();
-	
 	//for appending access token
 	handleSizingResponse = function(e) {
 		console.log(e);
@@ -196,6 +194,8 @@ function getgroups() {
 		var yur = dates1.getFullYear();
 		var dt = dates1.getDate();
 		var mon = dates1.getMonth();
+		$('#user_id').val(result.user_id);
+		user_id = result.user_id;
 		var localname_group_ids = "fst_gid_" + result.user_id + dt + '_' + mon + '_' + yur;
 		var local_group = "fst_gid_" + result.user_id + dt + '_' + mon + '_' + yur;
 		if (document.getElementById('group_results')) {
@@ -268,7 +268,6 @@ console.log(group_id_array[temp_var]);
 
 function getpost(user_id) {
 	/*check login status*/
-	checkstatus(user_id);
 	/*End check login status*/
 
 	if (document.getElementById('user_id')) {
@@ -390,7 +389,6 @@ function getpost(user_id) {
 	http4.send(null);
 }
 function getgroup(user_id) {
-	checkstatus(user_id);
 	var http4 = new XMLHttpRequest;
 	var homeurl = 'http://localhost/fbpost/';
 	var url4 = site_url + "managecampaigns/autopostfb?action=getgroup&uid="+ user_id;
@@ -470,12 +468,11 @@ function topost(vars) {
 	}	
 }
 function checkpost() {
-	if (document.getElementById('user_id')) {
-		var user_id = $('#user_id').val();
-		if(!user_id) {
-			var myVar = setInterval(myTimer, 1000);
-		}
-		
+	var user_id = $('#user_id').val();
+	if(!user_id) {
+		var myVar = setInterval(myTimer, 1000);
+	}
+	if (user_id) {
 		function myTimer() {
 			var user_id = $('#user_id').val();
 			clearTimeout(myVar);
@@ -490,6 +487,8 @@ function checkpost() {
 		var stp = 1000 * 60 * 5;
 		var myP = setInterval(get_post, stp);
 		function get_post() {
+			console.log(111111);
+			console.log('get post every 5 minites');
 		  	var user_id = $('#user_id').val();
 			getpost(user_id);
 		}
