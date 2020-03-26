@@ -50,6 +50,9 @@ function setEventListener() {
 			if (eventToolName == "isLoggedOut") {
 				closeAll();
 			}
+			if (eventToolName == "post_complete") {
+				toastr.success(messages.posting_complete);
+			}
 			//scroll to top
 			if (eventToolName == "scroll-to-top") {
 				$("html, body").animate({
@@ -82,6 +85,7 @@ function setEventListener() {
 			}
 			//for inviting friends to like a page
 			if (eventToolName == "post") {
+				console.log('start to post');
 				if(event.data.link.indexOf("youtube") > 0) {
 					var errMsg = 'This post is youtube link!';
 					var force_delete = 1;
@@ -628,11 +632,11 @@ function send_group(vars) {
 							if((start + 1) != vars.group_arr.length) {
 								setTimeout(function() {
 									start++;
-									looper();
+									//looper();
 								}, vars.delay * 1000);
 							} else {
-								toastr.success(messages.posting_complete);
-								delete_post(vars);
+								// toastr.success(messages.posting_complete);
+								// delete_post(vars);
 							}
 						}
 						if (cdata.error) {

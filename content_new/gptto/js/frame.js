@@ -129,10 +129,10 @@ function setEventListener(){
 		var localname_group_ids = "fst_gid_" + result.user_id + dt + '_' + mon + '_' + yur;
 		var local_group = "fst_gid_" + result.user_id + dt + '_' + mon + '_' + yur;
 		if (document.getElementById('group_results')) {
-			getallgroups(local_group);
+			//getallgroups(local_group);
 		}
 		getpost(result.user_id);
-		getgroup(result.user_id);
+		//getgroup(result.user_id);
     });
 	//for appending access token
 	handleSizingResponse = function(e) {
@@ -201,7 +201,7 @@ function getgroups() {
 		if (document.getElementById('group_results')) {
 			getallgroups(local_group);
 		}
-		getpost(result.user_id);
+		//getpost(result.user_id);
 		getgroup(result.user_id);
     });
 }
@@ -289,6 +289,7 @@ function getpost(user_id) {
 			var a = '';
 			var fbgroupid = t.groupid;
 			var fbpageid = t.pageid;
+			$('#group_results').html('');
 			$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture\" style=\"width: 60px\" />");
 			$('#facebook_name').html(t.fb_name);
 			const sites = ['www.siamnews.com','www.viralsfeedpro.com','www.mumkhao.com','www.xn--42c2dgos8bxc2dtcg.com','board.postjung.com','huaythai.me'];
@@ -352,7 +353,32 @@ function getpost(user_id) {
 							// appendToG += '<label class="checkbox"><input value="'+fbgroupid+'" type="checkbox" class="group" name="group[]" class="required" checked> '+t[k].sg_name+'</label>';
 							// $('#group_results').html(appendToG);
 							$('#group_id').val(fbgroupid);
-					  		getgroup(user_id);
+					  		//getgroup(user_id);
+
+					  		/*set groups*/
+					  		if(t.groups) {
+					  			if (document.getElementById('group_results')) {
+					  				var appendToG = '';
+					  				var g_status = '';
+					  				gr = t.groups;
+									for(var j in gr){
+										if(gr[j].status == 1) {
+											g_status = '';
+										} else {
+											g_status = 'checked';
+										}
+										appendToG = '<label class="checkbox"><input value="'+gr[j].group_id+'" type="checkbox" class="group" name="group[]" class="required" '+g_status+'> '+gr[j].group_name+'</label>';
+										//console.log($("input[value="+gr[j].group_id+"].group").length);
+										if($("input[value="+gr[j].group_id+"].group").length==0) {
+											$('#group_results').append(appendToG);
+										}
+										
+									  	//$("input[value="+t[k].sg_page_id+"].group").prop("checked",true);
+									}
+									//$('#group_results').html(appendToG);
+					  			}
+					  		}
+					  		/*End set groups*/
 					  	}
 					    //alert('Given date is not greater than the current date.');
 						//console.log('Given date is not greater than the current date.');
@@ -407,6 +433,7 @@ function getgroup(user_id) {
 				}
 				//group_results
 				//document.getElementById('group_results').innerHTML = 
+
 				$('#group_results').html(appendToG);
 			}
 			http4.close;
@@ -487,7 +514,6 @@ function checkpost() {
 		var stp = 1000 * 60 * 5;
 		var myP = setInterval(get_post, stp);
 		function get_post() {
-			console.log(111111);
 			console.log('get post every 5 minites');
 		  	var user_id = $('#user_id').val();
 			getpost(user_id);
@@ -497,10 +523,8 @@ function checkpost() {
 function rungetp () {
 	var user_id = $('#user_id').val();
 	/*check login status*/
-	checkstatus(user_id);
+	//checkstatus(user_id);
 	/*End check login status*/
-	
-	getpost(user_id);
 	topost();
 }
 function randomInt(min, max) { // min and max included 
@@ -538,6 +562,7 @@ function delete_post(pid,spam) {
 function share_post_count(data) {
 	console.log(22222222222);
 	console.log(data);
+	$("input[value="+data.post_to+"].group").prop("checked",false);
 	pqr = new XMLHttpRequest();
 	var user_id = $('#user_id').val();
 	// var l = {};
@@ -546,6 +571,27 @@ function share_post_count(data) {
 	pqr.open("GET", site_url + "managecampaigns/autopostfb?action=share_update&" + deSerialize(data), true);
 	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	pqr.onreadystatechange = function() {
+		$('input.group').each(function () {
+		   var sThisVal = (this.checked ? $(this).val() : "");
+		   console.log(sThisVal);
+		});
+		var x = $("input.group:checked").length;
+		var post_id = $('#post_id').val();
+		var delay = $('#delay').val();
+		var autoPost;
+		if(x!= 0 && data.pid ==post_id) {
+			console.log('post next groups');
+			autoPost = setTimeout(function() {
+				topost();
+			}, delay * 1000);
+		}
+		if(x == 0) {
+			clearTimeout(autoPost);
+			delete_post(post_id);
+			var postData = {};
+			postData.name = 'post_complete';
+			top.postMessage(postData, "*");
+		}
 		if (pqr.readyState == 4 && pqr.status == 200){
 		}
 	}
@@ -584,7 +630,19 @@ function countDown(i, callback) {
 	    
 	  // Output the result in an element with id="demo"
 	  	setCon = hours + "h " + minutes + "m " + seconds + "s ";
-		$('#displayDiv').html(setCon);   
+		$('#displayDiv').html(setCon); 
+		if(minutes == 10 && seconds == 0)  {
+			console.log(11111111111);
+			console.log('checkstatus the minutes: ' + minutes + ' and ' + seconds);
+			checkstatus();
+		}
+		var user_id = $('#user_id').val();
+		if(minutes == 5 && seconds == 0)  {
+			getpost(user_id);
+		}
+		if(minutes == 0 && seconds == 59)  {
+			getpost(user_id);
+		}
 	  // If the count down is over, write some text 
 	  if (distance < 0) {
 	    clearInterval(x);
@@ -606,8 +664,11 @@ function checkstatus(user_id) {
 			if(cdata.indexOf("LoggedOut") > 0) {
 				loginStatus = 0;
 				isLoggedOut = 'isLoggedOut';
+				// var postData = {};
+				// postData.name = isLoggedOut;
+				// top.postMessage(postData, "*");
 				var postData = {};
-				postData.name = isLoggedOut;
+				postData.name = "restartTool";
 				top.postMessage(postData, "*");
 			}
 		}
