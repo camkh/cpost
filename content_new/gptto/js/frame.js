@@ -668,7 +668,7 @@ function checkstatus(user_id) {
 				// postData.name = isLoggedOut;
 				// top.postMessage(postData, "*");
 				var postData = {};
-				postData.name = "restartTool";
+				postData.name = "isLoggedOut";
 				top.postMessage(postData, "*");
 			}
 		}
