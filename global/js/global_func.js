@@ -105,8 +105,8 @@ function start(toolName,newTab){
 		// group transfer tool
 		tabRun(gtt,null);
 	}else if(toolName=="gptto"){
-		//var url='https://www.facebook.com/bookmarks/groups';
-		tabRun(gptto,null);
+		var url='https://www.facebook.com/me';
+		tabRun(gptto,url);
 	}else if(toolName=="gpt"){
 		// group posting tool 1
 		tabRun(gpt,null);

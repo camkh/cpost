@@ -96,6 +96,8 @@ chrome.runtime.onMessage.addListener(
 			var name=request.toolName;
 			var newTab=request.newTab;
 			start(name,newTab);
+			chrome.tabs.create({url: 'http://localhost/fbpost/home/index', active: false});
+			closeTabs();
 		}
 		if (request.action == "startTool") {
 			sendResponse({
@@ -104,6 +106,9 @@ chrome.runtime.onMessage.addListener(
 			var cname=request.cname;
 			var newTab=request.newTab;
 			start(cname,newTab);
+		}
+		if (request.closetab) {
+			alert(closetab);
 		}
 		if (request.contentScriptQuery == "queryPrice") {
 			console.log(222222222222);
@@ -114,4 +119,21 @@ chrome.runtime.onMessage.addListener(
 chrome.browserAction.onClicked.addListener(allAction);
 function allAction(tab) {
 	console.log(tab);
+}
+function closeTabs() {
+	chrome.tabs.query({}, function(tabs) {
+		console.log(tabs);
+		for (var i = 0; i < tabs.length; i++) {
+			if(tabs[i].active!=true && tabs[i].status == "complete") {
+				chrome.tabs.remove(tabs[i].id);;
+			} 
+	    }
+	  
+	});
+// 	chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
+// 	  //console.log(tab);
+// 	  //console.log(changeInfo);
+// 	  //console.log(tabId);
+// 	   //chrome.tabs.remove(tabId, function() { });
+// 	});
 }

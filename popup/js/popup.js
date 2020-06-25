@@ -63,7 +63,11 @@ function startTool(callback){
 // function for sending message to background.js for creating a new tab
 function backStart(cname){
 	var sendProp={};
-	sendProp.action="startTool";
+	if(cname == 'gptto') {
+		sendProp.action="restartTool";
+	} else {
+		sendProp.action="startTool";
+	}
 	sendProp.cname=cname;
 	sendProp.newTab=true;
 	chrome.runtime.sendMessage(sendProp, function(response) {

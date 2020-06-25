@@ -4,6 +4,7 @@
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
 var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id;
+timeToPosts();
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
 	var Maximize = document.getElementById("maximize-button");
@@ -596,6 +597,11 @@ function share_post_count(data) {
 		}
 	}
 	pqr.send();
+}
+function timeToPosts() {
+	setTimeout(function(){
+		rungetp();
+	}, 30000);
 }
 function countDown(i, callback) {
 	/*set date time posted*/

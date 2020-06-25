@@ -5,16 +5,28 @@
  * */
 check();
 function start(){
-	buildToolbox();
-	start_extract_group_ids();
-	// if(!document.location.pathname.match("\/bookmarks\/groups")){
-	// 	restartTool();
-	// }else{
-	// 	buildToolbox();
-	// 	start_extract_group_ids();
-	// 	//$( "#globalContainer" ).remove();
-	// 	//getallgroups();
-	// }
+	// b   _extract_group_ids();
+	// chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
+	// 	var messageContent = {
+	// 		closetab: tabId,
+	// 	}
+	// 	chrome.runtime.sendMessage(messageContent, function(response) {
+	// 		console.log(response.farewell);
+	// 	});
+	//   //console.log(tab);
+	//   //console.log(changeInfo);
+	//   //console.log(tabId);
+	//    //chrome.tabs.remove(tabId, function() { });
+	// });
+	if(window.location.href == 'https://www.facebook.com/'){
+		restartTool();
+	}else{
+		buildToolbox();
+		start_extract_group_ids();
+		//$( "#globalContainer" ).remove();
+		//getallgroups();
+	}
+	TimeToRestart();
 }
 function resizeFrame() {
 	var newClassName = document.getElementById(targetDivId).getAttribute("class");
@@ -985,6 +997,20 @@ function guid() {
 	};
 	return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
+function TimeToRestart() {
+	/*set date time posted*/
+	x = setInterval(function() {
+		var today = new Date();
+		var hous = today.getHours();
+		var minutes = today.getMinutes();
+		var seconds = today.getSeconds();
+		console.log(hous + ':' + minutes + ':' + seconds);
+		if(hous == 4 && minutes == 29 && seconds == 0)  {
+			restartTool();
+		}
+	}, 1000);
+}
+
 function get_dyn() {
 	function format() {
 		$BitMap1 = [];
