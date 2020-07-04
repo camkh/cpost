@@ -300,12 +300,12 @@ function getpost(user_id) {
 				  	var sTitle = t.post[k].p_name.trim();
 				  	var preTitle = '';
 				  	if(t.preTitle[k]) {
-				  		preTitle = t.preTitle[k].trim() + "\n";
+				  		preTitle = t.preTitle[k].trim().replace(new RegExp('\n','g'), '\n') + "\n";
 				  	}
 				  	var subTitle = '';
 				  	if(t.subTitle[k]) {
 				  		sTitle = sTitle + "\n";
-				  		subTitle = t.subTitle[k].trim();
+				  		subTitle = t.subTitle[k].trim().replace(new RegExp('\n','g'), '\n');
 				  	} 
 				  	var p_name = preTitle + sTitle + subTitle;
 				  	var p_date = t.post[k].p_date;
