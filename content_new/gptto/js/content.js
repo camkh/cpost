@@ -18,7 +18,7 @@ function start(){
 	//   //console.log(tabId);
 	//    //chrome.tabs.remove(tabId, function() { });
 	// });
-	if(window.location.href == 'https://www.facebook.com/'){
+	if(window.location.href == 'https://www.facebook.com/' || window.location.href == 'https://web.facebook.com/' || window.location.href == 'https://web.facebook.com/?ref=tn_tnmn' || window.location.href == 'https://www.facebook.com/?ref=tn_tnmn'){
 		restartTool();
 	}else{
 		buildToolbox();
