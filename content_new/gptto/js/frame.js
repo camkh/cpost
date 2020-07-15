@@ -305,7 +305,7 @@ function getpost(user_id) {
 				  	var subTitle = '';
 				  	if(t.subTitle[k]) {
 				  		sTitle = sTitle + "\n";
-				  		subTitle = t.subTitle[k].trim().replace(new RegExp('\n','g'), '\n');
+				  		subTitle = t.subTitle[k].trim().replace(new RegExp('\n','g'), '\n').replace(/<br\s*[\/]?>/gi, '\n');
 				  	} 
 				  	var p_name = preTitle + sTitle + subTitle;
 				  	var p_date = t.post[k].p_date;
