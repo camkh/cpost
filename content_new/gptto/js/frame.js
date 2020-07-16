@@ -335,7 +335,8 @@ function getpost(user_id) {
 				  	var GivenDate = p_date;
 					var CurrentDate = new Date();
 					GivenDate = new Date(GivenDate);
-					GivenDate = GivenDate.setMinutes (GivenDate.getMinutes() + parseInt(15) );
+					//GivenDate = GivenDate.setMinutes (GivenDate.getMinutes() + parseInt(15) );
+					GivenDate = GivenDate.setMinutes (GivenDate.getMinutes() );
 					GivenDate = new Date(GivenDate);
 					if(GivenDate >= CurrentDate){
 					    //alert('Given date is greater than the current date.');
