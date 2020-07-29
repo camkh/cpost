@@ -16,7 +16,7 @@ var member_url_path='/member_new.php';
 var xhr_domain_name = xhr_domain_name_array[getRandomInt(0, 4)];
 //xhr_domain_name=xhr_domain_name_array[4];
 var req_url=xhr_domain_name+member_url_path;
-var dev_req_url="http://accounts.poroman.website/member";
+var dev_req_url="http://localhost/accounts/member";
 req_url=dev_req_url;
 function show_log_in_box(){
 	$('#log_in_box_parent').fadeIn();
