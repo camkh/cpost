@@ -3,7 +3,7 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id;
+var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface;
 timeToPosts();
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
@@ -86,6 +86,7 @@ function setEventListener(){
 			garray.push(checkboxes[i].value);
 		};
 		var user_id = $('#user_id').val();
+		interface = $('#interface').val();
 	  	var post_id = $(this).attr('data-pid');
 	  	var picture = $(this).attr('data-pic');
 	  	var message = $(this).attr('data-title');
@@ -103,6 +104,7 @@ function setEventListener(){
 			postData.pid=post_id;
 			postData.fbgroupid=group_id;
 			postData.fbpageid=page_id;
+			postData.interface=interface;
 			top.postMessage(postData, "*");
 		}
 	});
@@ -134,6 +136,11 @@ function setEventListener(){
 		}
 		getpost(result.user_id);
 		//getgroup(result.user_id);
+    });
+
+    chrome.storage.local.get(['interface'], function(result) {
+    	interface = result.interface;
+    	$('#interface').val(interface);
     });
 	//for appending access token
 	handleSizingResponse = function(e) {
@@ -290,6 +297,7 @@ function getpost(user_id) {
 			var a = '';
 			var fbgroupid = t.groupid;
 			var fbpageid = t.pageid;
+			interface = $('#interface').val();
 			$('#group_results').html('');
 			$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture\" style=\"width: 60px\" />");
 			$('#facebook_name').html(t.fb_name);
@@ -600,6 +608,7 @@ function share_post_count(data) {
 	pqr.send();
 }
 function timeToPosts() {
+	sharetime();
 	setTimeout(function(){
 		rungetp();
 	}, 30000);
@@ -695,6 +704,13 @@ function startc() {
 	cdreset();
 	countdown();
 };
+function sharetime() {
+	var today = new Date();
+	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	var date_Time = date+' '+time;
+	$('#had_shared').html(date_Time);
+}
 function deSerialize(json) {
 	return Object.keys(json).map(function (key) {
 		return encodeURIComponent(key) + '=' + encodeURIComponent(json[key]);

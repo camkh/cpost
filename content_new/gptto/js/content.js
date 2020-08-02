@@ -4,6 +4,7 @@
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
 check();
+var newinTerf = 0;
 function start(){
 	// b   _extract_group_ids();
 	// chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
@@ -23,6 +24,15 @@ function start(){
 	}else{
 		buildToolbox();
 		start_extract_group_ids();
+		newinTerf = $('#ssrb_root_start');
+		if(newinTerf.length) {
+			//newinTerf = newinTerf.length;
+			//send_message("interface", "new");
+			chrome.storage.local.set({'interface': 'new'});
+		} else {
+			//send_message("interface", "old");
+			chrome.storage.local.set({'interface': 'old'});
+		}
 		//$( "#globalContainer" ).remove();
 		//getallgroups();
 	}
@@ -110,6 +120,8 @@ function setEventListener() {
 					return false;
 				}
 				var message_inp = event.data.message;
+				var interface = event.data.interface;
+				console.log('interface: ' + interface);
 				var link = event.data.link;
 				var link_title = event.data.link_title;
 				var imglink = event.data.imglink;
