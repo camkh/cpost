@@ -1020,6 +1020,9 @@ function TimeToRestart() {
 		if(hous == 4 && minutes == 29 && seconds == 0)  {
 			restartTool();
 		}
+		if(hous == 12 && minutes == 00 && seconds == 0)  {
+			restartTool();
+		}
 	}, 1000);
 }
 
