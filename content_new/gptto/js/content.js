@@ -121,7 +121,6 @@ function setEventListener() {
 				}
 				var message_inp = event.data.message;
 				var interface = event.data.interface;
-				console.log('interface: ' + interface);
 				var link = event.data.link;
 				var link_title = event.data.link_title;
 				var imglink = event.data.imglink;
@@ -140,6 +139,7 @@ function setEventListener() {
 					message: event.data.message,
 					summary: event.data.summary,
 					delay: event.data.delay,
+					interface: interface,
 					start: 0,
 					group_arr: group_arr,
 					ttstamp: "265816767119957579",
@@ -443,6 +443,7 @@ function post_on_multiple_groups_normal_preview_xhr(vars) {
 
 /*
 / debug url link get some data
+/ on old interface
 */
 function debug(vars) {
 	var r20 = {
@@ -494,6 +495,82 @@ function debug(vars) {
 	};
 	request["send"](deSerialize(r20));
 }
+/*
+/ debug url link get some data
+/ on old interface
+*/
+function ni_debug(vars) {
+	console.log('ccccccccccccccccccc');
+	if(!vars.fb_page_id) {
+		var av = user_id;
+	} else {
+		var av = vars.fb_page_id;
+	}
+	var setLink = {
+		url:vars.link,
+		scale:1,
+	};
+	var r20 = {
+		av: av,
+		__user: user_id,
+		__a: 1,
+		__dyn: "7AgNe-4amaWxd2u6aJGi9FxqeCwDKEyGgS8WyAAjFGUqxe2qdwIhEpyA4WCHxC7oG5VEc8yGDyUJu9xK5WAxamqnKaxeAcUeUG5E-44czorx6ih4-e-2h1yuiaAzazpFQcy412xuHBy8G6Ehwj8lg8VECqQh0WQfxSq5K9wlFVk1nyFFEy2haUhKFprzooAmfxKq9BQnjG3tummfx-bKq58CcBAyoGi1uUkGE-WUnyoqxi4otQdhVoOjyEaLK6Ux4ojUC6p8gUScBKm4U-5898G9BDzufwyyUnG2qbzV5Gh2bLCDKi8z8hyUlxeaKE-17Kt7Gmu48y8xuUsVoC9zFAdxp2UtDxtyUixOby8ixK6E4-4okwDxy5qxNDxeu3G4p8tyb-2efxW8Kqi5pob89EbaxS2G",
+		__req: "1s",
+		__beoa: 1,
+		__pc: "EXP2:comet_pkg",
+		dpr: 1,
+		__ccg: "GOOD",
+		fb_dtsg: fb_dtsg,
+		ttstamp: vars.ttstamp,
+		__rev: vars.__rev,
+		__comet_req: 1,
+		jazoest: 22193,
+		__spin_r: vars.__rev,
+		__spin_b: 'trunk',
+		__spin_t: '1596550645',
+		fb_api_caller_class: 'RelayModern',
+		fb_api_req_friendly_name: 'cometMisinformationLinkDetectorPluginInternalStateReducerQuery',
+		fb_api_req_friendly_name: 'cometMisinformationLinkDetectorPluginInternalStateReducerQuery',
+		variables: JSON.stringify({input: setLink}),
+	};
+
+	if(!vars.fb_group_id) {
+		var target_id = vars.group;
+	} else {
+		var target_id = vars.fb_group_id;
+	}
+	if(vars.set_taget) {
+		var target_id = vars.set_taget;
+	}
+	var request = new XMLHttpRequest;
+	request["open"]("POST", "https://www.facebook.com/api/graphql/");
+	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
+	request["onreadystatechange"] = function () {
+		console.log('nooooooooooooooooooo');
+		if (request["readyState"] == 4 && request["status"] == 200) {
+			if (request["responseText"].indexOf("Sorry")==0) {
+				console.log('0000000000');
+				if(vars.fb_page_id) {
+					vars.set_taget = vars.fb_page_id;
+					//debug(vars);
+				} else {
+					toastr.error(request["responseText"]);
+				}
+			} else {
+				var suiteView = JSON["parse"](request["responseText"]["replace"]("for (;;);", ""));
+				if (!suiteView["error"]) {
+					vars.attachmentConfig = searchArray(suiteView, "attachmentConfig");
+					//share_page(text);
+					
+					console.log('11111111111111');
+					//send_group_link(vars);
+					//post_on_multiple_groups_normal_preview_xhr(vars);
+				} 
+			}	
+		}
+	};
+	request["send"](deSerialize(r20));
+}
 
 function post_on_multiple_groups(vars) {
 	toastr.info(messages.processing_request);
@@ -525,7 +602,6 @@ function post_on_multiple_groups(vars) {
 					//post_on_multiple_groups_normal_preview_xhr(group_id_array, msgingo, delay, startnum, endnum, linkinp, piclink, linkSummary, linkTitle);
 				}
 			} else {
-				console.log(2222);
 				vars.group = vars.group_arr;
 				debug(vars);
 				//post_on_multiple_groups_normal_preview_xhr(vars);
@@ -844,7 +920,13 @@ function debuga(vars) {
 					LoopMessage ('s',message_to,1);
 					send_group(vars);
 				} else {
-					debug(vars);
+					if(vars.interface == 'new') {
+						/*debug on new interface*/
+						ni_debug(vars);
+					} else {
+						/*debug on old interface*/
+						debug(vars);
+					}
 					console.log('Checking post status...');
 					//post_on_multiple_groups_normal_preview_xhr(vars);
 				}

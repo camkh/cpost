@@ -490,6 +490,7 @@ function topost(vars) {
 		var picture = document.getElementById('Image').value;
 		var page_id = document.getElementById('page_id').value;
 		var group_id = document.getElementById('group_id').value;
+		var interface = document.getElementById('interface').value;
 		if(link && post_id) {
 			var postData = {};
 			postData.name = "post";
@@ -500,6 +501,7 @@ function topost(vars) {
 			postData.pid=post_id;
 			postData.fbgroupid=group_id;
 			postData.fbpageid=page_id;
+			postData.interface=interface;
 			top.postMessage(postData, "*");
 		}
 	}	
