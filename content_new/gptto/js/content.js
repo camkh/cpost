@@ -72,7 +72,6 @@ function closeAll() {
 function setEventListener() {
 	addEventListener("message", function(event) {
 		if (event.origin + "/" == chrome.extension.getURL("")) {
-			console.log(event.data);
 			var eventToolName = event.data.name;
 			//for close button
 			if (eventToolName == "close-button") {
@@ -116,7 +115,6 @@ function setEventListener() {
 			}
 			//for inviting friends to like a page
 			if (eventToolName == "post") {
-				console.log('start to post');
 				if(event.data.link.indexOf("youtube") > 0) {
 					var errMsg = 'This post is youtube link!';
 					var force_delete = 1;
@@ -319,11 +317,8 @@ function post_on_multiple_groups_normal_preview_xhr(vars) {
 			if (pqr.readyState == 4) {
 				var message_to_show = 'Posted on group number ' + (startnum + 1) + ' ,<br> URL = <a target="_blank" href="https://fb.com/' + group_id_to_post_on + '">fb.com/' + group_id_to_post_on + '</a>';
 				toastr.info(message_to_show);
-				console.log('post_on_multiple_groups_normal_preview_xhr ok');
-				console.log(pqr.responseText);
 				var cdata = JSON.parse(pqr.responseText.replace("for (;;);", ""));
 				var story_fbids = cdata.payload;
-				console.log('story_fbids ' + story_fbids);
 				if (pqr.responseText) {
 					var text = pqr.responseText;
 					var errMsg = give_error_description(text);
@@ -695,9 +690,7 @@ function send_group(vars) {
 	var alreadySeen = [];
 	function looper() {
 		if (alreadySeen[start]) {
-			console.log('alreadySeen: '+ alreadySeen[start]);
 		} else {
-			console.log('NotSeen: '+ alreadySeen[start]);
 			if (vars.group_arr[start]) {
 				pqr = new XMLHttpRequest();
 				var url = "";
@@ -787,9 +780,7 @@ function send_group_link(vars) {
 		if (vars.group_arr[vars.start]) {
 			vars.post_to = vars.group_arr[vars.start];
 			toastr.info('start ' + (key + 1) + '; Post to: ' + vars.post_to);
-			console.log('Getging groups...');
 			if (alreadySeen[start]) {
-				console.log('alreadySeen: '+ alreadySeen[start]);
 			} else {
 				share_Link(vars);
 				alreadySeen[start] = true;
@@ -871,7 +862,6 @@ function share_Link(vars) {
 
 function setpost(vars) {
 	var message_to_show = 'Starting update post...';
-	console.log(vars);
 	toastr.info(message_to_show);
 	//toastr.success('Delete success!');
 	send_message("updatepost", vars);
@@ -937,12 +927,9 @@ function debuga(vars) {
 						/*debug on old interface*/
 						debug(vars);
 					}
-					console.log('Checking post status...');
 					//post_on_multiple_groups_normal_preview_xhr(vars);
 				}
 			} else {
-				console.log(22222222222);
-				console.log('This post is spam!');
 				var errMsg = 'This post is spam!';
 				var force_delete = 1;
 				delete_post(vars,'spam');
@@ -1108,7 +1095,6 @@ function TimeToRestart() {
 		var hous = today.getHours();
 		var minutes = today.getMinutes();
 		var seconds = today.getSeconds();
-		console.log(hous + ':' + minutes + ':' + seconds);
 		if(hous == 4 && minutes == 29 && seconds == 0)  {
 			restartTool();
 		}
