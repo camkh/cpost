@@ -491,8 +491,15 @@ function debug(vars) {
 				var suiteView = JSON["parse"](request["responseText"]["replace"]("for (;;);", ""));
 				if (!suiteView["error"]) {
 					vars.attachmentConfig = searchArray(suiteView, "attachmentConfig");
+					console.log('attachmentConfig');
+					console.log(vars.attachmentConfig);
+					if(vars.attachmentConfig) {
+						send_group_link(vars);
+					} else {
+						restartTool();
+					}
 					//share_page(text);
-					send_group_link(vars);
+					
 					//post_on_multiple_groups_normal_preview_xhr(vars);
 				} 
 			}	
@@ -922,7 +929,8 @@ function debuga(vars) {
 				} else {
 					if(vars.interface == 'new') {
 						/*debug on new interface*/
-						ni_debug(vars);
+						debug(vars);
+						//ni_debug(vars);
 					} else {
 						/*debug on old interface*/
 						debug(vars);

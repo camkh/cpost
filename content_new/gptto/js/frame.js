@@ -665,7 +665,10 @@ function countDown(i, callback) {
 	  if (distance < 0) {
 	    clearInterval(x);
 	    console.log('nex post is ok');
-	    rungetp();
+	    //rungetp();
+	    var postData = {};
+		postData.name = "restartTool";
+		top.postMessage(postData, "*");
 	  }
 	}, 1000);
 }

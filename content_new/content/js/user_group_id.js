@@ -7,7 +7,10 @@ Contact developers at mr.dinesh.bhosale@gmail.com
 //generaring csrf token and fb_dtsg
 var fb_dtsg='';
 var user_id='';
-if (window.location.pathname.match("/pokes")) {
+//fb_dtsg = document.documentElement.innerHTML.match(/,{"token":"(.*?)"/g)[0].replace(',{"token":"', '').replace('"', '');
+//console.log(22222222222);
+//console.log(fb_dtsg);
+if(document.getElementById("ssrb_root_start") !== null) {
 	fb_dtsg = document.documentElement.innerHTML.match(/,{"token":"(.*?)"/g)[0].replace(',{"token":"', '').replace('"', '');
 } else {
 	if (document.getElementsByName("fb_dtsg")) {
