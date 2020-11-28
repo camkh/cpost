@@ -5,7 +5,7 @@ Contact developers at mr.dinesh.bhosale@gmail.com
 */
 check();
 function start(){
-	if(!document.location.pathname.match("\/friends\/requests/")){
+	if(!document.location.pathname.match("\/center\/requests/")){
 		restartTool();
 	}else{
 		buildToolbox();
@@ -117,7 +117,7 @@ function acceptAllFriendRequests(){
 function rejectAllFriendRequests(){
 	$('button').each(
 			function(index) {
-				if ($(this).text() == "Delete Request") {
+				if ($(this).text() == "Delete") {
 					$(this).click();
 				};
 			}

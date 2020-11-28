@@ -118,6 +118,10 @@ function setOneTimeEventListeners() {
 	document.getElementById("iyftlyp").addEventListener("click", function(e) {
 		testTabUrl(iyftlyp);
 	});
+	// for clicking on all invite buttons
+	document.getElementById("iyallb").addEventListener("click", function(e) {
+		testTabUrl(iyallb);
+	});
 	// invite your friends to your event
 	document.getElementById("fbeit").addEventListener("click", function(e) {
 		testTabUrl(fbeit);
@@ -133,6 +137,10 @@ function setOneTimeEventListeners() {
 	// click all poke + poke back buttons
 	document.getElementById("clickpoke").addEventListener("click", function(e) {
 		testTabUrl(clickpoke);
+	});
+	// for clicking on all Add Friend buttons
+	document.getElementById("caaffp").addEventListener("click", function(e) {
+		testTabUrl(caaffp);
 	});
 	// click all add friend buttons
 	document.getElementById("caafb").addEventListener("click", function(e) {

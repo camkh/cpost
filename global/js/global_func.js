@@ -49,15 +49,21 @@ function start(toolName,newTab){
 	}else if(toolName=="iyftlyp"){
 		// invite your friends to like your page
 		tabRun(iyftlyp,null);
-	}else if(toolName=="fbeit"){
+	}else if(toolName=="iyftlyp"){
+		// invite your friends to like your page
+		tabRun(iyftlyp,null);
+	}else if(toolName=="iyallb"){
 		//facebook id extractor
-		tabRun(fbeit,null);
+		tabRun(iyallb,null);
+	}else if(toolName=="caaffp"){
+		//facebook id extractor
+		tabRun(caaffp,null);
 	}else if(toolName=="iyftjyg"){
 		// invite your friends to join your group
 		tabRun(iyftjyg,null);
 	}else if(toolName=="aafrao"){
 		// accept all friend  at once
-		var url='https://www.facebook.com/friends/requests/';
+		var url='https://mobile.facebook.com/friends/center/requests/all/';
 		tabRun(aafrao,url);
 	}else if(toolName=="clickpoke"){
 		// click all poke buttons
@@ -299,6 +305,7 @@ function fbeit() {
 		file: "/content_new/content/js/lang.js"
 	});
 }
+
 //for inviting your friends to join a group
 function iyftjyg(){
 	var dirName='iyftjyg';
@@ -317,6 +324,70 @@ function iyftjyg(){
 	//start friendlist genrator
 	chrome.tabs.executeScript(null, {
 		file: "/content_new/content/js/friendlist_generator.js"
+	});
+	//for loading variables
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/var.js"
+	});
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//start content script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/content.js"
+	});
+	//starting language check
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/lang.js"
+	});
+}
+//for clicking all Invite buttons
+function iyallb(){
+	var dirName='iyallb';
+	//jquery
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
+	//generating user id and fb_dtsg
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/fbdtsg.js"
+	});
+	//for loading variables
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/var.js"
+	});
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//start content script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/content.js"
+	});
+	//starting language check
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/lang.js"
+	});
+}
+//for clicking all Invite buttons
+function caaffp(){
+	var dirName='caaffp';
+	//jquery
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
+	//generating user id and fb_dtsg
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/fbdtsg.js"
 	});
 	//for loading variables
 	chrome.tabs.executeScript(null, {
