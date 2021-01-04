@@ -738,7 +738,7 @@ function send_group(vars) {
 							$( "#pagelet_sidebar" ).remove();
 							$( "#pagelet_dock" ).remove();
 							unFollowPost(vars);
-							disable_comments(vars);
+							//disable_comments(vars);
 							if((start + 1) != vars.group_arr.length) {
 								setTimeout(function() {
 									start++;
