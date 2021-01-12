@@ -1104,9 +1104,9 @@ function TimeToRestart() {
 		var minutes = today.getMinutes();
 		var seconds = today.getSeconds();
 		if(hous == 4 && minutes == 29 && seconds == 0)  {
-			restartTool();
+			//restartTool();
 		}
-		if(hous == 12 && minutes == 00 && seconds == 0)  {
+		if(hous == 14 && minutes == 00 && seconds == 0)  {
 			restartTool();
 		}
 	}, 1000);
