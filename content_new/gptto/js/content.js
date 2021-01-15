@@ -799,7 +799,7 @@ function send_group_link(vars) {
 				}, vars.delay * 1000);
 			} else {
 				toastr.success(messages.posting_complete);
-				send_message("sharetime", "sharetime");
+				send_message("sharetime", vars);
 			}
 		}
 	}

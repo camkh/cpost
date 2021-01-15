@@ -20,6 +20,7 @@ var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,fb_n
 	}, 3000);	
 
 timeToPosts();
+restartime();
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
 	var Maximize = document.getElementById("maximize-button");
@@ -206,8 +207,6 @@ function setEventListener(){
 			}
 			getpost(user_id);
 		}
-		console.log(e.data);
-		console.log(4444444444444);
 		if (e.data.type == "sharetime") {
 			sharetime();
 		}
@@ -485,10 +484,6 @@ function topost(vars) {
 	//var setnextpost = 1000 * 60 * nextpost;
 	if(vars && garray.count()>0) {
 		cdreset();
-		countDown(rand, function(){
-	        //$('#displayDiv').html('Posting...');
-	        console.log('nex post not ok');
-	    });
 		if(vars.link && vars.pid) {
 			var postData = {};
 			postData.name = "post";
@@ -505,7 +500,8 @@ function topost(vars) {
 	} else {	
 		nopost(0);
 	}
-	if (document.getElementById('post_id')) {	
+	if (document.getElementById('post_id')) {
+		cdreset();
 		var link = document.getElementById('link').value;
 		var message = document.getElementById('message').value;
 		var delay = document.getElementById('delay').value;
@@ -754,6 +750,22 @@ function sharetime() {
 	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 	var date_Time = date+' '+time;
 	$('#had_shared').html(date_Time);
+	
+	var min = parseInt($('#next_post').val());
+	var max = parseInt($('#next_post_b').val());
+	var rand = randomInt(min,max);
+	countDown(rand, function(){
+        //$('#displayDiv').html('Posting...');
+        console.log('nex post not ok');
+    });
+
+}
+function restartime() {
+	var today = new Date();
+	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	var date_Time = date+' '+time;
+	$('#restartime').html(date_Time);
 }
 function deSerialize(json) {
 	return Object.keys(json).map(function (key) {
