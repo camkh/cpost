@@ -481,9 +481,15 @@ function topost(vars) {
 	var max = parseInt($('#next_post_b').val());
 	var rand = randomInt(min,max);
 
+	//var had_shared = parseInt($('#had_shared').text());
+	var had_shared = '18:14:59';
+	var d = new Date();
+	had_shared = had_shared.split(":");
+  	d.setHours(had_shared[0],had_shared[1],had_shared[2]);
+	console.log(d);
+
 	//var setnextpost = 1000 * 60 * nextpost;
 	if(vars && garray.count()>0) {
-		cdreset();
 		if(vars.link && vars.pid) {
 			var postData = {};
 			postData.name = "post";
@@ -501,7 +507,6 @@ function topost(vars) {
 		nopost(0);
 	}
 	if (document.getElementById('post_id')) {
-		cdreset();
 		var link = document.getElementById('link').value;
 		var message = document.getElementById('message').value;
 		var delay = document.getElementById('delay').value;
@@ -640,6 +645,7 @@ function countDown(i, callback) {
 	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 	var date_Time = 'Posted: ' + date+' '+time;
 	$('#had_posted').html(date_Time);
+	$('#had_shared').html(time);
 	/*set date time posted*/
     var d1 = new Date (),
     d2 = new Date ( d1 );
@@ -666,8 +672,6 @@ function countDown(i, callback) {
 	  	setCon = hours + "h " + minutes + "m " + seconds + "s ";
 		$('#displayDiv').html(setCon); 
 		if(minutes == 10 && seconds == 0)  {
-			console.log(11111111111);
-			console.log('checkstatus the minutes: ' + minutes + ' and ' + seconds);
 			checkstatus();
 		}
 		var user_id = $('#user_id').val();
@@ -690,15 +694,11 @@ function countDown(i, callback) {
 }
 
 function nopost(e) {
-	console.log('no post');
-	console.log(e);
 	if(e>0) {
 		var stp = e * 60 * 1000;
 	} else {
 		var stp = 5 * 60 * 1000;
 	}
-	console.log(stp);
-	console.log(2222222222222);
 	var myP = setInterval(get_post, stp);
 	function get_post() {
 		console.log('get post every 5 minites');
@@ -746,14 +746,14 @@ function startc() {
 };
 function sharetime() {
 	var today = new Date();
-	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-	var date_Time = date+' '+time;
-	$('#had_shared').html(date_Time);
-	
+	var date_Time = time;
+	//$('#had_shared').html(date_Time);
+
 	var min = parseInt($('#next_post').val());
 	var max = parseInt($('#next_post_b').val());
 	var rand = randomInt(min,max);
+	cdreset();
 	countDown(rand, function(){
         //$('#displayDiv').html('Posting...');
         console.log('nex post not ok');
