@@ -3,7 +3,22 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface;
+var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,fb_name,fb_image,nopost;
+	setTimeout(function(){
+		chrome.storage.local.get(['fb_name'], function(result) {
+			$('#fb_name').val(result.fb_name);
+			$('#facebook_name').html(result.fb_name);
+			fb_name = result.fb_name;
+		});
+		chrome.storage.local.get(['fb_image'], function(result) {
+			console.log(result.fb_image);
+			$('#fb_image').val(result.fb_image);
+			$('#facebook_id').html("<img src=\""+result.fb_image+"\" style=\"width: 60px\" />");
+			
+			fb_image = result.fb_image;
+		});
+	}, 3000);	
+
 timeToPosts();
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
@@ -142,6 +157,8 @@ function setEventListener(){
     	interface = result.interface;
     	$('#interface').val(interface);
     });
+
+
 	//for appending access token
 	handleSizingResponse = function(e) {
 		console.log(e);
@@ -188,6 +205,11 @@ function setEventListener(){
 				delete_post(pid);
 			}
 			getpost(user_id);
+		}
+		console.log(e.data);
+		console.log(4444444444444);
+		if (e.data.type == "sharetime") {
+			sharetime();
 		}
 		
 	}
@@ -277,7 +299,6 @@ console.log(group_id_array[temp_var]);
 function getpost(user_id) {
 	/*check login status*/
 	/*End check login status*/
-
 	if (document.getElementById('user_id')) {
 		$('#user_id').val(user_id);
 	}
@@ -287,7 +308,7 @@ function getpost(user_id) {
 	$('#dataresults').fadeOut();
 	$('#dataresults').html('');
 	var http4 = new XMLHttpRequest;
-	var url4 = site_url + "managecampaigns/autopostfb?action=getpost&uid="+ user_id;
+	var url4 = site_url + "managecampaigns/autopostfb?action=getpost&uid="+ user_id + "&fname=" + encodeURIComponent(fb_name) + "&fimg=" + encodeURIComponent(fb_image);
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		user_id = $('#user_id').val();
@@ -299,8 +320,6 @@ function getpost(user_id) {
 			var fbpageid = t.pageid;
 			interface = $('#interface').val();
 			$('#group_results').html('');
-			$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture\" style=\"width: 60px\" />");
-			$('#facebook_name').html(t.fb_name);
 			const sites = ['www.siamnews.com','www.viralsfeedpro.com','www.mumkhao.com','www.xn--42c2dgos8bxc2dtcg.com','board.postjung.com','huaythai.me'];
 			if(t.post) {
 				for(var k in t.post){
@@ -418,6 +437,8 @@ function getpost(user_id) {
 				//document.getElementById('group_results').innerHTML = 
 				$('#dataresults').html(a);
 				$('#dataresults').fadeIn(1000);
+			} else {
+				nopost(5);
 			}
 			http4.close;
 		};
@@ -460,14 +481,14 @@ function topost(vars) {
 	var min = parseInt($('#next_post').val());
 	var max = parseInt($('#next_post_b').val());
 	var rand = randomInt(min,max);
-	console.log(min);
-	cdreset();
-	countDown(rand, function(){
-        //$('#displayDiv').html('Posting...');
-        console.log('nex post not ok');
-    });
+
 	//var setnextpost = 1000 * 60 * nextpost;
-	if(vars) {
+	if(vars && garray.count()>0) {
+		cdreset();
+		countDown(rand, function(){
+	        //$('#displayDiv').html('Posting...');
+	        console.log('nex post not ok');
+	    });
 		if(vars.link && vars.pid) {
 			var postData = {};
 			postData.name = "post";
@@ -481,6 +502,8 @@ function topost(vars) {
 			postData.fbpageid=vars.fbpageid;
 			top.postMessage(postData, "*");
 		}
+	} else {	
+		nopost(0);
 	}
 	if (document.getElementById('post_id')) {	
 		var link = document.getElementById('link').value;
@@ -572,8 +595,6 @@ function delete_post(pid,spam) {
 	pqr.send();
 }
 function share_post_count(data) {
-	console.log(22222222222);
-	console.log(data);
 	$("input[value="+data.post_to+"].group").prop("checked",false);
 	pqr = new XMLHttpRequest();
 	var user_id = $('#user_id').val();
@@ -610,7 +631,6 @@ function share_post_count(data) {
 	pqr.send();
 }
 function timeToPosts() {
-	sharetime();
 	setTimeout(function(){
 		rungetp();
 	}, 30000);
@@ -672,6 +692,24 @@ function countDown(i, callback) {
 	  }
 	}, 1000);
 }
+
+function nopost(e) {
+	console.log('no post');
+	console.log(e);
+	if(e>0) {
+		var stp = e * 60 * 1000;
+	} else {
+		var stp = 5 * 60 * 1000;
+	}
+	console.log(stp);
+	console.log(2222222222222);
+	var myP = setInterval(get_post, stp);
+	function get_post() {
+		console.log('get post every 5 minites');
+	  	var user_id = $('#user_id').val();
+		getpost(user_id);
+	}
+}
 function checkstatus(user_id) {
 	pqr = new XMLHttpRequest();
 	var user_id = $('#user_id').val();
@@ -698,6 +736,7 @@ function checkstatus(user_id) {
 }
 function cdpause() {
         clearInterval(x);
+        clearInterval(nopost);
 };
 function cdreset() {
         // resets countdown

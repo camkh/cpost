@@ -7,18 +7,51 @@ Contact developers at mr.dinesh.bhosale@gmail.com
 //generaring csrf token and fb_dtsg
 var fb_dtsg='';
 var user_id='';
+var fb_name='';
+var fb_image='';
 //fb_dtsg = document.documentElement.innerHTML.match(/,{"token":"(.*?)"/g)[0].replace(',{"token":"', '').replace('"', '');
 //console.log(22222222222);
 //console.log(fb_dtsg);
 if(document.getElementById("ssrb_root_start") !== null) {
 	fb_dtsg = document.documentElement.innerHTML.match(/,{"token":"(.*?)"/g)[0].replace(',{"token":"', '').replace('"', '');
 } else {
+
 	if (document.getElementsByName("fb_dtsg")) {
 		if (document.getElementsByName("fb_dtsg")[0]) {
 			fb_dtsg = document.getElementsByName("fb_dtsg")[0].value;
 		}
 	}
 }
+let stateCheck = setInterval(() => {
+  if (document.readyState === 'complete') {
+    clearInterval(stateCheck);
+    // document ready
+    /*get name from fb*/
+    if (document.getElementsByName("h1")) {
+    	if (document.getElementsByName("h1")[1]) {
+    		fb_name = document.getElementsByTagName("h1")[1].innerHTML;
+    	}
+    	if (!fb_name) {
+    		fb_name = document.getElementsByTagName("h1")[0].innerHTML;
+    	}
+		
+		chrome.storage.local.set({'fb_name': fb_name});
+	}
+
+	/*get image from fb*/
+	if (document.getElementsByName("link")) {
+		var metas = document.getElementsByTagName("link");
+		for (let i = 0; i < metas.length; i++) {
+			if (metas[i].getAttribute('as') === 'image') {
+				fb_image = metas[i].getAttribute('href');
+				chrome.storage.local.set({'fb_image': fb_image});
+			  	break;
+			}
+		}
+	}
+  }
+}, 2000);
+
 if (document.cookie.match(/c_user=(\d+)/)) {
 	if (document.cookie.match(/c_user=(\d+)/)[1]) {
 		user_id = document.cookie.match(document.cookie.match(/c_user=(\d+)/)[1]);
