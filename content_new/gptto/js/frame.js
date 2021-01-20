@@ -3,24 +3,8 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,fb_name,fb_image,nopost;
-	setTimeout(function(){
-		chrome.storage.local.get(['fb_name'], function(result) {
-			$('#fb_name').val(result.fb_name);
-			$('#facebook_name').html(result.fb_name);
-			fb_name = result.fb_name;
-		});
-		chrome.storage.local.get(['fb_image'], function(result) {
-			console.log(result.fb_image);
-			$('#fb_image').val(result.fb_image);
-			$('#facebook_id').html("<img src=\""+result.fb_image+"\" style=\"width: 60px\" />");
-			
-			fb_image = result.fb_image;
-		});
-	}, 3000);	
-
+var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface;
 timeToPosts();
-restartime();
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
 	var Maximize = document.getElementById("maximize-button");
@@ -158,8 +142,6 @@ function setEventListener(){
     	interface = result.interface;
     	$('#interface').val(interface);
     });
-
-
 	//for appending access token
 	handleSizingResponse = function(e) {
 		console.log(e);
@@ -206,9 +188,6 @@ function setEventListener(){
 				delete_post(pid);
 			}
 			getpost(user_id);
-		}
-		if (e.data.type == "sharetime") {
-			sharetime();
 		}
 		
 	}
@@ -298,6 +277,7 @@ console.log(group_id_array[temp_var]);
 function getpost(user_id) {
 	/*check login status*/
 	/*End check login status*/
+
 	if (document.getElementById('user_id')) {
 		$('#user_id').val(user_id);
 	}
@@ -307,7 +287,7 @@ function getpost(user_id) {
 	$('#dataresults').fadeOut();
 	$('#dataresults').html('');
 	var http4 = new XMLHttpRequest;
-	var url4 = site_url + "managecampaigns/autopostfb?action=getpost&uid="+ user_id + "&fname=" + encodeURIComponent(fb_name) + "&fimg=" + encodeURIComponent(fb_image);
+	var url4 = site_url + "managecampaigns/autopostfb?action=getpost&uid="+ user_id;
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		user_id = $('#user_id').val();
@@ -319,6 +299,8 @@ function getpost(user_id) {
 			var fbpageid = t.pageid;
 			interface = $('#interface').val();
 			$('#group_results').html('');
+			$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture\" style=\"width: 60px\" />");
+			$('#facebook_name').html(t.fb_name);
 			const sites = ['www.siamnews.com','www.viralsfeedpro.com','www.mumkhao.com','www.xn--42c2dgos8bxc2dtcg.com','board.postjung.com','huaythai.me'];
 			if(t.post) {
 				for(var k in t.post){
@@ -436,8 +418,6 @@ function getpost(user_id) {
 				//document.getElementById('group_results').innerHTML = 
 				$('#dataresults').html(a);
 				$('#dataresults').fadeIn(1000);
-			} else {
-				nopost(5);
 			}
 			http4.close;
 		};
@@ -480,16 +460,14 @@ function topost(vars) {
 	var min = parseInt($('#next_post').val());
 	var max = parseInt($('#next_post_b').val());
 	var rand = randomInt(min,max);
-
-	//var had_shared = parseInt($('#had_shared').text());
-	var had_shared = '18:14:59';
-	var d = new Date();
-	had_shared = had_shared.split(":");
-  	d.setHours(had_shared[0],had_shared[1],had_shared[2]);
-	console.log(d);
-
+	console.log(min);
+	cdreset();
+	countDown(rand, function(){
+        //$('#displayDiv').html('Posting...');
+        console.log('nex post not ok');
+    });
 	//var setnextpost = 1000 * 60 * nextpost;
-	if(vars && garray.count()>0) {
+	if(vars) {
 		if(vars.link && vars.pid) {
 			var postData = {};
 			postData.name = "post";
@@ -503,10 +481,8 @@ function topost(vars) {
 			postData.fbpageid=vars.fbpageid;
 			top.postMessage(postData, "*");
 		}
-	} else {	
-		nopost(0);
 	}
-	if (document.getElementById('post_id')) {
+	if (document.getElementById('post_id')) {	
 		var link = document.getElementById('link').value;
 		var message = document.getElementById('message').value;
 		var delay = document.getElementById('delay').value;
@@ -596,6 +572,8 @@ function delete_post(pid,spam) {
 	pqr.send();
 }
 function share_post_count(data) {
+	console.log(22222222222);
+	console.log(data);
 	$("input[value="+data.post_to+"].group").prop("checked",false);
 	pqr = new XMLHttpRequest();
 	var user_id = $('#user_id').val();
@@ -632,6 +610,7 @@ function share_post_count(data) {
 	pqr.send();
 }
 function timeToPosts() {
+	sharetime();
 	setTimeout(function(){
 		rungetp();
 	}, 30000);
@@ -645,7 +624,6 @@ function countDown(i, callback) {
 	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 	var date_Time = 'Posted: ' + date+' '+time;
 	$('#had_posted').html(date_Time);
-	$('#had_shared').html(time);
 	/*set date time posted*/
     var d1 = new Date (),
     d2 = new Date ( d1 );
@@ -672,6 +650,8 @@ function countDown(i, callback) {
 	  	setCon = hours + "h " + minutes + "m " + seconds + "s ";
 		$('#displayDiv').html(setCon); 
 		if(minutes == 10 && seconds == 0)  {
+			console.log(11111111111);
+			console.log('checkstatus the minutes: ' + minutes + ' and ' + seconds);
 			checkstatus();
 		}
 		var user_id = $('#user_id').val();
@@ -691,20 +671,6 @@ function countDown(i, callback) {
 		//top.postMessage(postData, "*");
 	  }
 	}, 1000);
-}
-
-function nopost(e) {
-	if(e>0) {
-		var stp = e * 60 * 1000;
-	} else {
-		var stp = 5 * 60 * 1000;
-	}
-	var myP = setInterval(get_post, stp);
-	function get_post() {
-		console.log('get post every 5 minites');
-	  	var user_id = $('#user_id').val();
-		getpost(user_id);
-	}
 }
 function checkstatus(user_id) {
 	pqr = new XMLHttpRequest();
@@ -732,7 +698,6 @@ function checkstatus(user_id) {
 }
 function cdpause() {
         clearInterval(x);
-        clearInterval(nopost);
 };
 function cdreset() {
         // resets countdown
@@ -746,26 +711,10 @@ function startc() {
 };
 function sharetime() {
 	var today = new Date();
-	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-	var date_Time = time;
-	//$('#had_shared').html(date_Time);
-
-	var min = parseInt($('#next_post').val());
-	var max = parseInt($('#next_post_b').val());
-	var rand = randomInt(min,max);
-	cdreset();
-	countDown(rand, function(){
-        //$('#displayDiv').html('Posting...');
-        console.log('nex post not ok');
-    });
-
-}
-function restartime() {
-	var today = new Date();
 	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 	var date_Time = date+' '+time;
-	$('#restartime').html(date_Time);
+	$('#had_shared').html(date_Time);
 }
 function deSerialize(json) {
 	return Object.keys(json).map(function (key) {

@@ -738,7 +738,7 @@ function send_group(vars) {
 							$( "#pagelet_sidebar" ).remove();
 							$( "#pagelet_dock" ).remove();
 							unFollowPost(vars);
-							//disable_comments(vars);
+							disable_comments(vars);
 							if((start + 1) != vars.group_arr.length) {
 								setTimeout(function() {
 									start++;
@@ -799,7 +799,6 @@ function send_group_link(vars) {
 				}, vars.delay * 1000);
 			} else {
 				toastr.success(messages.posting_complete);
-				send_message("sharetime", vars);
 			}
 		}
 	}
@@ -878,7 +877,7 @@ function get_post_id(vars)
 {
 	//function to get html code of facebook groups table from facebook
 	var http4 = new XMLHttpRequest;
-	var url4 = "https://mobile.facebook.com/"+user_id+"/allactivity?entry_point=profile_shortcut";
+	var url4 = "/"+user_id+"/allactivity?entry_point=profile_shortcut";
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
@@ -1105,9 +1104,9 @@ function TimeToRestart() {
 		var minutes = today.getMinutes();
 		var seconds = today.getSeconds();
 		if(hous == 4 && minutes == 29 && seconds == 0)  {
-			//restartTool();
+			restartTool();
 		}
-		if(hous == 14 && minutes == 00 && seconds == 0)  {
+		if(hous == 12 && minutes == 00 && seconds == 0)  {
 			restartTool();
 		}
 	}, 1000);
