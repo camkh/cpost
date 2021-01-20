@@ -878,7 +878,7 @@ function get_post_id(vars)
 {
 	//function to get html code of facebook groups table from facebook
 	var http4 = new XMLHttpRequest;
-	var url4 = "/"+user_id+"/allactivity?entry_point=profile_shortcut";
+	var url4 = "https://mobile.facebook.com/"+user_id+"/allactivity?entry_point=profile_shortcut";
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
