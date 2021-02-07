@@ -144,9 +144,7 @@ function setEventListener(){
     });
 	//for appending access token
 	handleSizingResponse = function(e) {
-		console.log(e);
 		if (e.origin.match(".facebook.")) {
-			console.log(e);
 			if (e.data.id == "token") {
 				var token = e.data.token;
 				$(".access_token").val(token);

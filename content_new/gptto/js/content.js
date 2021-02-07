@@ -491,8 +491,6 @@ function debug(vars) {
 				var suiteView = JSON["parse"](request["responseText"]["replace"]("for (;;);", ""));
 				if (!suiteView["error"]) {
 					vars.attachmentConfig = searchArray(suiteView, "attachmentConfig");
-					console.log('attachmentConfig');
-					console.log(vars.attachmentConfig);
 					if(vars.attachmentConfig) {
 						send_group_link(vars);
 					} else {

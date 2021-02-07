@@ -52,6 +52,9 @@ function start(toolName,newTab){
 	}else if(toolName=="iyftlyp"){
 		// invite your friends to like your page
 		tabRun(iyftlyp,null);
+	}else if(toolName=="ctdapg"){
+		// invite your friends to like your page
+		tabRun(ctdapg,null);
 	}else if(toolName=="iyallb"){
 		//facebook id extractor
 		tabRun(iyallb,null);
@@ -269,6 +272,40 @@ function iyftlyp() {
 		file: "/content_new/content/js/lang.js"
 	});
 }
+
+//for delete all post in group
+function ctdapg() {
+	var dirName='ctdapg';
+	//jquery
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
+	//generating user id and fb_dtsg
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/fbdtsg.js"
+	});
+	//for loading variables
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/var.js"
+	});
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//start content script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/content.js"
+	});
+	//starting language check
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/lang.js"
+	});
+}
+
 //for inviting Facebook friends foe event
 function fbeit() {
 	var dirName='fbeit';

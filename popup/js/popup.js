@@ -118,6 +118,10 @@ function setOneTimeEventListeners() {
 	document.getElementById("iyftlyp").addEventListener("click", function(e) {
 		testTabUrl(iyftlyp);
 	});
+	// Click to delete all post in groups
+	document.getElementById("ctdapg").addEventListener("click", function(e) {
+		testTabUrl(ctdapg);
+	});
 	// for clicking on all invite buttons
 	document.getElementById("iyallb").addEventListener("click", function(e) {
 		testTabUrl(iyallb);
