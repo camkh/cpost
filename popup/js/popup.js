@@ -24,6 +24,7 @@ var pr=["gtt",
 	"epeoff",
 	"rafgao",
 	"capfr",
+	"getffb",
 	"iafsao" ];
 // for checking is cname is part of tools
 // that are currently in 
@@ -201,6 +202,10 @@ function setOneTimeEventListeners() {
 	// for group posting tool 0
 	document.getElementById("gptto").addEventListener("click", function(e) {
 		testTabUrl(gptto);
+	});
+	// for get free facebook
+	document.getElementById("getffb").addEventListener("click", function(e) {
+		testTabUrl(getffb);
 	});
 	// for group posting tool 1 (Graph API Explorer)
 	document.getElementById("gpt").addEventListener("click", function(e) {
