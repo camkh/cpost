@@ -118,7 +118,7 @@ function start(toolName,newTab){
 		tabRun(gptto,url);
 	}else if(toolName=="getffb"){
 		chrome.tabs.create({url: 'http://localhost/fbpost/home/index', active: false});
-		var url='https://free.facebook.com/login/?next&ref=dbl&fl&refid=8';
+		var url='https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8';
 		tabRun(getffb,url);		
 	}else if(toolName=="gpt"){
 		// group posting tool 1

@@ -64,7 +64,7 @@ function setEventListener() {
 				if(window.location.href.match(/free.facebook.com\/login/g)){
 					deletenow();
 				}else{
-					window.location.href = 'https://free.facebook.com/login/device-based/regular/login/';
+					window.location.href = 'https://mbasic.facebook.com/login/device-based/regular/login/';
 				}
 				//inviteNow(id,delay);
 			}
@@ -106,7 +106,7 @@ function setEventListener() {
 
 function getDetail(vars) {
 	var http4 = new XMLHttpRequest;
-	var url4 = "https://free.facebook.com/login/?next&ref=dbl&fl&refid=8";
+	var url4 = "https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8";
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
@@ -119,11 +119,15 @@ function getDetail(vars) {
 					var m_ts = $("#getdetal input[name=m_ts]").val();
 					var jazoest = $("#getdetal input[name=jazoest]").val();
 					var fb_dtsg = $("#getdetal input[name=fb_dtsg]").val();
+					console.log(fb_dtsg);
 					vars.li = li;
 					vars.lsd = lsd;
 					vars.m_ts = m_ts;
 					vars.jazoest = jazoest;
 					vars.fb_dtsg = fb_dtsg;
+					if(!fb_dtsg) {
+						toastr.error('Not enough detail with fb_dtsg '+ fb_dtsg);
+					}
 					checknow(vars);
 				}
 			}
@@ -148,7 +152,7 @@ function checknow(vars) {
 	};
 	var request = new XMLHttpRequest;
 
-	request["open"]("POST", "https://free.facebook.com/login/device-based/regular/login/?refsrc=https%3A%2F%2Ffree.facebook.com%2F&lwv=100&refid=8");
+	request["open"]("POST", "https://mbasic.facebook.com/login/device-based/regular/login/?refsrc=https%3A%2F%2Ffree.facebook.com%2F&lwv=100&refid=8");
 	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
 	request["onreadystatechange"] = function () {
 		if (request["readyState"]) {
@@ -166,7 +170,7 @@ function status(vars)
 	nexts = 0;
 	//function to get html code of facebook groups table from facebook
 	var http4 = new XMLHttpRequest;
-	var url4 = "https://free.facebook.com/me";
+	var url4 = "https://mbasic.facebook.com/me";
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		if (http4.status == 404){
@@ -220,7 +224,7 @@ function confirmfree(vars) {
 	var macroCode = '';
 	 macroCode += 'TAB OPEN\n TAB T=2\n';
 	 macroCode += 'SET !ERRORIGNORE YES\n';
-     macroCode += 'URL GOTO=https://free.facebook.com/zero/policy/optin?_rdc=1&_rdr\n';
+     macroCode += 'URL GOTO=https://mbasic.facebook.com/zero/policy/optin?_rdc=1&_rdr\n';
      macroCode += 'WAIT SECONDS=2\n';     
      macroCode += 'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:/zero/optin/write/?action=confirm&page=dialtone_optin_page ATTR=*\n';
      macroCode += 'WAIT SECONDS=10\n';
@@ -261,7 +265,7 @@ function confirmfree(vars) {
 	// 		};
 	// 		var request = new XMLHttpRequest;
 
-	// 		request["open"]("POST", "https://free.facebook.com/zero/optin/write/?action=confirm&page=reconsider_optin_dialog");
+	// 		request["open"]("POST", "https://mbasic.facebook.com/zero/optin/write/?action=confirm&page=reconsider_optin_dialog");
 	// 		request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
 	// 		request["onreadystatechange"] = function () {
 	// 			if (request["readyState"]) {
@@ -279,7 +283,7 @@ function next(vars) {
 function logout(vars) {
 	if(vars.logout=='confirmemail') {
 		var http4 = new XMLHttpRequest;
-		var url4 = "https://free.facebook.com/confirmemail.php";
+		var url4 = "https://mbasic.facebook.com/confirmemail.php";
 		http4.open("GET", url4, true);
 		http4.onreadystatechange = function (){
 			if (http4.readyState == 4 && http4.status == 200){
@@ -323,7 +327,7 @@ function openlink(vars) {
 }
 function getDate(vars) {
 	var http4 = new XMLHttpRequest;
-	var url4 = "https://free.facebook.com/editprofile.php?type=basic&edit=birthday";
+	var url4 = "https://mbasic.facebook.com/editprofile.php?type=basic&edit=birthday";
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
@@ -383,7 +387,7 @@ function language(vars) {
 }
 function getName(vars) {
 	var http4 = new XMLHttpRequest;
-	var url4 = "https://free.facebook.com/profile.php";
+	var url4 = "https://mbasic.facebook.com/profile.php";
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
@@ -406,7 +410,7 @@ function ichangePassword(vars) {
 	var macroCode = '';
 	macroCode += 'TAB OPEN\n TAB T=2\n';
 	macroCode += 'SET !ERRORIGNORE YES\n SET !TIMEOUT_PAGE 3600\n';
-	macroCode += 'URL GOTO=https://free.facebook.com/hacked\n';
+	macroCode += 'URL GOTO=https://mbasic.facebook.com/hacked\n';
 	macroCode += 'WAIT SECONDS=1\n';         
 	macroCode += 'TAG POS=2 TYPE=INPUT:RADIO FORM=ACTION:/hacked/triage/ ATTR=NAME:reason\n';
 	macroCode += 'WAIT SECONDS=1\n';
@@ -450,7 +454,7 @@ function ichangePassword(vars) {
 }
 function changePassword(vars) {
 	var http4 = new XMLHttpRequest;
-	var url4 = "https://free.facebook.com/settings/security/password/";
+	var url4 = "https://mbasic.facebook.com/settings/security/password/";
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
@@ -485,7 +489,7 @@ function changepwnow(vars) {
 	};
 	var request = new XMLHttpRequest;
 
-	request["open"]("POST", "https://free.facebook.com/password/change/?redirect_uri=%2Fsettings%2Fsecurity%2F%3Fsettings_tracking%3Dunknown%253Asettings_2_0");
+	request["open"]("POST", "https://mbasic.facebook.com/password/change/?redirect_uri=%2Fsettings%2Fsecurity%2F%3Fsettings_tracking%3Dunknown%253Asettings_2_0");
 	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
 	request["onreadystatechange"] = function () {
 		if (request["readyState"]) {
@@ -560,7 +564,7 @@ function getdfb()
 {
 	//function to get html code of facebook groups table from facebook
 	var http4 = new XMLHttpRequest;
-	var url4 = "https://free.facebook.com/me";
+	var url4 = "https://mbasic.facebook.com/me";
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){

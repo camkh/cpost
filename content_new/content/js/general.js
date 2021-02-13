@@ -96,7 +96,6 @@ function restartTool(){
 	throw new Error("execution stopped");
 }
 //for logging dirName
-console.log(dirName);
 //asking users to log in
 function pleaseLogin(){
 	var message='Please log in into Your Facebook Account';
