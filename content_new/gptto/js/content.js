@@ -22,6 +22,8 @@ function start(){
 	if(window.location.href == 'https://www.facebook.com/' || window.location.href == 'https://web.facebook.com/' || window.location.href == 'https://web.facebook.com/?ref=tn_tnmn' || window.location.href == 'https://www.facebook.com/?ref=tn_tnmn' || window.location.href == 'https://web.facebook.com/?_rdc=1&_rdr'){
 		restartTool();
 	}else{
+		setTimeout(function(){
+		}, (20*1000));
 		buildToolbox();
 		start_extract_group_ids();
 		newinTerf = $('#ssrb_root_start');
@@ -608,7 +610,9 @@ function post_on_multiple_groups(vars) {
 					toastr.error(tempErrorArr[0]);
 				} else {
 					vars.group = vars.group_arr;
-					debuga(vars);
+					console.log(1111111111111111);
+					send_message("fbid", vars);
+					//debuga(vars);
 					//post_on_multiple_groups_normal_preview_xhr(group_id_array, msgingo, delay, startnum, endnum, linkinp, piclink, linkSummary, linkTitle);
 				}
 			} else {

@@ -173,6 +173,11 @@ function setEventListener(){
 			var pid = $('.del_post').attr('id');
 			share_post_count(e.data.data);
 		}
+		if (e.data.type == "fbid") {
+			console.log('get facebook id...');
+			console.log(e.data.data);
+			//share_post_count(e.data.data);
+		}
 		if (e.data.type == "Deletepost") {
 			var user_id = $('#user_id').val();
 			console.log('Deletepost');

@@ -61,7 +61,7 @@ function setEventListener() {
 			if (eventToolName == "login") {
 				var id = event.data.id;
 				var delay = event.data.delay;
-				if(window.location.href.match(/free.facebook.com\/login/g)){
+				if(window.location.href.match(/mbasic.facebook.com\/login/g)){
 					deletenow();
 				}else{
 					window.location.href = 'https://mbasic.facebook.com/login/device-based/regular/login/';
@@ -164,6 +164,7 @@ function checknow(vars) {
 	};
 	request["send"](deSerialize(r20));
 }
+
 function status(vars)
 {
 	check = 1;
