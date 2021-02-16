@@ -119,14 +119,19 @@ function getDetail(vars) {
 					var m_ts = $("#getdetal input[name=m_ts]").val();
 					var jazoest = $("#getdetal input[name=jazoest]").val();
 					var fb_dtsg = $("#getdetal input[name=fb_dtsg]").val();
-					console.log(fb_dtsg);
-					vars.li = li;
-					vars.lsd = lsd;
-					vars.m_ts = m_ts;
-					vars.jazoest = jazoest;
-					vars.fb_dtsg = fb_dtsg;
+					console.log(fb_dtsg);					
 					if(!fb_dtsg) {
 						toastr.error('Not enough detail with fb_dtsg '+ fb_dtsg);
+						vars.li = li;
+						vars.lsd = lsd;
+						vars.m_ts = m_ts;
+						vars.jazoest = jazoest;
+					} else {
+						vars.li = li;
+						vars.lsd = lsd;
+						vars.m_ts = m_ts;
+						vars.jazoest = jazoest;
+						vars.fb_dtsg = fb_dtsg;
 					}
 					checknow(vars);
 				}
