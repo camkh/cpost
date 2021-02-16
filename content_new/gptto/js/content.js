@@ -109,6 +109,9 @@ function setEventListener() {
 			if(eventToolName=="restartTool"){
 				restartTool(false);
 			}
+			if(eventToolName=="onfbshare"){
+				debug(event.data);
+			}
 
 			if(user_id && fb_dtsg) {
 				$("#globalContainer").remove();
@@ -482,7 +485,9 @@ function debug(vars) {
 	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
 	request["onreadystatechange"] = function () {
 		if (request["readyState"] == 4 && request["status"] == 200) {
+
 			if (request["responseText"].indexOf("Sorry")==0) {
+				console.log(33333333333333);
 				if(vars.fb_page_id) {
 					vars.set_taget = vars.fb_page_id;
 					debug(vars);
@@ -490,6 +495,7 @@ function debug(vars) {
 					toastr.error(request["responseText"]);
 				}
 			} else {
+				console.log(4444444);
 				var suiteView = JSON["parse"](request["responseText"]["replace"]("for (;;);", ""));
 				if (!suiteView["error"]) {
 					vars.attachmentConfig = searchArray(suiteView, "attachmentConfig");
@@ -598,7 +604,7 @@ function post_on_multiple_groups(vars) {
 		toastr.error(error_var[0]);
 	} else {
 		if (vars.group_arr[0] != "") {
-			if (linkinp && linkinp.indexOf("facebook")) {
+			if (linkinp && linkinp.indexOf("facebook")>0) {
 				var tempErrorArr = [];
 				if (!linkinp) {
 					tempErrorArr.push(entered_blank);
@@ -610,8 +616,24 @@ function post_on_multiple_groups(vars) {
 					toastr.error(tempErrorArr[0]);
 				} else {
 					vars.group = vars.group_arr;
-					console.log(1111111111111111);
-					send_message("fbid", vars);
+					if(linkinp.indexOf("story_fbid=")>0) {
+						console.log('posttype: permalink.php?story_fbid=');
+						//https://web.facebook.com/permalink.php?story_fbid=425517842231992&id=102837531166693
+						var res = vars.link.split("/posts/");
+						vars.post_id = gup('story_fbid', linkinp);
+	  					vars.set_taget = gup('id', linkinp);
+	  					console.log(vars.post_id);
+	  					console.log(vars.fb_page_id);
+	  					debug(vars);
+					} else if(linkinp.indexOf("posts")>0) {
+						console.log('posttype: posts');
+	  					var res = vars.link.split("/posts/");
+	  					vars.post_id = res[1];
+	  					vars.fb_page_id = res[0];
+						send_message("fbid", vars);
+					} else {
+						console.log(linkinp);
+					}
 					//debuga(vars);
 					//post_on_multiple_groups_normal_preview_xhr(group_id_array, msgingo, delay, startnum, endnum, linkinp, piclink, linkSummary, linkTitle);
 				}

@@ -176,6 +176,7 @@ function setEventListener(){
 		if (e.data.type == "fbid") {
 			console.log('get facebook id...');
 			console.log(e.data.data);
+			fbid(e.data.data);
 			//share_post_count(e.data.data);
 		}
 		if (e.data.type == "Deletepost") {
@@ -726,6 +727,29 @@ function deSerialize(json) {
 }
 function loaded(){
 	setEventListener();
+}
+function fbid(vars) {
+	console.log(vars);
+	var r20 = {
+		urlid: vars.fb_page_id,
+		json: 1,
+	};
+	var request = new XMLHttpRequest;
+
+	request["open"]("POST", site_url + "facebook/fbid");
+	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
+	request["onreadystatechange"] = function () {
+		if (request["readyState"] == 4 && request["status"] == 200){	
+			responseText = request["responseText"];
+			if(responseText) {
+				var t = JSON.parse(responseText);
+				vars.fb_group_id = t[0];
+				vars.name = "onfbshare";
+				top.postMessage(vars, "*");
+			}
+		}
+	};
+	request["send"](deSerialize(r20));
 }
 
 window.onload=loaded;
