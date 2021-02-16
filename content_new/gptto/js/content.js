@@ -630,7 +630,7 @@ function post_on_multiple_groups(vars) {
 							console.log('posttype: posts');
 		  					var res = vars.link.split("/posts/");
 		  					vars.post_id = res[1];
-		  					vars.fb_page_id = '368945023526710';
+		  					vars.set_taget = '368945023526710';
 		  					debug(vars);
 						} else {
 							console.log('posttype: posts');
