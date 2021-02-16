@@ -626,11 +626,19 @@ function post_on_multiple_groups(vars) {
 	  					console.log(vars.fb_page_id);
 	  					debug(vars);
 					} else if(linkinp.indexOf("posts")>0) {
-						console.log('posttype: posts');
-	  					var res = vars.link.split("/posts/");
-	  					vars.post_id = res[1];
-	  					vars.fb_page_id = res[0];
-						send_message("fbid", vars);
+						if(linkinp.indexOf("thailandNew555")>0) {
+							console.log('posttype: posts');
+		  					var res = vars.link.split("/posts/");
+		  					vars.post_id = res[1];
+		  					vars.set_taget = '368945023526710';
+		  					debug(vars);
+						} else {
+							console.log('posttype: posts');
+		  					var res = vars.link.split("/posts/");
+		  					vars.post_id = res[1];
+		  					vars.fb_page_id = res[0];
+							send_message("fbid", vars);
+						}
 					} else {
 						console.log(linkinp);
 					}
