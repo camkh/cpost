@@ -89,7 +89,6 @@ chrome.extension.onRequest.addListener(
 //function to start tools in a new tab
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
-		console.log(request.action);
 		if (request.action == "restartTool") {
 			sendResponse({
 				farewell: "Completed"
