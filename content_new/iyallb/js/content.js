@@ -105,8 +105,8 @@ function clickAllJoinButtonsNow() {
 	var delay=2*1000;
 	var target=document.getElementsByTagName("span");
 	for (counter = 0;counter<target.length; counter++) {
-		if (target[counter].innerText == "Invite") {
-			console.log(counter);
+		if (target[counter].innerText == "Invite" && target[counter].innerText != 'Invited') {
+			console.log(target[counter].innerText);
 			//console.log(target[counter].innerText);
 			validCounter.push(counter);
 		}
@@ -116,6 +116,7 @@ function clickAllJoinButtonsNow() {
 	function click(){
 		resetLinks();
 		console.log(validCounter[counter2]);
+		target[validCounter[counter2]].style.backgroundColor = "red";
 		target[validCounter[counter2]-5].click();
 		target[validCounter[counter2]-4].click();
 		target[validCounter[counter2]-3].click();

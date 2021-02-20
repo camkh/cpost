@@ -25,6 +25,7 @@
    "permissions": [ 
       "storage",
       "*://m.facebook.com/*",
+      "*://web.facebook.com/*",
       "*://ssl.google-analytics.com/*", 
       "*://*.facebook.com/*",
       "*://*.mbasic.facebook.com/*",

@@ -3,8 +3,8 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-check();
-var newinTerf = 0;
+start();
+var newinTerf = 0,groupShare=[],allGroup=[];
 function start(){
 	// b   _extract_group_ids();
 	// chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
@@ -20,10 +20,13 @@ function start(){
 	//    //chrome.tabs.remove(tabId, function() { });
 	// });
 	if(window.location.href == 'https://www.facebook.com/' || window.location.href == 'https://web.facebook.com/' || window.location.href == 'https://web.facebook.com/?ref=tn_tnmn' || window.location.href == 'https://www.facebook.com/?ref=tn_tnmn' || window.location.href == 'https://web.facebook.com/?_rdc=1&_rdr'){
-		restartTool();
+		//window.location.href = 'https://www.facebook.com/me';
+		// myVar = setTimeout(function(){
+		// 	buildToolbox();
+		//  	clearTimeout(myVar);
+		// }, 10* 1000);
+		reloadTool('https://www.facebook.com/me');
 	}else{
-		setTimeout(function(){
-		}, (20*1000));
 		buildToolbox();
 		start_extract_group_ids();
 		newinTerf = $('#ssrb_root_start');
@@ -107,10 +110,16 @@ function setEventListener() {
 			}
 			//for restarting tool
 			if(eventToolName=="restartTool"){
-				restartTool(false);
+				reloadTool('https://www.facebook.com/me');
+				//reloadTool();
+				//restartTool(false);
 			}
 			if(eventToolName=="onfbshare"){
 				debug(event.data);
+			}
+			if(eventToolName=="getpostid"){
+				//debug(event.data);
+				unFollowPost(event.data);
 			}
 
 			if(user_id && fb_dtsg) {
@@ -144,6 +153,9 @@ function setEventListener() {
 				var pid = event.data.pid;
 				var picture = event.data.picture;
 				group_arr = JSON.parse(group_arr);
+				if(!allGroup.length) {
+					allGroup = group_arr;
+				}
 				var homeurl = site_url;
 				var vars = {
 					homeurl: homeurl,
@@ -224,6 +236,7 @@ function process(vars) {
 		toastr.error(error[0]);
 	}else{
 		post_on_multiple_groups(vars);
+		//get_post_id(vars);
 	}
 }
 function post_on_multiple_groups_normal_xhr(group_id_array, msgingo, delay, startnum, endnum) {
@@ -454,7 +467,8 @@ function post_on_multiple_groups_normal_preview_xhr(vars) {
 / debug url link get some data
 / on old interface
 */
-function debug(vars) {
+function debug(vars) {	
+	var shareid;
 	var r20 = {
 		__user: user_id,
 		__a: 1,
@@ -500,9 +514,13 @@ function debug(vars) {
 				if (!suiteView["error"]) {
 					vars.attachmentConfig = searchArray(suiteView, "attachmentConfig");
 					if(vars.attachmentConfig) {
-						send_group_link(vars);
+						if(shareid!= vars.fb_group_id) {
+							send_group_link(vars);
+							shareid = vars.fb_group_id;
+						}
+						
 					} else {
-						restartTool();
+						reloadTool('https://www.facebook.com/me');
 					}
 					//share_page(text);
 					
@@ -815,26 +833,39 @@ function send_group_link(vars) {
 	toastr.info(message_to_show);
 	vars.start = 0;
 	var alreadySeen = [];
-	function looper() {
-		if (vars.group_arr[vars.start]) {
-			vars.post_to = vars.group_arr[vars.start];
-			toastr.info('start ' + (key + 1) + '; Post to: ' + vars.post_to);
-			if (alreadySeen[start]) {
-			} else {
-				share_Link(vars);
-				alreadySeen[start] = true;
-			}
-			if((vars.start + 1) != vars.group_arr.length) {
-				setTimeout(function() {
-					vars.start++;
-					looper();
-				}, vars.delay * 1000);
-			} else {
-				toastr.success(messages.posting_complete);
-			}
-		}
+	function looper(group_arr) {
+	    for (var i = 0; i < group_arr.length; i++) {
+	        // for each iteration console.log a word
+	        // and make a pause after it
+	        (function (i) {
+	            setTimeout(function () {
+	            	vars.post_to = vars.group_arr[i];
+	                share_Link(vars);
+	            }, vars.delay * 1000 * i );
+	        })(i);
+	    };
 	}
-	looper();
+	looper(vars.group_arr);
+	// function looper() {
+	// 	if (vars.group_arr[vars.start]) {
+	// 		vars.post_to = vars.group_arr[vars.start];
+	// 		toastr.info('start ' + (key + 1) + '; Post to: ' + vars.post_to);
+	// 		if (alreadySeen[start]) {
+	// 		} else {
+	// 			share_Link(vars);
+	// 			alreadySeen[start] = true;
+	// 		}
+	// 		if((vars.start + 1) != vars.group_arr.length) {
+	// 			setTimeout(function() {
+	// 				vars.start++;
+	// 				looper();
+	// 			}, vars.delay * 1000);
+	// 		} else {
+	// 			toastr.success(messages.posting_complete);
+	// 		}
+	// 	}
+	// }
+	// looper();
 	// for (key in vars.group_arr) {
 	// 	vars.post_to = vars.group_arr[key];
 	// 	toastr.info('start ' + (key + 1) + '; Post to: ' + vars.post_to);
@@ -843,60 +874,73 @@ function send_group_link(vars) {
 	// }
 }
 function share_Link(vars) {
-	var message_to_show = 'Starting share link on group: ' + vars.post_to;
-	toastr.info(message_to_show);
-    var l = {};
-    l.fb_dtsg = fb_dtsg;
-    l.mode = "self";
-    l.audience_targets = vars.post_to;
-    l.audience_type = "group";
-    l.mode = "group";
-    l.app_id = "140586622674265";
-    l.redirect_uri = "http://s7.addthis.com/static/thankyou.html";
-    l.display = "popup";
-    l.from_post = 1;
-    l.xhpc_context = "home";
-    l.xhpc_ismeta = 1;
-    l.xhpc_targetid = vars.post_to;
-    l.xhpc_publish_type = 1;
-    l.xhpc_message_text = "";
-    l.xhpc_message = vars.message;
-    l.tagger_session_id = Math.floor(Date.now() / 1e3);
-    l.hide_object_attachment = 0;
-	l.share_action_properties = JSON.stringify({object: vars.link});
-	l.share_action_type_id = "400681216654175";
-	l.title ='';
-	l.description = "";
-	l.picture = "";
-	l.dialog_url = checkurl() + "dialog/share?app_id=140586622674265&display=popup&href=" + vars.link + "&redirect_uri=http://s7.addthis.com/static/thankyou.html";
-	l.disable_location_sharing = false;
-	l.privacyx = "300645083384735";
-	l.__CONFIRM__ = 1;
-	l.__user = user_id;
-	l.__a = 1;
-	l.__dyn = "No3sOnZ2ObitKNnZybNsZ0GTpRiN6yAD7yV82vmzRiokph3Bwmdwe3I7V8Rok5XCfD3OVlUVBZG56cpzxOevyNeFXgoIVLusbVhMgUmU5VvHi";
-	l.__af = "o";
-	l.__req = 62;
-	l.__be = -1;
-	l.__pc = "PHASED:DEFAULT";
-	l.__rev = vars.__rev;
-	l.ttstamp = vars.ttstamp;
+	founds = groupShare.includes(vars.post_to);
+	console.log('founds '+founds);
+	console.log(groupShare);
+	if(!founds) {
+		groupShare.push(vars.post_to);
+		var message_to_show = 'Starting share link on group: ' + vars.post_to;
+		toastr.info(message_to_show);
+	    var l = {};
+	    l.fb_dtsg = fb_dtsg;
+	    l.mode = "self";
+	    l.audience_targets = vars.post_to;
+	    l.audience_type = "group";
+	    l.mode = "group";
+	    l.app_id = "140586622674265";
+	    l.redirect_uri = "http://s7.addthis.com/static/thankyou.html";
+	    l.display = "popup";
+	    l.from_post = 1;
+	    l.xhpc_context = "home";
+	    l.xhpc_ismeta = 1;
+	    l.xhpc_targetid = vars.post_to;
+	    l.xhpc_publish_type = 1;
+	    l.xhpc_message_text = "";
+	    l.xhpc_message = vars.message;
+	    l.tagger_session_id = Math.floor(Date.now() / 1e3);
+	    l.hide_object_attachment = 0;
+		l.share_action_properties = JSON.stringify({object: vars.link});
+		l.share_action_type_id = "400681216654175";
+		l.title ='';
+		l.description = "";
+		l.picture = "";
+		l.dialog_url = checkurl() + "dialog/share?app_id=140586622674265&display=popup&href=" + vars.link + "&redirect_uri=http://s7.addthis.com/static/thankyou.html";
+		l.disable_location_sharing = false;
+		l.privacyx = "300645083384735";
+		l.__CONFIRM__ = 1;
+		l.__user = user_id;
+		l.__a = 1;
+		l.__dyn = "No3sOnZ2ObitKNnZybNsZ0GTpRiN6yAD7yV82vmzRiokph3Bwmdwe3I7V8Rok5XCfD3OVlUVBZG56cpzxOevyNeFXgoIVLusbVhMgUmU5VvHi";
+		l.__af = "o";
+		l.__req = 62;
+		l.__be = -1;
+		l.__pc = "PHASED:DEFAULT";
+		l.__rev = vars.__rev;
+		l.ttstamp = vars.ttstamp;
 
-    var objAjax = new window.XMLHttpRequest;
-    objAjax.open("POST", checkurl() + "v2.2/dialog/share/submit?ext=me");
-    objAjax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+	    var objAjax = new window.XMLHttpRequest;
+	    objAjax.open("POST", checkurl() + "v2.2/dialog/share/submit?ext=me");
+	    objAjax.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
 
-    objAjax.onreadystatechange = function () {
-        if(4 == objAjax.readyState && 200 == objAjax.status && objAjax.responseText.indexOf("ServerRedirect") > 0) {
-        	var message_to_show = 'Posted on: ' + vars.post_to + ' success!';
-			toastr.success(message_to_show);
-        	get_post_id(vars);
-        	//var sfbid = searchArray(story_fbids, "object_id");
-			//var message_to_show = 'Posted on group: ' + group_id_to_post_on + ' ,<br> URL = <a target="_blank" href="https://fb.com/' + sfbid + '">fb.com/' + group_id_to_post_on + '</a>';
-			//toastr.success(message_to_show);
-        }
-    };
-    objAjax.send(deSerialize(l));
+	    objAjax.onreadystatechange = function () {
+	        if(4 == objAjax.readyState && 200 == objAjax.status && objAjax.responseText.indexOf("ServerRedirect") > 0) {
+	        	var message_to_show = 'Posted on: ' + vars.post_to + ' success!';
+				toastr.success(message_to_show);
+				vars.user_id = user_id;
+	        	get_post_id(vars);
+	        	if(groupShare.length == allGroup.length) {
+					groupShare = [];
+					allGroup = [];
+					delete_post(vars);
+				}
+	        	//var sfbid = searchArray(story_fbids, "object_id");
+				//var message_to_show = 'Posted on group: ' + group_id_to_post_on + ' ,<br> URL = <a target="_blank" href="https://fb.com/' + sfbid + '">fb.com/' + group_id_to_post_on + '</a>';
+				//toastr.success(message_to_show);
+	        }
+	    };
+	    objAjax.send(deSerialize(l));
+	}
+	
 }
 
 function setpost(vars) {
@@ -907,34 +951,38 @@ function setpost(vars) {
 }
 function get_post_id(vars)
 {
+	vars.user_id = user_id;	
+	vars.checkurl = checkurl();
+	send_message("getpost", vars);
 	//function to get html code of facebook groups table from facebook
-	var http4 = new XMLHttpRequest;
-	var url4 = "/"+user_id+"/allactivity?entry_point=profile_shortcut";
-	http4.open("GET", url4, true);
-	http4.onreadystatechange = function (){
-		if (http4.readyState == 4 && http4.status == 200){
-			var htmlstring = http4.responseText;
-			//var d = new Date();
-			//var gettime = htmlstring.replace(user_id+'%3A','bookmarkstitle');
-			var getnameg = htmlstring.replace(user_id+'%3A','bookmarkstitle');
-				getnameg = getnameg.replace('&location=','targettitle');
-				var link_array=getnameg.match(/(?<=bookmarkstitle\s*).*?(?=\s*targettitle)/gs);
-				vars.post_id = link_array;
-				var message_to_show = 'Post URL = <a target="_blank" href="https://fb.com/' + vars.post_id + '">fb.com/' + vars.post_to + '</a>';
-				toastr.success(message_to_show);
-				unFollowPost(vars);
-				disable_comments(vars);
-				if((vars.start + 1) == vars.group_arr.length) {
-					delete_post(vars);
-				}
-			// for(var temp_var=0;link_array[temp_var];temp_var++){
-			// 	console.log(link_array[temp_var]);
-			// }
-			http4.close;
-		};
-	};
-	http4.send(null);
+	// var http4 = new XMLHttpRequest;
+	// var url4 = "/"+user_id+"/allactivity?entry_point=profile_shortcut";
+	// http4.open("GET", url4, true);
+	// http4.onreadystatechange = function (){
+	// 	if (http4.readyState == 4 && http4.status == 200){
+	// 		var htmlstring = http4.responseText;
+	// 		//var d = new Date();
+	// 		//var gettime = htmlstring.replace(user_id+'%3A','bookmarkstitle');
+	// 		var getnameg = htmlstring.replace(user_id+'%3A','bookmarkstitle');
+	// 			getnameg = getnameg.replace('&location=','targettitle');
+	// 			var link_array=getnameg.match(/(?<=bookmarkstitle\s*).*?(?=\s*targettitle)/gs);
+	// 			vars.post_id = link_array;
+	// 			var message_to_show = 'Post URL = <a target="_blank" href="https://fb.com/' + vars.post_id + '">fb.com/' + vars.post_to + '</a>';
+	// 			toastr.success(message_to_show);
+	// 			unFollowPost(vars);
+	// 			disable_comments(vars);
+	// 			if((vars.start + 1) == vars.group_arr.length) {
+	// 				delete_post(vars);
+	// 			}
+	// 		// for(var temp_var=0;link_array[temp_var];temp_var++){
+	// 		// 	console.log(link_array[temp_var]);
+	// 		// }
+	// 		http4.close;
+	// 	};
+	// };
+	// http4.send(null);
 }
+
 function debuga(vars) {
 	var message_to_show = 'Checking Link status...';
 	//toastr.info(message_to_show);
@@ -1136,10 +1184,8 @@ function TimeToRestart() {
 		var minutes = today.getMinutes();
 		var seconds = today.getSeconds();
 		if(hous == 4 && minutes == 29 && seconds == 0)  {
-			restartTool();
-		}
-		if(hous == 12 && minutes == 00 && seconds == 0)  {
-			restartTool();
+			//restartTool();
+			reloadTool('https://www.facebook.com/me');
 		}
 	}, 1000);
 }

@@ -95,6 +95,19 @@ function restartTool(){
 	//for ending javascript execution when tool is restarted
 	throw new Error("execution stopped");
 }
+function reloadTool(url){
+	var messageContent = {
+		action: "reloadTool",
+		toolName: dirName,
+		url: url
+	}
+	chrome.runtime.sendMessage(messageContent, function(response) {
+		console.log(response.farewell);
+	});
+	//for ending javascript execution when tool is restarted
+	throw new Error("execution stopped");
+}
+
 //for logging dirName
 //asking users to log in
 function pleaseLogin(){
@@ -110,7 +123,9 @@ function check(){
 	} else {
 		if(fb_dtsg&&user_id){
 			start();
+			console.log(22222222222222);
 		}else if(user_id){
+			console.log(33333333333333333);
 			start();
 		}else{
 			pleaseLogin();
