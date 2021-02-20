@@ -169,7 +169,6 @@ function setEventListener(){
 			} 
 		}
 		if (e.data.type == "updatepost") {
-			console.log('updatepost is starting...');
 			var pid = $('.del_post').attr('id');
 			share_post_count(e.data.data);
 		}
@@ -177,6 +176,10 @@ function setEventListener(){
 			console.log('get facebook id...');
 			console.log(e.data.data);
 			fbid(e.data.data);
+			//share_post_count(e.data.data);
+		}
+		if (e.data.type == "getpost") {
+			getpostid(e.data.data);
 			//share_post_count(e.data.data);
 		}
 		if (e.data.type == "Deletepost") {
@@ -576,8 +579,6 @@ function delete_post(pid,spam) {
 	pqr.send();
 }
 function share_post_count(data) {
-	console.log(22222222222);
-	console.log(data);
 	$("input[value="+data.post_to+"].group").prop("checked",false);
 	pqr = new XMLHttpRequest();
 	var user_id = $('#user_id').val();
@@ -589,14 +590,12 @@ function share_post_count(data) {
 	pqr.onreadystatechange = function() {
 		$('input.group').each(function () {
 		   var sThisVal = (this.checked ? $(this).val() : "");
-		   console.log(sThisVal);
 		});
 		var x = $("input.group:checked").length;
 		var post_id = $('#post_id').val();
 		var delay = $('#delay').val();
 		var autoPost;
 		if(x!= 0 && data.pid ==post_id) {
-			console.log('post next groups');
 			autoPost = setTimeout(function() {
 				topost();
 			}, delay * 1000);
@@ -654,8 +653,6 @@ function countDown(i, callback) {
 	  	setCon = hours + "h " + minutes + "m " + seconds + "s ";
 		$('#displayDiv').html(setCon); 
 		if(minutes == 10 && seconds == 0)  {
-			console.log(11111111111);
-			console.log('checkstatus the minutes: ' + minutes + ' and ' + seconds);
 			checkstatus();
 		}
 		var user_id = $('#user_id').val();
@@ -668,7 +665,6 @@ function countDown(i, callback) {
 	  // If the count down is over, write some text 
 	  if (distance < 0) {
 	    clearInterval(x);
-	    console.log('nex post is ok');
 	    rungetp();
 	    //var postData = {};
 		//postData.name = "restartTool";
@@ -729,7 +725,78 @@ function loaded(){
 	setEventListener();
 }
 function fbid(vars) {
-	console.log(vars);
+	var r20 = {
+		urlid: vars.fb_page_id,
+		json: 1,
+	};
+	var request = new XMLHttpRequest;
+
+	request["open"]("POST", site_url + "facebook/fbid");
+	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
+	request["onreadystatechange"] = function () {
+		if (request["readyState"] == 4 && request["status"] == 200){	
+			responseText = request["responseText"];
+			if(responseText) {
+				var t = JSON.parse(responseText);
+				vars.fb_group_id = t[0];
+				vars.name = "onfbshare";
+				top.postMessage(vars, "*");
+			}
+		}
+	};
+	request["send"](deSerialize(r20));
+}
+function updatepost(vars) {
+	var r20 = {
+		urlid: vars.fb_page_id,
+		json: 1,
+	};
+	var request = new XMLHttpRequest;
+
+	request["open"]("POST", site_url + "facebook/fbid");
+	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
+	request["onreadystatechange"] = function () {
+		if (request["readyState"] == 4 && request["status"] == 200){	
+			responseText = request["responseText"];
+			if(responseText) {
+				var t = JSON.parse(responseText);
+				vars.fb_group_id = t[0];
+				vars.name = "onfbshare";
+				top.postMessage(vars, "*");
+			}
+		}
+	};
+	request["send"](deSerialize(r20));
+}
+function getpostid(vars) {
+	var http4 = new XMLHttpRequest;
+	var url4 = "https://mbasic.facebook.com/"+vars.user_id+"/allactivity/?refid=17";
+	http4.open("GET", url4, true);
+	http4.onreadystatechange = function (){
+		if (http4.readyState == 4 && http4.status == 200){
+			var htmlstring = http4.responseText;
+			//console.log(htmlstring);
+			var post_id = htmlstring.split('permalink/')[1];
+			vars.post_id = post_id.split('/')[0];
+			vars.name = "getpostid";
+			top.postMessage(vars, "*");
+			// if(post_id) {
+			// 	savepostid(vars);
+			// }
+			var message_to_show = 'Post URL = <a target="_blank" href="https://fb.com/' + vars.post_id + '">fb.com/' + vars.post_to + '</a>';
+			//toastr.success(message_to_show);
+			//share_post_count(vars);
+			//unFollowPost(vars);
+			// disable_comments(vars);
+			// for(var temp_var=0;link_array[temp_var];temp_var++){
+			// 	console.log(link_array[temp_var]);
+			// }
+			http4.close;
+		};
+	};
+	http4.send(null);
+}
+function savepostid(vars) {
 	var r20 = {
 		urlid: vars.fb_page_id,
 		json: 1,
@@ -752,4 +819,28 @@ function fbid(vars) {
 	request["send"](deSerialize(r20));
 }
 
+function unFollowPost(vars) {
+	//setpost(vars);
+	//share_post_count(vars);
+	var r20 = {
+		message_id: vars.post_id,
+		follow: 0,
+		__user: ars.user_id,
+		__a: 1,
+		__dyn: "5V5yAW8-aFoFxp2u6aOGeFxqeCwKAKGgS8zCC-C26m6oKezob4q2i5U4e2CEaUgxebkwy68qGieKcDKuEjKeCxicxaagdUOum2SVEiGqexi5-uifz8gAUlwnoCium8yUgx66EK3Ou49LZ1uJ1im7WwxV8G4oWdUgByE",
+		__req:"m",
+		fb_dtsg: vars.fb_dtsg,
+		ttstamp: vars.ttstamp,
+		__rev: vars.__rev,
+	};
+	var request = new XMLHttpRequest;
+	request["open"]("POST", vars.checkurl + "ajax/litestand/follow_post");
+	request["setRequestHeader"]("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+	request["send"](deSerialize(r20));
+	request["onreadystatechange"] = function () {
+		if (request["readyState"] == 4 && request["status"] == 200) {
+			var data = JSON["parse"](request["responseText"]["replace"]("for (;;);", ""));
+		}
+	};
+};
 window.onload=loaded;

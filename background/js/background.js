@@ -5,6 +5,7 @@
 //
 */
 //for performing a task after installation
+var setname=[],newTab;
 chrome.runtime.onInstalled.addListener(function(object) {
 	chrome.storage.local.get('installed', function(a) {
 		if (!a.installed) {
@@ -26,6 +27,8 @@ chrome.runtime.onInstalled.addListener(function(object) {
 		}
 	});
 });
+
+
 /*
 for updating member info in background
 */
@@ -97,7 +100,51 @@ chrome.runtime.onMessage.addListener(
 			var newTab=request.newTab;
 			start(name,newTab);
 			chrome.tabs.create({url: 'http://localhost/fbpost/home/index', active: false});
-			closeTabs();
+			//closeTabs();
+		}
+		if (request.action == "reloadTool") {
+			chrome.tabs.create({url: 'http://localhost/fbpost/home/index', active: false});
+			var cname=request.toolName;
+			var newTab=request.newTab;
+			setname.push({
+				'toolName':request.toolName,
+				'request':request.action,
+			});
+			chrome.tabs.getSelected(null, function(tab){
+				var reloadProperties={};
+				reloadProperties.url=request.url;
+				tabid = tab.id;
+				chrome.tabs.update(tabid, reloadProperties, function callback(e) {
+					setTimeout(function(){
+						sendResponse({
+							farewell: "started"
+						});
+						//start(cname,newTab);
+						if(cname=='gptto') {
+							closeTabs(tabid);
+							gptto();
+						}
+					}, (10*1000));
+					// if (e.status == 'complete') {
+					// 	console.log(cname);
+					// 	// sendResponse({
+					// 	// 	farewell: "started"
+					// 	// });
+						
+					// 	// start(cname,newTab);
+					// }
+					
+				});
+			    // console.log(tab.id);
+			    // var createProperties = {};
+			    // createProperties.name = request.toolName;
+			    // createProperties.newTab = newTab=request.newTab;
+			    // createProperties.url = newTab=request.url;
+			    // createProperties.id = tab.id;
+			    // createProperties.request = request.action;
+			    //reloadurl(request.toolName,createProperties);
+			});
+			
 		}
 		if (request.action == "startTool") {
 			sendResponse({
@@ -120,20 +167,53 @@ chrome.browserAction.onClicked.addListener(allAction);
 function allAction(tab) {
 	console.log(tab);
 }
-function closeTabs() {
+function closeTabs(tabid) {
 	chrome.tabs.query({}, function(tabs) {
-		console.log(tabs);
 		for (var i = 0; i < tabs.length; i++) {
-			if(tabs[i].active!=true && tabs[i].status == "complete") {
-				chrome.tabs.remove(tabs[i].id);;
-			} 
+			if(tabs[i].id!=tabid) {
+				chrome.tabs.remove(tabs[i].id);
+			}
 	    }
 	  
 	});
+	// chrome.tabs.query({}, function(tabs) {
+	// 	for (var i = 0; i < tabs.length; i++) {
+	// 		if(tabs[i].active!=true && tabs[i].status == "complete") {
+	// 			if(tabs[i].id!=tabid) {
+	// 				chrome.tabs.remove(tabs[i].id);
+	// 			}
+	// 		} 
+	//     }
+	  
+	// });
 // 	chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
 // 	  //console.log(tab);
 // 	  //console.log(changeInfo);
 // 	  //console.log(tabId);
 // 	   //chrome.tabs.remove(tabId, function() { });
 // 	});
+}
+// chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {          
+// 	 //alert(changeInfo.status);
+// 	 if (changeInfo.status == 'complete') {
+// 		 console.log(changeInfo.status);
+// 		 if(setname.length>0) {
+// 		 	if(setname[0]['request'] =='reloadTool') {
+// 		 		startTool(setname[0]['toolName'],setname[0]['request']);
+// 		 		//var dirName=setname[0]['toolName'];		 		
+// 		 		setname.push({
+// 					'toolName':'',
+// 					'request':'',
+// 				});
+// 		 	}
+		 	
+// 		 }
+// 	 }
+// });
+function getCurrent() {
+	chrome.tabs.getSelected(null, function(tab){
+	    console.log(tab.id);
+	    
+	});
+	//chrome.tabs.reload(tabId: number, reloadProperties: object, callback: function);
 }

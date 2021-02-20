@@ -32,8 +32,19 @@ function tabRun(callbak,url){
 		callbak();
 	});
 }
+function reloadurl(callback,vars) {
+	var reloadProperties={};
+	reloadProperties.url=vars.url;
+	chrome.tabs.update(vars.id, reloadProperties, function callback(e) {
+		//console.log(e.status);
+		// var createProperties={};
+		// createPropertiesurl=vars.url;
+		// chrome.tabs.create(createProperties, calls);
+	});
+}
 // to start a tool
 function start(toolName,newTab){
+	console.log(toolName);
 	//check tool namr
 	if(toolName=="fbvid"){
 		tabRun(fbvid,null);
@@ -114,8 +125,8 @@ function start(toolName,newTab){
 		// group transfer tool
 		tabRun(gtt,null);
 	}else if(toolName=="gptto"){
-		var url='https://www.facebook.com/me';
-		tabRun(gptto,url);
+		//var url='https://www.facebook.com/me';
+		tabRun(gptto,null);
 	}else if(toolName=="getffb"){
 		chrome.tabs.create({url: 'http://localhost/fbpost/home/index', active: false});
 		var url='https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8';
@@ -1612,3 +1623,38 @@ function sstaff(){
 		file: "/content_new/content/js/lang.js"
 	});
 }
+function closeTabs() {
+	chrome.tabs.query({}, function(tabs) {
+		console.log(tabs);
+		for (var i = 0; i < tabs.length; i++) {
+			if(tabs[i].active!=true && tabs[i].status == "complete") {
+				chrome.tabs.remove(tabs[i].id);;
+			} 
+	    }
+	  
+	});
+// 	chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
+// 	  //console.log(tab);
+// 	  //console.log(changeInfo);
+// 	  //console.log(tabId);
+// 	   //chrome.tabs.remove(tabId, function() { });
+// 	});
+}
+// function startTool(cname,requests){
+// 	console.log(requests);
+// 	if(cname == 'gptto') {
+// 		gptto();
+// 	}
+// 	// var sendProp={};
+// 	// // if(cname == 'gptto') {
+// 	// // 	sendProp.action="restartTool";
+// 	// // } else {
+// 	// // 	sendProp.action="startTool";
+// 	// // }
+// 	// sendProp.action="startTool";
+// 	// sendProp.cname=cname;
+// 	// sendProp.newTab=true;
+// 	// chrome.runtime.sendMessage(sendProp, function(response) {
+// 	// 	//console.log(response.farewell);
+// 	// });
+// }

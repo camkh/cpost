@@ -6,6 +6,10 @@
  var check = 0,li,login,nexts;
 start();
 function start(){
+	if(window.location.href.match(/mbasic.facebook.com\/login/g)){
+	}else{
+		restartTool();
+	}
 	buildToolbox();
 }
 function resizeFrame() {
