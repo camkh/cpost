@@ -4,7 +4,7 @@
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
 var toolTitle = "Invite Your Friends To Like Your Page";
-var dirName = "gptto";
+var dirName = "sharettg";
 var targetFrameId = 'fstFrameDiv';
 var targetDivId = 'fstParentDiv';
 var messages={};

@@ -10,3 +10,5 @@ var extensionName="AutoPost For Facebook";
 var manifest = chrome.runtime.getManifest();
 // regex for checking correct hostname
 var hname_regex=/\.facebook\.com/ig;
+
+//console.log(detail);

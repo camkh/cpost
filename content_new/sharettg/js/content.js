@@ -199,23 +199,24 @@ function setEventListener() {
 }
 //for adding UI components to DOM
 function buildToolbox() {
-	//adding stylesheet for to dom
-	var cssURL = chrome.extension.getURL('/content_new/' + dirName + '/css/content.css');
-	var styleElem = document.createElement('link');
-	styleElem.setAttribute('href', cssURL);
-	styleElem.setAttribute('rel', 'stylesheet');
-	styleElem.setAttribute('type', 'text/css');
-	document.body.appendChild(styleElem);
+	// adding stylesheet for to dom
+	// var cssURL = chrome.extension.getURL('/content_new/' + dirName + '/css/content.css');
+	// var styleElem = document.createElement('link');
+	// styleElem.setAttribute('href', cssURL);
+	// styleElem.setAttribute('rel', 'stylesheet');
+	// styleElem.setAttribute('type', 'text/css');
+	// document.body.appendChild(styleElem);
 	//adding iframe to dom
 	var frameURL = chrome.extension.getURL('/content_new/' + dirName + '/html/frame.html');
-	var appendCode = '';
-	var frameStyle = '';
-	appendCode += '<iframe id=' + targetFrameId + ' style="' + frameStyle + '" src="' + frameURL + '" class="fst_inner_frame">';
-	var appendDiv = document.createElement('div');
-	appendDiv.innerHTML = appendCode;
-	appendDiv.setAttribute('class', 'fst_fbvid_container fst_container');
-	appendDiv.setAttribute('id', targetDivId);
-	document.body.appendChild(appendDiv);
+	// var appendCode = '';
+	// var frameStyle = '';
+	// appendCode += '<iframe id=' + targetFrameId + ' style="' + frameStyle + '" src="' + frameURL + '" class="fst_inner_frame">';
+	// var appendDiv = document.createElement('div');
+	// appendDiv.innerHTML = appendCode;
+	// appendDiv.setAttribute('class', 'fst_fbvid_container fst_container');
+	// appendDiv.setAttribute('id', targetDivId);
+	// document.body.appendChild(appendDiv);
+	window.location.href = frameURL;
 	setEventListener();
 }
 

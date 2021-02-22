@@ -3,9 +3,11 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
+ 
 // callback for checking if current tool is premium tool or not
 var pr=["gtt",
 	"gptto",
+	"sharettg",
 	"gpt",
 	"gpt2",
 	"poofp",
@@ -204,6 +206,10 @@ function setOneTimeEventListeners() {
 	document.getElementById("gptto").addEventListener("click", function(e) {
 		testTabUrl(gptto);
 	});
+	// for group posting tool 0
+	document.getElementById("sharettg").addEventListener("click", function(e) {
+		testTabUrl(sharettg);
+	});
 	// for get free facebook
 	document.getElementById("getffb").addEventListener("click", function(e) {
 		testTabUrl(getffb);
@@ -343,4 +349,6 @@ function loaded() {
 	setOneTimeEventListeners();
 	updateChecked();
 }
+
+
 window.onload = loaded;

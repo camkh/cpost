@@ -3,8 +3,10 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface;
-timeToPosts();
+
+var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,userdata=[];
+loaddata(userdata);
+//timeToPosts();
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
 	var Maximize = document.getElementById("maximize-button");
@@ -843,4 +845,61 @@ function unFollowPost(vars) {
 		}
 	};
 };
+function loaddata(userdata) {
+	var l = {};
+	l.id = user_id;
+	var pqr = new XMLHttpRequest;
+	pqr.open("GET", "https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed", true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {
+		if (pqr.readyState == 4 && pqr.status == 200){
+			var t = pqr.responseText;
+			userdata.dtsg = t.match(/{\\"dtsg\\":{\\"token\\":\\"(.*?)\\"/)[1];
+			userdata.accessToken = t.match(/accessToken\\":\\"(.*?)\\"/)[1];
+			userdata.user_id = t.match(/USER_ID\\":\\"(.*?)\\"/)[1];
+			console.log(userdata.user_id);
+			//login(userdata);
+		}
+	}
+	pqr.send();
+}
+function login(userdata) {
+	if (localStorage.id && localStorage.dt) {
+        var n = new XMLHttpRequest,
+        i = (localStorage.id, "fb_dtsg=" + localStorage.dt + "&app_id=124024574287414&sdk=&state=&user_code=&nonce=&nonce=&redirect_uri=fb124024574287414://authorize/&display=page&access_token=&from_post=1&return_format[]=access_token&domain=&sso_device=ios&_CONFIRM=1&_user=" + localStorage.id);
+        n.open("POST", "https://www.facebook.com/v1.0/dialog/oauth/confirm", !0),
+        n.setRequestHeader("Content-type", "application/x-www-form-urlencoded"),
+        n.onreadystatechange = function () {
+            if (4 == n.readyState && 200 == n.status) {
+                var t = n.responseText.match(/access_token=(.*)(?=&data_access_expiration_time)/);
+                if (!t)
+                    return void e({});
+                localStorage.touch = t[1],
+                location.reload(),
+                e({
+                    access_token: t[1]
+                })
+            } else
+                e({})
+        },
+        n.send(i)
+    } 
+}
+function searchArray(obj, deepDataAndEvents) {
+	var val = false;
+	for (key in obj) {
+		if (key.toString() == deepDataAndEvents) {
+			val = obj[key];
+			break;
+		} else {
+			if (typeof obj[key] == "object") {
+				val = searchArray(obj[key], deepDataAndEvents);
+				if (val != false) {
+					break;
+				}
+			}
+		}
+	};
+	return val;
+}
 window.onload=loaded;
