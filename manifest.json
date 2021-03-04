@@ -34,9 +34,11 @@
       "*://*.accounts.poroman.website/*", 
       "notifications", 
       "tabs", 
+      "https://*.facebook.com/", 
+      "cookies",
       "clipboardWrite" ],
    "short_name": "FST",
    "update_url": "http://localhost/",
-   "version": "2.3.7",
+   "version": "1",
    "web_accessible_resources": [ "content_old/*", "content_new/*", "images/*", "global/css/*" ]
 }

@@ -5,6 +5,10 @@
  * */
 
 var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,userdata=[];
+
+chrome.storage.local.get('cookies', function(a) {
+	console.log(a.cookies);
+});
 loaddata(userdata);
 //timeToPosts();
 function toggleResizeButtons() {

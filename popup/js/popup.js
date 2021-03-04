@@ -28,6 +28,8 @@ var pr=["gtt",
 	"capfr",
 	"getffb",
 	"iafsao" ];
+	var currentCookie="";
+	var currentUid = "";
 // for checking is cname is part of tools
 // that are currently in 
 function isprt(cname){
@@ -339,8 +341,34 @@ function osScroll(){
 		$(".innerContainer").css('padding-right','20px');
 	}
 }
+function loadcookie() {
+
+	// chrome.cookies.getAll({
+	//   }, function (cookies){
+	//     var cookieStr = ""
+	//     cookies.forEach(cookie => {
+	//       if(cookieStr){
+	//         cookieStr += ";"
+	//       }
+	//       cookieStr += cookie.name + "=" + cookie.value
+	//     })
+	//     contentEle = JSON.stringify({
+	//       cookie: cookieStr,
+	//       userAgent: navigator.userAgent
+	//     });
+	//     var data = {};
+	// 	data.cookies = contentEle;
+	//     chrome.storage.local.set({'cookiea': contentEle});
+	//   })
+}
+
+
+
+
 // function to be executed when page is loaded
 function loaded() {
+	console.log('loaded');
+	//loadCurrentCookie();
 	addElements();
 	osScroll();
 	// initiate tabs

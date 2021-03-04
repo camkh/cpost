@@ -1,3 +1,4 @@
+
 /*
 Copyright(c) 2014-2016 Dinesh Rajkumar Bhosale of getmyscript.com
 See license file for more information
@@ -27,37 +28,59 @@ let stateCheck = setInterval(() => {
     clearInterval(stateCheck);
     // document ready
     /*get name from fb*/
-    if (document.getElementsByName("h1")) {
-    	if (document.getElementsByName("h1")[1]) {
-    		fb_name = document.getElementsByTagName("h1")[1].innerHTML;
-    	}
-    	if (!fb_name) {
-    		fb_name = document.getElementsByTagName("h1")[0].innerHTML;
-    	}
-		
-		chrome.storage.local.set({'fb_name': fb_name});
-	}
+    if(fb_dtsg) {
+	    if (document.getElementsByName("h1")) {
+	    	if (document.getElementsByName("h1")[1]) {
+	    		fb_name = document.getElementsByTagName("h1")[1].innerHTML;
+	    	}
+	    	if (!fb_name) {
+	    		fb_name = document.getElementsByTagName("h1")[0].innerHTML;
+	    	}
+			
+			chrome.storage.local.set({'fb_name': fb_name});
+		}
 
-	/*get image from fb*/
-	if (document.getElementsByName("link")) {
-		var metas = document.getElementsByTagName("link");
-		for (let i = 0; i < metas.length; i++) {
-			if (metas[i].getAttribute('as') === 'image') {
-				fb_image = metas[i].getAttribute('href');
-				chrome.storage.local.set({'fb_image': fb_image});
-			  	break;
+		//get image from fb
+		if (document.getElementsByName("link")) {
+			var metas = document.getElementsByTagName("link");
+			for (let i = 0; i < metas.length; i++) {
+				if (metas[i].getAttribute('as') === 'image') {
+					fb_image = metas[i].getAttribute('href');
+					chrome.storage.local.set({'fb_image': fb_image});
+				  	break;
+				}
 			}
 		}
 	}
   }
 }, 2000);
 
-if (document.cookie.match(/c_user=(\d+)/)) {
-	if (document.cookie.match(/c_user=(\d+)/)[1]) {
-		user_id = document.cookie.match(document.cookie.match(/c_user=(\d+)/)[1]);
-		chrome.storage.local.set({'user_id': user_id});
-	}
-};
+// if (document.cookie.match(/c_user=(\d+)/)) {
+// 	if (document.cookie.match(/c_user=(\d+)/)[1]) {
+// 		user_id = document.cookie.match(document.cookie.match(/c_user=(\d+)/)[1]);
+// 		chrome.storage.local.set({'user_id': user_id});
+
+// 		var gcookie = get_cookies_array();
+// 		var cookieStr = "";
+// 		for (const property in gcookie) {
+// 		  //console.log(`${property}: ${gcookie[property]}`);
+// 		  if(cookieStr){
+// 	        cookieStr += ";"
+// 	      }
+// 	      cookieStr += property + "=" + gcookie[property]
+// 		}
+
+// 	    contentEle = JSON.stringify({
+// 	      cookie: cookieStr,
+// 	      userAgent: navigator.userAgent
+// 	    });
+// 		chrome.storage.local.set({'cookies': contentEle});
+// 		console.log(contentEle);
+// 		var data = {};
+// 		data.cookies = contentEle;
+// 		//updatecookie(data);
+// 	}
+// };
 
 //remove duplicates from array
 var unique_array = function (arr) {
@@ -104,6 +127,40 @@ function group_info_parse(htmlstring){
 
 }
 
+function get_cookies_array() {
+
+    // var cookies = { };
+
+    // if (document.cookie && document.cookie != '') {
+    //     var split = document.cookie.split(';');
+    //     for (var i = 0; i < split.length; i++) {
+    //         var name_value = split[i].split("=");
+    //         name_value[0] = name_value[0].replace(/^ /, '');
+    //         cookies[decodeURIComponent(name_value[0])] = decodeURIComponent(name_value[1]);
+    //     }
+    // }
+
+    // return cookies;
+   
+}
+function deSerialize(json) {
+	return Object.keys(json).map(function (key) {
+		return encodeURIComponent(key) + '=' + encodeURIComponent(json[key]);
+	}).join('&');
+}
+function updatecookie(data) {
+	pqr = new XMLHttpRequest();
+	// var data = {};
+	// data.action = "share_update";
+	// data.postid = pid;
+	pqr.open("GET", "http://localhost/fbpost/facebook/fb?action=cookies&" + deSerialize(data), true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {		
+		if (pqr.readyState == 4 && pqr.status == 200){
+		}
+	}
+	pqr.send();
+}
 function generate_group_id_array(silent)
 {
 	//function to get html code of facebook groups table from facebook

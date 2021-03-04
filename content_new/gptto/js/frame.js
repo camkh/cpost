@@ -3,8 +3,36 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface;
+var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,userdata={};
+// chrome.storage.local.get('cookiea', function(a) {
+// 	var data = {};
+// 	data.cookies = a.cookiea;
+// 	updatecookie(data);
+// });
+chrome.storage.local.get(['fbuser'], function(result) {
+	if(result.fbuser) {
+		userdata = result.fbuser;
+		//fb_dtsg = result.fbuser.fb_dtsg;
+		user_id = result.fbuser.user_id;
+		getpost(userdata.user_id);
+	}
+});
 timeToPosts();
+// function deSerialize(json) {
+// 	return Object.keys(json).map(function (key) {
+// 		return encodeURIComponent(key) + '=' + encodeURIComponent(json[key]);
+// 	}).join('&');
+// }
+// function updatecookie(data) {
+// 	pqr = new XMLHttpRequest();
+// 	pqr.open("GET", site_url + "facebook/fb?action=cookies&" + deSerialize(data), true);
+// 	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+// 	pqr.onreadystatechange = function() {		
+// 		if (pqr.readyState == 4 && pqr.status == 200){
+// 		}
+// 	}
+// 	pqr.send();
+// }
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
 	var Maximize = document.getElementById("maximize-button");
@@ -306,7 +334,12 @@ function getpost(user_id) {
 			var fbpageid = t.pageid;
 			interface = $('#interface').val();
 			$('#group_results').html('');
-			$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture\" style=\"width: 60px\" />");
+			if(userdata.accessToken) {
+				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=small&access_token="+userdata.accessToken+"\" style=\"width: 60px\" />");
+			} else {
+				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=small\" style=\"width: 60px\" />");
+			}
+			
 			$('#facebook_name').html(t.fb_name);
 			const sites = ['www.siamnews.com','www.viralsfeedpro.com','www.mumkhao.com','www.xn--42c2dgos8bxc2dtcg.com','board.postjung.com','huaythai.me'];
 			if(t.post) {
@@ -475,6 +508,7 @@ function topost(vars) {
     });
 	//var setnextpost = 1000 * 60 * nextpost;
 	if(vars) {
+		var user_id = $('#user_id').val();
 		if(vars.link && vars.pid) {
 			var postData = {};
 			postData.name = "post";
@@ -486,10 +520,13 @@ function topost(vars) {
 			postData.picture=vars.picture;
 			postData.fbgroupid=vars.fbgroupid;
 			postData.fbpageid=vars.fbpageid;
+			postData.user_id= user_id;
 			top.postMessage(postData, "*");
 		}
 	}
 	if (document.getElementById('post_id')) {	
+		var user_id = $('#user_id').val();
+		console.log(user_id);
 		var link = document.getElementById('link').value;
 		var message = document.getElementById('message').value;
 		var delay = document.getElementById('delay').value;
@@ -509,6 +546,7 @@ function topost(vars) {
 			postData.fbgroupid=group_id;
 			postData.fbpageid=page_id;
 			postData.interface=interface;
+			postData.user_id=user_id;
 			top.postMessage(postData, "*");
 		}
 	}	

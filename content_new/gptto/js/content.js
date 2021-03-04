@@ -3,9 +3,30 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
+chrome.storage.local.get(['fbuser'], function(result) {
+	if(result.fbuser) {
+
+		userdata = result.fbuser;
+		//fb_dtsg = result.fbuser.fb_dtsg;
+		if(!user_id) {
+			user_id = result.fbuser.user_id;
+		}
+		console.log(user_id);
+	}
+});
+if(!user_id) {
+	chrome.storage.local.get(['user_id'], function(result) {
+	if(result.user_id) {
+
+		userdata = result.user_id;
+		console.log(user_id);
+	}
+});
+}
 start();
 var newinTerf = 0,groupShare=[],allGroup=[];
 function start(){
+	console.log(user_id);
 	// b   _extract_group_ids();
 	// chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
 	// 	var messageContent = {
@@ -152,6 +173,9 @@ function setEventListener() {
 				var fb_page_id = event.data.fbpageid;
 				var pid = event.data.pid;
 				var picture = event.data.picture;
+				if(event.data.user_id) {
+					user_id = event.data.user_id;
+				}
 				group_arr = JSON.parse(group_arr);
 				if(!allGroup.length) {
 					allGroup = group_arr;
@@ -174,6 +198,7 @@ function setEventListener() {
 					fb_group_id: fb_group_id,
 					postid: "",
 					post_to: "",
+					user_id: user_id,
 					pid: pid,
 					picture: picture,
 					group: [],
@@ -470,7 +495,7 @@ function post_on_multiple_groups_normal_preview_xhr(vars) {
 function debug(vars) {	
 	var shareid;
 	var r20 = {
-		__user: user_id,
+		__user: vars.user_id,
 		__a: 1,
 		__dyn: "7AgNe-4amaWxd2u6aJGi9FxqeCwDKEyGgS8WyAAjFGUqxe2qdwIhEpyA4WCHxC7oG5VEc8yGDyUJu9xK5WAxamqnKaxeAcUeUG5E-44czorx6ih4-e-2h1yuiaAzazpFQcy412xuHBy8G6Ehwj8lg8VECqQh0WQfxSq5K9wlFVk1nyFFEy2haUhKFprzooAmfxKq9BQnjG3tummfx-bKq58CcBAyoGi1uUkGE-WUnyoqxi4otQdhVoOjyEaLK6Ux4ojUC6p8gUScBKm4U-5898G9BDzufwyyUnG2qbzV5Gh2bLCDKi8z8hyUlxeaKE-17Kt7Gmu48y8xuUsVoC9zFAdxp2UtDxtyUixOby8ixK6E4-4okwDxy5qxNDxeu3G4p8tyb-2efxW8Kqi5pob89EbaxS2G",
 		__req: "4t",
@@ -481,7 +506,7 @@ function debug(vars) {
 		__rev: vars.__rev
 	};
 	if(!vars.fb_page_id) {
-		var av = user_id;
+		var av = vars.user_id;
 	} else {
 		var av = vars.fb_page_id;
 	}
@@ -494,8 +519,12 @@ function debug(vars) {
 		var target_id = vars.set_taget;
 	}
 	var request = new XMLHttpRequest;
-
-	request["open"]("POST", checkurl()+ "react_composer/scraper/?composer_id=rc.js_21l&target_id=" + target_id + "&scrape_url=" + vars.link + "&entry_point=group&source_attachment=STATUS&source_logging_name=link_pasted&av=" + av);
+	for (var i = 0; i < target_id.length; i++) {
+		if(i == 0) {
+			target_ids = target_id[i];
+		}
+	}
+	request["open"]("POST", checkurl()+ "react_composer/scraper/?composer_id=rc.js_21l&target_id=" + target_ids + "&scrape_url=" + vars.link + "&entry_point=group&source_attachment=STATUS&source_logging_name=link_pasted&av=" + av);
 	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
 	request["onreadystatechange"] = function () {
 		if (request["readyState"] == 4 && request["status"] == 200) {
@@ -538,7 +567,7 @@ function debug(vars) {
 function ni_debug(vars) {
 	console.log('ccccccccccccccccccc');
 	if(!vars.fb_page_id) {
-		var av = user_id;
+		var av = vars.user_id;
 	} else {
 		var av = vars.fb_page_id;
 	}
@@ -548,7 +577,7 @@ function ni_debug(vars) {
 	};
 	var r20 = {
 		av: av,
-		__user: user_id,
+		__user: vars.user_id,
 		__a: 1,
 		__dyn: "7AgNe-4amaWxd2u6aJGi9FxqeCwDKEyGgS8WyAAjFGUqxe2qdwIhEpyA4WCHxC7oG5VEc8yGDyUJu9xK5WAxamqnKaxeAcUeUG5E-44czorx6ih4-e-2h1yuiaAzazpFQcy412xuHBy8G6Ehwj8lg8VECqQh0WQfxSq5K9wlFVk1nyFFEy2haUhKFprzooAmfxKq9BQnjG3tummfx-bKq58CcBAyoGi1uUkGE-WUnyoqxi4otQdhVoOjyEaLK6Ux4ojUC6p8gUScBKm4U-5898G9BDzufwyyUnG2qbzV5Gh2bLCDKi8z8hyUlxeaKE-17Kt7Gmu48y8xuUsVoC9zFAdxp2UtDxtyUixOby8ixK6E4-4okwDxy5qxNDxeu3G4p8tyb-2efxW8Kqi5pob89EbaxS2G",
 		__req: "1s",
