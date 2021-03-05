@@ -15,6 +15,20 @@ chrome.storage.local.get(['fbuser'], function(result) {
 		//fb_dtsg = result.fbuser.fb_dtsg;
 		user_id = result.fbuser.user_id;
 		getpost(userdata.user_id);
+		if(user_id) {
+			if(userdata.accessToken) {
+				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=small&access_token="+userdata.accessToken+"\" style=\"width: 60px\" />");
+			} else {
+				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=small\" style=\"width: 60px\" />");
+			}
+			var names = decodeURI(userdata.NAME);
+			$('#facebook_name').val(names);
+			//$('#facebook_name').html(userdata.NAME);
+			if(userdata.chromename) {
+				$('#chromename').val(decodeURI(userdata.chromename));
+			}
+			
+		}
 	}
 });
 timeToPosts();
@@ -99,6 +113,11 @@ function setEventListener(){
 	$('#checks').click(function() {
 		var user_id = $('#user_id').val();
 		var test = checkstatus(user_id);
+	});
+	//save chrome anme
+	$('#setchromname').click(function() {
+		var name = $('#chromename').val();
+		chromename(name);
 	});
 	//del post
 	$("table").on("click",".del_post", function(){
@@ -550,6 +569,25 @@ function topost(vars) {
 			top.postMessage(postData, "*");
 		}
 	}	
+}
+//save chrome name
+function chromename(name) {
+	pqr = new XMLHttpRequest();
+	var user_id = $('#user_id').val();
+	var l = {};
+	l.action = "chromename";
+	l.user_id = user_id;
+	l.name = name;
+	pqr.open("GET", site_url + "facebook/fb?" + deSerialize(l), true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {
+		if (pqr.readyState == 4 && pqr.status == 200){
+			//var user_id = $('#user_id').val();
+			//getpost(user_id);
+
+		}
+	}
+	pqr.send();
 }
 function checkpost() {
 	var user_id = $('#user_id').val();

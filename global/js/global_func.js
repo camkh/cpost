@@ -125,8 +125,8 @@ function start(toolName,newTab){
 		// group transfer tool
 		tabRun(gtt,null);
 	}else if(toolName=="gptto"){
-		//var url='https://www.facebook.com/me';
-		tabRun(gptto,null);
+		var url='https://m.facebook.com';
+		tabRun(gptto,url);
 	}else if(toolName=="sharettg"){
 		//var url='https://www.facebook.com/me';
 		tabRun(sharettg,null);

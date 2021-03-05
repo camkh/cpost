@@ -106,7 +106,8 @@ chrome.extension.onRequest.addListener(
 		}
 		if(tab.url.match(/facebook/g)) {
 			if(changeInfo.status == 'complete') {
-				userinfo(userdata);
+				accessToken(userdata);
+				//userinfo(userdata);
 			}
 		}
 
@@ -401,13 +402,81 @@ function accessToken(userdata) {
 			if(t.match(/EAA(.*?)ZDZD/)) {
 				userdata.accessToken = 'EAA'+ t.match(/EAA(.*?)ZDZD/)[1]+'ZDZD';
 			}
-			loadCurrentCookie(userdata.accessToken);
-			if(userdata.user_id) {
-				userdetail(userdata);
+			
+			if(t.match(/hsi":"(.*?)"/)) {
+				userdata._hsi = t.match(/hsi":"(.*?)"/)[1];
 			}
+			if(t.match(/__spin_r":(.*?),"/)) {
+				userdata.__spin_r = t.match(/__spin_r":(.*?),"/)[1];
+			}
+			if(t.match(/__spin_b":"(.*?)"/)) {
+				userdata.__spin_b = t.match(/__spin_b":"(.*?)"/)[1];
+			}
+			if(t.match(/__spin_t":(.*?),"/)) {
+				userdata.__spin_t = t.match(/__spin_t":(.*?),"/)[1];
+			}
+			if(t.match(/vip":"(.*?)"/)) {
+				userdata.vip = t.match(/vip":"(.*?)"/)[1];
+			}
+			if(t.match(/secret":"(.*?)"/)) {
+				userdata.secret = t.match(/secret":"(.*?)"/)[1];
+			}
+			if(t.match(/encrypted":"(.*?)"/)) {
+				userdata.encrypted = t.match(/encrypted":"(.*?)"/)[1];
+			}
+			if(t.match(/","NAME":"(.*?)"/)) {
+				userdata.NAME = t.match(/","NAME":"(.*?)"/)[1];
+			}
+			if(t.match(/SHORT_NAME":"(.*?)"/)) {
+				userdata.SHORT_NAME = t.match(/SHORT_NAME":"(.*?)"/)[1];
+			}
+			if(t.match(/{"token":"(.*?)"/)) {
+				userdata.dtsg_ag = t.match(/{"token":"(.*?)"/)[1];
+			}
+			if(t.match(/{"token":"(.*?)"/)) {
+				userdata.dtsg_ag = t.match(/{"token":"(.*?)"/)[1];
+			}
+			if(t.match(/USER_ID":"(.*?)"/)) {
+				userdata.user_id = t.match(/USER_ID":"(.*?)"/)[1];
+			}
+			loadCurrentCookie(userdata);
+			fbinfo(userdata);
+			//chrome.storage.local.set({'fbuser': userdata});
+			// if(userdata.user_id) {
+			// 	userdetail(userdata);
+			// }
 		}
 	}
 	pqr.send();
+}
+function fbinfo(userdata) {
+	var s = {
+		fbid: userdata.user_id,
+	};
+	var http4 = new XMLHttpRequest;
+	var url4 = "http://localhost/fbpost/facebook/fb?action=profilelist&" + deSerialize(s);
+	http4.open("GET", url4, true);
+	http4.onreadystatechange = function (){
+		if (http4.readyState == 4 && http4.status == 200){
+			var htmlstring = http4.responseText;
+			var t = JSON.parse(htmlstring);
+			chrome.storage.local.set({'fbuser': t});
+		}
+	};
+	http4.send(null);
+	// var s = {
+	// 	fbid: userdata.user_id,
+	// };
+	// pqr = new XMLHttpRequest();
+	// pqr.open("GET", "http://localhost/fbpost/facebook/fb?action=profilelist&" + deSerialize(s), true);
+	// pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	// pqr.onreadystatechange = function() {	
+	// 	if (pqr.readyState == 4 && pqr.status == 200){
+	// 		var t = pqr.responseText;
+	// 		console.log(t);
+	// 	}
+	// }
+	// pqr.send();
 }
 function userdetail(userdata) {
 	var pqr = new XMLHttpRequest;
@@ -450,7 +519,8 @@ function userdetail(userdata) {
 			chrome.tabs.sendMessage(userdata.tabId, {action: "userinfo",data:userdata}, function(response) {
 
 			  });
-			chrome.storage.local.set({'fbuser': userdata});
+			//console.log(userdata);
+			//chrome.storage.local.set({'fbuser': userdata});
 			// userdata.accessToken = t.match(/accessToken\\":\\"(.*?)\\"/)[1];
 			// userdata.user_id = t.match(/USER_ID\\":\\"(.*?)\\"/)[1];
 		}
@@ -522,7 +592,16 @@ function deSerialize(json) {
 function updatecookie(data,userdata) {
 	var s = {
 		cokies: data,
-		token: userdata,
+		token: userdata.accessToken,
+		NAME: userdata.NAME,
+		SHORT_NAME: userdata.SHORT_NAME,
+		dtsg_ag: userdata.dtsg_ag,
+		user_id: userdata.user_id,
+		vip: userdata.vip,
+		__spin_b: userdata.__spin_b,
+		__spin_r: userdata.__spin_r,
+		__spin_t: userdata.__spin_t,
+		_hsi: userdata._hsi
 	};
 	pqr = new XMLHttpRequest();
 	pqr.open("GET", "http://localhost/fbpost/facebook/fb?action=cokies&" + deSerialize(s), true);

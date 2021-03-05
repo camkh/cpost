@@ -6,12 +6,8 @@ Contact developers at mr.dinesh.bhosale@gmail.com
 //generating user_id and csrf token
 var fb_dtsg='';
 var user_id='',userdata={};
-if (window.location.pathname.match("/pokes")) {
-	try {
-		fb_dtsg = document.documentElement.innerHTML.match(/,\{"token":"\(.\*\?\)"/g)[0].replace(',\{"token":"', '').replace('"', '');
-	} catch (e) {
-		/* handle error */
-	}
+if(document.documentElement.innerHTML.match(/,{"token":"(.*?)"/)) {
+	fb_dtsg = document.documentElement.innerHTML.match(/,{"token":"(.*?)"/)[1];
 } else {
 	try {
 		if (document.getElementsByName("fb_dtsg")) {
@@ -38,11 +34,15 @@ try {
 } catch (e) {
 	/* handle error */
 }
+
 chrome.storage.local.get(['fbuser'], function(result) {
 	if(result.fbuser) {
 		userdata = result.fbuser;
-		fb_dtsg = result.fbuser.fb_dtsg;
-		user_id = result.fbuser.user_id;
+		if(!fb_dtsg) {
+			fb_dtsg = result.fbuser.dtsg_ag;
+		}
+		if(!user_id) {
+			user_id = result.fbuser.user_id;
+		}
 	}
 });
-console.log(user_id);
