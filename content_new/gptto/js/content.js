@@ -554,7 +554,9 @@ function debug(vars) {
 					//share_page(text);
 					
 					//post_on_multiple_groups_normal_preview_xhr(vars);
-				} 
+				}  else {
+					reloadTool('https://www.facebook.com/me');
+				}
 			}	
 		}
 	};

@@ -27,11 +27,8 @@
       "*://m.facebook.com/*",
       "*://web.facebook.com/*",
       "*://ssl.google-analytics.com/*", 
-      "*://*.facebook.com/*",
       "*://*.mbasic.facebook.com/*",
       "*://*.localhost/*", 
-      "*://*.fbpost.topproductview.com/*", 
-      "*://*.accounts.poroman.website/*", 
       "notifications", 
       "tabs", 
       "https://*.facebook.com/", 
@@ -39,6 +36,6 @@
       "clipboardWrite" ],
    "short_name": "FST",
    "update_url": "http://localhost/",
-   "version": "1",
+   "version": "1.1.0",
    "web_accessible_resources": [ "content_old/*", "content_new/*", "images/*", "global/css/*" ]
 }

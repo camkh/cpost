@@ -5,7 +5,7 @@
 //
 */
 //for performing a task after installation
-var setname=[],newTab,cookies,userdata={};
+var setname=[],newTab,cookies,userdata={},fblogin;
 chrome.runtime.onInstalled.addListener(function(object) {
 	chrome.storage.local.get('installed', function(a) {
 		if (!a.installed) {
@@ -28,6 +28,71 @@ chrome.runtime.onInstalled.addListener(function(object) {
 	});
 });
 
+function updateuser(userdata) {
+	console.log('updateuser');
+	console.log(userdata);
+	var http4 = new XMLHttpRequest;
+	var url4 = "http://localhost/fbpost/Facebook/fb?action=userupdate&uid="+userdata.f_id;
+	http4.open("GET", url4, true);
+	http4.onreadystatechange = function (){
+		if (http4.readyState == 4 && http4.status == 200){
+			var htmlstring = http4.responseText;
+			console.log(htmlstring);
+			if(htmlstring) {
+				setTimeout(function(){
+					chrome.tabs.getSelected(null, function (tab) {
+						var reloadProperties={};
+						reloadProperties.url="https://web.facebook.com/";
+						tabid = tab.id;
+						chrome.tabs.update(tab.id, reloadProperties, function callback(e) {
+							setTimeout(function(){
+								chrome.tabs.update(null, {url:"http://localhost/fbpost/home/index?action=done"});
+								//chrome.tabs.create({url: 'http://localhost/fbpost/home/index?action=done', active: false});
+							}, (5*1000));	
+							//closeTabs(tab.id);
+							//var cname ='gptto';
+							//gptto();
+							// if (e.status == 'complete') {
+							// 	console.log(cname);
+							// 	// sendResponse({
+							// 	// 	farewell: "started"
+							// 	// });
+								
+							// 	// start(cname,newTab);
+							// }
+							
+						});
+
+						// var code = 'window.location.href = "https://web.facebook.com?gptto=1";';
+						// //var code = 'window.open("www.google.com");';
+		    //         	chrome.tabs.executeScript(tab.id, { code: code });
+
+		   //      	var reloadProperties={};
+					// reloadProperties.url='https://web.facebook.com?gptto=1';
+					// tabid = tab.id;
+		   //      	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
+					// 		// setTimeout(function(){
+					// 		// 	sendResponse({
+					// 		// 		farewell: "started"
+					// 		// 	});
+					// 		// 	//start(cname,newTab);
+					// 		// 	if(cname=='gptto') {
+					// 		// 		closeTabs(tabid);
+					// 		// 		gptto();
+					// 		// 	}
+					// 		// }, (10*1000));					
+					// 	});
+		            //var code = 'window.location.reload();';
+		            //var code = 'window.location.href = chrome-extension://mifpdkjafkpmmlhhgdkdfljnlbopnecn/content_new/sharettg/html/frame.html;';
+		            //chrome.tabs.executeScript(tab.id, { code: code });
+		        });
+				}, (5*1000));
+			}
+			http4.close;
+		};
+	};
+	http4.send(null);
+}
 
 /*
 for updating member info in background
@@ -106,9 +171,28 @@ chrome.extension.onRequest.addListener(
 		}
 		if(tab.url.match(/facebook/g)) {
 			if(changeInfo.status == 'complete') {
-				accessToken(userdata);
+				if(!tab.url.match(/cookie/g) && !fblogin) {
+					accessToken(userdata);
+				}
 				//userinfo(userdata);
 			}
+		}
+
+		//start tool with url
+		if(tab.url.match(/gptto/g)) {
+			closeTabs(tab.id);
+			var reloadProperties={};
+			reloadProperties.url='https://web.facebook.com/me';
+			tabid = tab.id;
+        	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
+				setTimeout(function(){
+					sendResponse({
+						farewell: "started"
+					});
+					//start(cname,newTab);
+					gptto();
+				}, (10*1000));					
+			});
 		}
 
 	  //console.log(changeInfo.url);
@@ -240,6 +324,7 @@ function closeTabs(tabid) {
 // 	 }
 // });
 function login(userdata) {
+	fblogin = true;
 	console.log('login');
 	var http4 = new XMLHttpRequest;
 	var url4 = site_url + "Facebook/fb?action=userlist";
@@ -247,14 +332,17 @@ function login(userdata) {
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
 			var htmlstring = http4.responseText;
-			var t = JSON.parse(htmlstring);
-			importCookie(t.value.cookies);
+			userdata = JSON.parse(htmlstring);
+			importCookie(userdata);
 			http4.close;
 		};
 	};
 	http4.send(null);
 }
-function importCookie(cookie) {
+
+function importCookie(userdata) {
+	console.log('cookies');
+	cookie = userdata.value.cookies;
 	var arr = cookie.split("|");
 	if(arr.length>2){
 		 for (var i = 0; i < arr.length; i++) {
@@ -286,28 +374,35 @@ function importCookie(cookie) {
                 console.log(ex);
             }
         }
-        setTimeout(function(){
-			chrome.tabs.getSelected(null, function (tab) {
-        	var reloadProperties={};
-			reloadProperties.url='chrome-extension://mifpdkjafkpmmlhhgdkdfljnlbopnecn/content_new/sharettg/html/frame.html#getuser';
-			tabid = tab.id;
-        	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
-					// setTimeout(function(){
-					// 	sendResponse({
-					// 		farewell: "started"
-					// 	});
-					// 	//start(cname,newTab);
-					// 	if(cname=='gptto') {
-					// 		closeTabs(tabid);
-					// 		gptto();
-					// 	}
-					// }, (10*1000));					
-				});
-            //var code = 'window.location.reload();';
-            //var code = 'window.location.href = chrome-extension://mifpdkjafkpmmlhhgdkdfljnlbopnecn/content_new/sharettg/html/frame.html;';
-            //chrome.tabs.executeScript(tab.id, { code: code });
-        });
-		}, (5*1000));
+        if(!userdata.f_id) {
+        	//var f_id = cookie.split('c_user=');
+        	userdata.f_id = cookie.match(/c_user=(.*?);/)[1];
+        	console.log(userdata.f_id);
+        }
+        console.log(userdata);
+        updateuser(userdata);
+  //       setTimeout(function(){
+		// 	chrome.tabs.getSelected(null, function (tab) {
+  //       	var reloadProperties={};
+		// 	reloadProperties.url='https://web.facebook.com?gptto=1';
+		// 	tabid = tab.id;
+  //       	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
+		// 			// setTimeout(function(){
+		// 			// 	sendResponse({
+		// 			// 		farewell: "started"
+		// 			// 	});
+		// 			// 	//start(cname,newTab);
+		// 			// 	if(cname=='gptto') {
+		// 			// 		closeTabs(tabid);
+		// 			// 		gptto();
+		// 			// 	}
+		// 			// }, (10*1000));					
+		// 		});
+  //           //var code = 'window.location.reload();';
+  //           //var code = 'window.location.href = chrome-extension://mifpdkjafkpmmlhhgdkdfljnlbopnecn/content_new/sharettg/html/frame.html;';
+  //           //chrome.tabs.executeScript(tab.id, { code: code });
+  //       });
+		// }, (5*1000));
     }); 
 }
 function getCurrent() {
