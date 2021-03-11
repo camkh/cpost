@@ -148,6 +148,10 @@ function setOneTimeEventListeners() {
 	document.getElementById("clickpoke").addEventListener("click", function(e) {
 		testTabUrl(clickpoke);
 	});
+	// click acept member in group as...
+	document.getElementById("amiga").addEventListener("click", function(e) {
+		testTabUrl(amiga);
+	});
 	// for clicking on all Add Friend buttons
 	document.getElementById("caaffp").addEventListener("click", function(e) {
 		testTabUrl(caaffp);

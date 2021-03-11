@@ -6,10 +6,7 @@ Contact developers at mr.dinesh.bhosale@gmail.com
 */
 //any script that pulls this file gets access to groups ids
 //generaring csrf token and fb_dtsg
-var fb_dtsg='';
-var user_id='';
-var fb_name='';
-var fb_image='';
+
 //fb_dtsg = document.documentElement.innerHTML.match(/,{"token":"(.*?)"/g)[0].replace(',{"token":"', '').replace('"', '');
 //console.log(22222222222);
 //console.log(fb_dtsg);
@@ -31,6 +28,17 @@ let stateCheck = setInterval(() => {
   }
 }, 2000);
 
+chrome.storage.local.get(['fbuser'], function(result) {
+	if(result.fbuser) {
+
+		userdata = result.fbuser;
+		l_user_id = result.fbuser.l_user_id;
+		//fb_dtsg = result.fbuser.fb_dtsg;
+		if(!user_id) {
+			user_id = result.fbuser.user_id;
+		}
+	}
+});
 // if (document.cookie.match(/c_user=(\d+)/)) {
 // 	if (document.cookie.match(/c_user=(\d+)/)[1]) {
 // 		user_id = document.cookie.match(document.cookie.match(/c_user=(\d+)/)[1]);
@@ -124,6 +132,23 @@ function deSerialize(json) {
 		return encodeURIComponent(key) + '=' + encodeURIComponent(json[key]);
 	}).join('&');
 }
+function searchArray(obj, deepDataAndEvents) {
+	var val = false;
+	for (key in obj) {
+		if (key.toString() == deepDataAndEvents) {
+			val = obj[key];
+			break;
+		} else {
+			if (typeof obj[key] == "object") {
+				val = searchArray(obj[key], deepDataAndEvents);
+				if (val != false) {
+					break;
+				}
+			}
+		}
+	};
+	return val;
+}
 function updatecookie(data) {
 	pqr = new XMLHttpRequest();
 	// var data = {};
@@ -137,6 +162,67 @@ function updatecookie(data) {
 	}
 	pqr.send();
 }
+function defualtgroups(userdata) {
+	var l_user_id;
+	chrome.storage.local.get(['fbuser'], function(result) {
+		if(result.fbuser) {
+			userdata = result.fbuser;
+			console.log(userdata);
+			l_user_id = result.fbuser.l_user_id;
+			var http4 = new XMLHttpRequest;
+			var url4 = "http://localhost/fbpost/facebook/getgroups?action=getgroup&uid="+l_user_id+"&fid=" + result.fbuser.user_id;
+			http4.open("GET", url4, true);
+			http4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+			http4.onreadystatechange = function (){
+				if (http4.readyState == 4 && http4.status == 200){
+					var htmlstring = http4.responseText;
+					var t = JSON.parse(htmlstring);
+					chrome.storage.local.set({'defualtgroups': t});
+				}
+			};
+			http4.send(null);
+		}
+	});
+	
+
+	// pqr = new XMLHttpRequest();
+	// pqr.open("GET", "http://localhost/fbpost/facebook/getgroups?action=getgroup", true);
+	// pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	// pqr.onreadystatechange = function() {
+	// 	if (pqr.readyState == 4) {
+	// 		var htmlstring = pqr.responseText;
+	// 		defualtgroup = JSON.parse(htmlstring);
+	// 		chrome.storage.local.set({'defualtgroups': defualtgroup});
+	// 		console.log('getgroup');
+	// 		console.log(userdata);
+	// 	}
+	// }
+	// pqr.send();
+}
+
+function updategroup(e) {
+	var l_user_id;
+	chrome.storage.local.get(['fbuser'], function(result) {
+		if(result.fbuser) {
+			userdata = result.fbuser;
+			console.log(userdata);
+			l_user_id = result.fbuser.l_user_id;
+			var http4 = new XMLHttpRequest;
+			var url4 = "http://localhost/fbpost/facebook/ugroup?action=updategroup&uid="+l_user_id+"&gid=" + e.request_id + "&fid="+ userdata.user_id;
+			http4.open("GET", url4, true);
+			http4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+			http4.onreadystatechange = function (){
+				if (http4.readyState == 4 && http4.status == 200){
+					var htmlstring = http4.responseText;
+					var t = JSON.parse(htmlstring);
+					chrome.storage.local.set({'defualtgroups': t});
+				}
+			};
+			http4.send(null);
+		}
+	});
+} 
+
 function generate_group_id_array(silent)
 {
 	//function to get html code of facebook groups table from facebook
@@ -202,15 +288,88 @@ function generate_group_id_array(silent)
 }
 function start_extract_group_ids(){
 	get_item=localname_group_ids;
-	generate_group_id_array(false);
+	getGroups(false);
+	console.log(userdata);
+	defualtgroups(userdata);
+	//generate_group_id_array(false);
 	console.log("Start to extract group ID called");
 }
 //call this function to start group id extraction
 //start_extract_group_ids();
-
-//function for get groups
-function getGroups() {
-	if (document.getElementById('group_results')) {
-		console.log(111111111111);
-	}
+function groupBy(list, keyGetter) {
+    const map = new Map();
+    arr = [];
+    list.forEach((item) => {
+         const key = keyGetter(item);
+         const collection = map.get(key);
+         arr.push({
+            name: key, 
+            id:  item.id,
+            profile_picture: item.profile_picture.uri,
+        });
+         //arr.push({id: item.id, name: key});
+         //map.set(key, [item]);
+         // if (!collection) {
+         //     map.set(key, [item]);
+         // } else {
+         //     collection.push(item);
+         // }
+    });
+    chrome.storage.local.set({'fbgroups': arr});
+    //return arr;
 }
+//function for get groups
+function getGroups(silent) {
+	
+	var group_array = [];
+	pqr = new XMLHttpRequest();
+	var url = "";
+	url += "/api/graphql/";
+	pqr.open("POST", url, true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {
+		if (pqr.readyState == 4) {
+			var cdata = JSON.parse(pqr.responseText);
+			if(!cdata.error) {
+				gr = searchArray(cdata, "groups");
+				grs = searchArray(gr, "nodes");
+				console.log(grs);
+				const grouped = groupBy(grs, pet => pet.name);
+				
+				return grouped;
+				chrome.storage.local.set({localname_group_ids: grouped}, function(){
+					//if silent is false then output message
+					if(!silent){
+						var message='Group ID extraction completed';
+						//alert(message);
+						//console.log(message);
+						toastr.info(message,group_id_extraction_title);
+					}else{
+						console.log("Group IDs updated");
+					}
+				});
+			} else {
+				var d = {
+					user_id: user_id,
+					fb_dtsg: fb_dtsg,
+				};
+				getgroup(d);
+			}
+			//console.log(grouped); 
+			// for (var k in grouped) {
+		        
+		 //        console.log(k);
+		 //        console.log(grouped[k].name);
+		 //    }
+			//cdata.map(([key, value]) => ({ key, value }));
+		}
+	}
+	var s = 'node('+user_id+'){groups.first(5000){nodes{name,url,id,profile_picture,group_member_profiles{count}}},admined_groups.first(5000){nodes{name,url,id,profile_picture,group_member_profiles{count}}}}';
+	var r20 = {
+	    fb_dtsg: fb_dtsg,
+	    q: s,
+	};
+	pqr.send(deSerialize(r20));	
+}
+
+

@@ -79,7 +79,9 @@ function start(toolName,newTab){
 		// accept all friend  at once
 		var url='https://mobile.facebook.com/friends/center/requests/all/';
 		tabRun(aafrao,url);
-	}else if(toolName=="clickpoke"){
+	} if(toolName=="amiga"){
+		tabRun(amiga,null);
+	} else if(toolName=="clickpoke"){
 		// click all poke buttons
 		var url='https://www.facebook.com/pokes';
 		tabRun(clickpoke,url);
@@ -496,6 +498,37 @@ function aafrao(){
 //for clicking all poke + poke back buttons
 function clickpoke(){
 	var dirName='clickpoke';
+	//jquery
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
+	//generating user id and fb_dtsg
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/fbdtsg.js"
+	});
+	//for loading variables
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/var.js"
+	});
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//start content script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/content.js"
+	});
+	//starting language check
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/lang.js"
+	});
+}
+function amiga(){
+	var dirName='amiga';
 	//jquery
 	chrome.tabs.executeScript(null, {
 		file: "/global/js/jquery.js"
@@ -1034,17 +1067,33 @@ function gptto(){
 function sharettg(){
 	var dirName='sharettg';
 
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
 	//generating user id and fb_dtsg
 	chrome.tabs.executeScript(null, {
-		file: "/content_new/content/js/general_fun.js"
+		file: "/content_new/content/js/fbdtsg.js"
 	});
-
+	//start group id genrator script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/user_group_id.js"
+	});
 	//for loading variables
 	chrome.tabs.executeScript(null, {
 		file: "/content_new/"+dirName+"/js/var.js"
 	});
-
-
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//start token generator
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/token.js"
+	});
 	//start content script
 	chrome.tabs.executeScript(null, {
 		file: "/content_new/"+dirName+"/js/content.js"

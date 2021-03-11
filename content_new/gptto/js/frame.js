@@ -17,7 +17,7 @@ chrome.storage.local.get(['fbuser'], function(result) {
 		getpost(userdata.user_id);
 		if(user_id) {
 			if(userdata.accessToken) {
-				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=small&access_token="+userdata.accessToken+"\" style=\"width: 60px\" />");
+				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=square&height=500&width=500&access_token="+userdata.accessToken+"\" style=\"width: 60px\" />");
 			} else {
 				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=small\" style=\"width: 60px\" />");
 			}

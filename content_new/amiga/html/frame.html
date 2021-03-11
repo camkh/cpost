@@ -43,7 +43,7 @@
 		        <!-- list -->
 		        <div class="widget-content">
 		        	<div class="row">
-		        		<div class="col-md-6">
+		        		<div class="col-md-12">
 		        			<div class="widget-content">
 								<div class="row">
 									<div class="dataTables_header clearfix">
@@ -86,9 +86,8 @@
 													id="checkAll" /></th>
 												<th>Name</th>
 												<th class="hidden-xs">Email</th>
-												<th class="hidden-xs" style="overflow: hidden;">Type</th>
-												<th class="hidden-xs" style="width:200px;overflow: hidden;">Status</th>
-												<th>Action</th>
+												<th class="hidden-xs" style="width:72px;overflow: hidden;">Status</th>
+												<th style="width:70px;overflow: hidden;">Action</th>
 											</tr>
 										</thead>
 										<tbody id="dataresults">
@@ -111,105 +110,7 @@
 								<!-- end page -->
 							</div>
 		        		</div>
-		        		<!-- End list -->
-
-		        		<div class="col-md-6">
-		        			<!-- facebook  -->
-		        			<div class="statbox widget box box-shadow"> 
-								<div class="widget-content">
-									<div class="col-md-6">
-										<div id="facebook_id" class="visual blue" style="float: left; margin-right: 10px">
-											<img src="https://graph.facebook.com/ddd/picture" style="width: 60px" />
-										</div>
-										<div style="float:left">
-											<div id="facebook_name" style="font-weight: bold;font-size: 20px;">
-										</div>
-										<br/>Restart Time: <br/><div id="restartime" style="font-weight: bold;font-size: 15px;color:orange;"></div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<b><div id="had_posted" style="font-weight: bold;font-size: 20px;color:green"></div></b>
-									<br/><b>Next Post after:</b>
-									<div id="displayDiv" style="font-weight: bold;font-size: 20px;color:red"></div>
-									</div>
-									<div id="had_shared" style="font-weight: bold;font-size: 15px;color:orange;"></div>
-									<div style="clear: both;"></div>
-									<div class="row">
-										<div class="col-md-6">
-											<input type="text" name="" class="form-control" id="user_id" readonly>
-										</div>
-										<div class="col-md-6">
-											<div class="input-group"> 
-												<input type="text" class="form-control" id="chromename" placeholder="Chrome name"> 
-												<span class="input-group-btn"> 
-													<button class="btn btn-default" id="setchromname" type="button">Save!</button> </span> 
-												</div>
-										</div>
-									</div>
-									
-								</div> 
-							</div>
-		        			<!-- End facebook  -->
-				            <form class="form-horizontal row-border" id="submitForm" action="#">
-				                <!-- message to be shared on groups -->
-								<div class="form-group">
-									<label class="col-md-4 control-label" for="message">Enter Message</label>
-									<div class="col-md-8">
-										<textarea type="text" class="form-control" placeholder="##########" id="message"
-										autocomplete="off"></textarea>
-									</div>
-								</div>
-								<!-- link to web resource -->
-								<div class="form-group">
-									<label class="col-md-4 control-label"  for="token">Enter Link (use Facebook links, avoid use of external links)</label>
-									<div class="col-md-8">
-										<input type="text" class="form-control" placeholder="https://www.facebook.com" id="link" autocomplete="off">
-										<input type="hidden" id="post_id" class="form-control">
-										<input type="hidden" id="page_id" class="form-control">
-										<input type="hidden" id="group_id" class="form-control">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-md-4 control-label"  for="Image">Image</label>
-									<div class="col-md-8">
-										<input type="text" class="form-control" placeholder="30" 
-										id="Image" min="0" max="999"
-										autocomplete="on"
-										value="40">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-md-4 control-label"  for="delay">Enter delay time between requests</label>
-									<div class="col-md-8">
-										<input type="number" class="form-control" placeholder="60" 
-										id="delay" min="0" max="999"
-										autocomplete="on"
-										value="60">
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-md-4 control-label"  for="delay-post">Share next post after (Minutes)</label>
-									<div class="col-md-8">
-										<input type="number" class="form-control" placeholder="40 Minutes" 
-										id="next_post" min="40" max="999"
-										autocomplete="on"
-										value="40" style="width: 100px;display: inline-block;"> to <input type="number" class="form-control" placeholder="60 Minutes" 
-										id="next_post_b" min="60" max="999"
-										autocomplete="on"
-										value="60" style="width: 100px;display: inline-block;">
-
-									</div>
-								</div>
-								<!--starting group number -->
-								<div class="form-group"> 
-									<div class="col-md-12"> 
-										<div id="group_results" style="max-height: 250px;overflow-x: auto;">
-											
-										</div>
-									</div> 
-								</div>	
-				            </form>
-			        	</div>
+		        		<!-- End list -->		        		
 		        	</div>
 		        </div>
 		    </div>

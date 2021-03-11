@@ -95,6 +95,8 @@ function restartTool(){
 	//for ending javascript execution when tool is restarted
 	throw new Error("execution stopped");
 }
+
+/*Reload */
 function reloadTool(url){
 	var messageContent = {
 		action: "reloadTool",
@@ -106,6 +108,13 @@ function reloadTool(url){
 	});
 	//for ending javascript execution when tool is restarted
 	throw new Error("execution stopped");
+}
+
+/*get groups from m.facebook */
+function getgroup(e){
+	chrome.runtime.sendMessage({action: "getgroup",datas: e}, function(response) {
+	  console.log(response.farewell);
+	});
 }
 
 //for logging dirName

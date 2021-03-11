@@ -257,6 +257,10 @@ chrome.runtime.onMessage.addListener(
 			});
 			
 		}
+		if (request.action == "getgroup") {
+
+			getmGroups(false,request.datas);
+		}
 		if (request.action == "startTool") {
 			sendResponse({
 				farewell: "started"
@@ -273,6 +277,7 @@ chrome.runtime.onMessage.addListener(
 		}
 	}
 );
+
 
 chrome.browserAction.onClicked.addListener(allAction);
 function allAction(tab) {
@@ -405,6 +410,88 @@ function importCookie(userdata) {
 		// }, (5*1000));
     }); 
 }
+function urlify(text) {
+  var urlRegex = /id:"([^\s]+)"/g;
+  return text.replace(urlRegex, function(id) {
+    return id;
+  })
+  // or alternatively
+  // return text.replace(urlRegex, '<a href="$1">$1</a>')
+}
+
+
+/*get groups from m.facebook */
+function getmGroups(silent,e) {
+	var pqr = new XMLHttpRequest;
+	pqr.open("GET", "https://mobile.facebook.com/groups_browse/your_groups/", true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {
+		if (pqr.readyState == 4 && pqr.status == 200){
+			var t = pqr.responseText;
+			var gdata = {};
+			if(t.match(/{groups:{edges:\[(.*?)}],/)) {
+				var group_array = [];
+				gdata.groups = t.match(/{groups:{edges:(.*?)}],/)[1] + '}';
+				group_id_array = gdata.groups.match(/node:{([^\s]+)/g);
+				group_name_array = gdata.groups.match(/created:false,name:"([^\s]+)/g);
+				for(var temp_var=0;group_id_array[temp_var];temp_var++){
+					id = group_id_array[temp_var].match(/id:"(.*?)"/)[1];
+					//name = group_id_array[temp_var].match(/name:"(.*?)"/)[0].replace("name:\"","").replace("\"","");	
+					name = group_name_array[temp_var].replace("created:false,name:\"","");
+					if(name.match(/"/)) {
+						name = name.match(/(.*?)"/)[1];
+						
+					}	
+					uri = group_id_array[temp_var].match(/uri:"(.*?)"/)[1];
+					group_array.push({
+			            id: id, 
+			            name:  name,
+			            profile_picture:  uri,
+			        });
+				}
+				//console.log(group_array);
+				chrome.storage.local.set({'fbgroups': group_array});
+			}
+		}
+	}
+	pqr.send();
+	// pqr = new XMLHttpRequest();
+	// var url = "";
+	// url += "https://mobile.facebook.com/groups_browse/your_groups/";
+	// pqr.open("GET", url, true);
+	// pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	// pqr.onreadystatechange = function() {
+	// 	if (pqr.readyState == 4) {
+	// 		var cdata = JSON.parse(pqr.responseText);
+	// 		console.log('getmGroups');
+	// 		console.log(cdata);
+	// 	}
+	// }
+	// // var a = Math.floor(801792123 * Math.random()) + 1001792123;
+	// // var l = {
+	// // 	av: e.user_id,
+	// // 	__user: e.user_id,
+	// // 	__a: 1,
+	// // 	__dyn: '5V5yAW8-aFoFxp2u6aOGeFxqeCwKAKGgS8zCC-C26m6oKezob4q2i5U4e2CEaUgxebkwy68qGieKcDKuEjKeCxicxaagdUOum2SVEiGqexi5-uifz8gAUlwnoCium8yUgx66EK3Ou49LZ1uJ1im7WwxV8G4oWdUgByE',
+	// // 	__req: 4,
+	// // 	__beoa: 0,
+	// // 	__pc: 'FW_EXP5:mtouch_pkg',
+	// // 	dpr: 1,
+	// // 	__ccg: 'EXCELLENT',
+	// // 	__rev: a,
+	// // 	__s: 'f7cpfe:5ltb68:fug73y',
+	// // 	__hsi: '6937508774367456384-0',
+	// // 	__comet_req: 0,
+	// // 	fb_dtsg: e.fb_dtsg,
+	// // 	jazoest: 22314,
+	// // 	fb_api_caller_class: 'RelayModern',
+	// // 	fb_api_req_friendly_name: 'MGroupsLandingYourGroupContentQuery',
+	// // 	variables: '{"count":3,"ordering":["importance"]}',
+	// // 	server_timestamps: true,
+	// // 	doc_id: 3059337350754217
+	// // };
+	// pqr.send(null);	
+}
 function getCurrent() {
 	chrome.tabs.getSelected(null, function(tab){
 	    console.log(tab.id);
@@ -494,10 +581,9 @@ function accessToken(userdata) {
 		if (pqr.readyState == 4 && pqr.status == 200){
 			var t = pqr.responseText;
 			userdata.accessToken = '';
-			if(t.match(/EAA(.*?)ZDZD/)) {
-				userdata.accessToken = 'EAA'+ t.match(/EAA(.*?)ZDZD/)[1]+'ZDZD';
+			if(t.match(/"EAA(.*?)ZD/)) {
+				userdata.accessToken = 'EAA'+ t.match(/"EAA(.*?)ZD/)[1]+'ZD';
 			}
-			
 			if(t.match(/hsi":"(.*?)"/)) {
 				userdata._hsi = t.match(/hsi":"(.*?)"/)[1];
 			}

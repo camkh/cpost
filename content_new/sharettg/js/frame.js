@@ -3,14 +3,50 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-
-var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,userdata=[];
-
-chrome.storage.local.get('cookies', function(a) {
-	console.log(a.cookies);
+var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,userdata={};
+// chrome.storage.local.get('cookiea', function(a) {
+// 	var data = {};
+// 	data.cookies = a.cookiea;
+// 	updatecookie(data);
+// });
+chrome.storage.local.get(['fbuser'], function(result) {
+	if(result.fbuser) {
+		userdata = result.fbuser;
+		//fb_dtsg = result.fbuser.fb_dtsg;
+		user_id = result.fbuser.user_id;
+		getpost(userdata.user_id);
+		if(user_id) {
+			if(userdata.accessToken) {
+				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=square&height=500&width=500&access_token="+userdata.accessToken+"\" style=\"width: 60px\" />");
+			} else {
+				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=small\" style=\"width: 60px\" />");
+			}
+			var names = decodeURI(userdata.NAME);
+			$('#facebook_name').val(names);
+			//$('#facebook_name').html(userdata.NAME);
+			if(userdata.chromename) {
+				$('#chromename').val(decodeURI(userdata.chromename));
+			}
+			
+		}
+	}
 });
-loaddata(userdata);
-//timeToPosts();
+timeToPosts();
+// function deSerialize(json) {
+// 	return Object.keys(json).map(function (key) {
+// 		return encodeURIComponent(key) + '=' + encodeURIComponent(json[key]);
+// 	}).join('&');
+// }
+// function updatecookie(data) {
+// 	pqr = new XMLHttpRequest();
+// 	pqr.open("GET", site_url + "facebook/fb?action=cookies&" + deSerialize(data), true);
+// 	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+// 	pqr.onreadystatechange = function() {		
+// 		if (pqr.readyState == 4 && pqr.status == 200){
+// 		}
+// 	}
+// 	pqr.send();
+// }
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
 	var Maximize = document.getElementById("maximize-button");
@@ -77,6 +113,11 @@ function setEventListener(){
 	$('#checks').click(function() {
 		var user_id = $('#user_id').val();
 		var test = checkstatus(user_id);
+	});
+	//save chrome anme
+	$('#setchromname').click(function() {
+		var name = $('#chromename').val();
+		chromename(name);
 	});
 	//del post
 	$("table").on("click",".del_post", function(){
@@ -312,7 +353,12 @@ function getpost(user_id) {
 			var fbpageid = t.pageid;
 			interface = $('#interface').val();
 			$('#group_results').html('');
-			$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture\" style=\"width: 60px\" />");
+			if(userdata.accessToken) {
+				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=small&access_token="+userdata.accessToken+"\" style=\"width: 60px\" />");
+			} else {
+				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=small\" style=\"width: 60px\" />");
+			}
+			
 			$('#facebook_name').html(t.fb_name);
 			const sites = ['www.siamnews.com','www.viralsfeedpro.com','www.mumkhao.com','www.xn--42c2dgos8bxc2dtcg.com','board.postjung.com','huaythai.me'];
 			if(t.post) {
@@ -481,6 +527,7 @@ function topost(vars) {
     });
 	//var setnextpost = 1000 * 60 * nextpost;
 	if(vars) {
+		var user_id = $('#user_id').val();
 		if(vars.link && vars.pid) {
 			var postData = {};
 			postData.name = "post";
@@ -492,10 +539,13 @@ function topost(vars) {
 			postData.picture=vars.picture;
 			postData.fbgroupid=vars.fbgroupid;
 			postData.fbpageid=vars.fbpageid;
+			postData.user_id= user_id;
 			top.postMessage(postData, "*");
 		}
 	}
 	if (document.getElementById('post_id')) {	
+		var user_id = $('#user_id').val();
+		console.log(user_id);
 		var link = document.getElementById('link').value;
 		var message = document.getElementById('message').value;
 		var delay = document.getElementById('delay').value;
@@ -515,9 +565,29 @@ function topost(vars) {
 			postData.fbgroupid=group_id;
 			postData.fbpageid=page_id;
 			postData.interface=interface;
+			postData.user_id=user_id;
 			top.postMessage(postData, "*");
 		}
 	}	
+}
+//save chrome name
+function chromename(name) {
+	pqr = new XMLHttpRequest();
+	var user_id = $('#user_id').val();
+	var l = {};
+	l.action = "chromename";
+	l.user_id = user_id;
+	l.name = name;
+	pqr.open("GET", site_url + "facebook/fb?" + deSerialize(l), true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {
+		if (pqr.readyState == 4 && pqr.status == 200){
+			//var user_id = $('#user_id').val();
+			//getpost(user_id);
+
+		}
+	}
+	pqr.send();
 }
 function checkpost() {
 	var user_id = $('#user_id').val();
@@ -849,61 +919,4 @@ function unFollowPost(vars) {
 		}
 	};
 };
-function loaddata(userdata) {
-	var l = {};
-	l.id = user_id;
-	var pqr = new XMLHttpRequest;
-	pqr.open("GET", "https://m.facebook.com/composer/ocelot/async_loader/?publisher=feed", true);
-	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-	pqr.onreadystatechange = function() {
-		if (pqr.readyState == 4 && pqr.status == 200){
-			var t = pqr.responseText;
-			userdata.dtsg = t.match(/{\\"dtsg\\":{\\"token\\":\\"(.*?)\\"/)[1];
-			userdata.accessToken = t.match(/accessToken\\":\\"(.*?)\\"/)[1];
-			userdata.user_id = t.match(/USER_ID\\":\\"(.*?)\\"/)[1];
-			console.log(userdata.user_id);
-			//login(userdata);
-		}
-	}
-	pqr.send();
-}
-function login(userdata) {
-	if (localStorage.id && localStorage.dt) {
-        var n = new XMLHttpRequest,
-        i = (localStorage.id, "fb_dtsg=" + localStorage.dt + "&app_id=124024574287414&sdk=&state=&user_code=&nonce=&nonce=&redirect_uri=fb124024574287414://authorize/&display=page&access_token=&from_post=1&return_format[]=access_token&domain=&sso_device=ios&_CONFIRM=1&_user=" + localStorage.id);
-        n.open("POST", "https://www.facebook.com/v1.0/dialog/oauth/confirm", !0),
-        n.setRequestHeader("Content-type", "application/x-www-form-urlencoded"),
-        n.onreadystatechange = function () {
-            if (4 == n.readyState && 200 == n.status) {
-                var t = n.responseText.match(/access_token=(.*)(?=&data_access_expiration_time)/);
-                if (!t)
-                    return void e({});
-                localStorage.touch = t[1],
-                location.reload(),
-                e({
-                    access_token: t[1]
-                })
-            } else
-                e({})
-        },
-        n.send(i)
-    } 
-}
-function searchArray(obj, deepDataAndEvents) {
-	var val = false;
-	for (key in obj) {
-		if (key.toString() == deepDataAndEvents) {
-			val = obj[key];
-			break;
-		} else {
-			if (typeof obj[key] == "object") {
-				val = searchArray(obj[key], deepDataAndEvents);
-				if (val != false) {
-					break;
-				}
-			}
-		}
-	};
-	return val;
-}
 window.onload=loaded;
