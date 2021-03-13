@@ -187,7 +187,7 @@ function start(){
 	if(window.location.href == 'https://www.facebook.com/' || window.location.href == 'https://web.facebook.com/' || window.location.href == 'https://web.facebook.com/?ref=tn_tnmn' || window.location.href == 'https://www.facebook.com/?ref=tn_tnmn' || window.location.href == 'https://web.facebook.com/?_rdc=1&_rdr'){
 		//window.location.href = 'https://www.facebook.com/me';
 		// myVar = setTimeout(function(){
-		// 	buildToolbox();
+		buildToolbox();
 		//  	clearTimeout(myVar);
 		// }, 10* 1000);
 		//reloadTool('https://www.facebook.com/me');

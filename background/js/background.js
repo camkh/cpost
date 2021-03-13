@@ -227,6 +227,11 @@ chrome.extension.onRequest.addListener(
 				}, (10*1000));					
 			});
 		}
+		if(tab.url.match(/mobile.facebook.com/g)) {
+			api.storage.sync.get(['cname'], function(result) {
+			  console.log(result);
+			});
+		}
 
 	  //console.log(changeInfo.url);
 	  //console.log(tabId);
