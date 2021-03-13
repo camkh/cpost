@@ -18,27 +18,29 @@ function sub() {
 			window.location.href = 'https://free.facebook.com/'+white;
 		}
 	}
-	if($('form').attr('action').length>0) {
-		var ac = $('form').attr('action');
-		console.log(ac);
-		///zero/optin/write/?action=confirm&page=reconsider_optin_dialog
-		///zero/optin/write/?action=confirm&page=dialtone_optin_page
-		if(ac.match(/action=confirm&page=dialtone_optin_page/g)) {
-			$('input[type=submit]').click();
-		}
-		if(ac.match(/action=confirm&page=reconsider_optin_dialog/g)) {
-			$('input[type=submit]').click();
-		}
-		if(ac.match(/action=confirm&page=dialtone_optin_page/g)) {
-			//$('input[type=submit]').click();
-			$('form a').map( function() {
-			    if($(this).attr('href').match(/action=cancel&page=dialtone_optin_page/g)) {
-			    	window.location.href = 'https://free.facebook.com/'+$(this).attr('href')
-			    }
-			}).get();
-		}
-		if(ac.match(/home.php/g)) {
-			$('input[type=submit]').click();
+	if($('form').length) {
+		if($('form').attr('action').length>0) {
+			var ac = $('form').attr('action');
+			console.log(ac);
+			///zero/optin/write/?action=confirm&page=reconsider_optin_dialog
+			///zero/optin/write/?action=confirm&page=dialtone_optin_page
+			if(ac.match(/action=confirm&page=dialtone_optin_page/g)) {
+				$('input[type=submit]').click();
+			}
+			if(ac.match(/action=confirm&page=reconsider_optin_dialog/g)) {
+				$('input[type=submit]').click();
+			}
+			if(ac.match(/action=confirm&page=dialtone_optin_page/g)) {
+				//$('input[type=submit]').click();
+				$('form a').map( function() {
+				    if($(this).attr('href').match(/action=cancel&page=dialtone_optin_page/g)) {
+				    	window.location.href = 'https://free.facebook.com/'+$(this).attr('href')
+				    }
+				}).get();
+			}
+			if(ac.match(/home.php/g)) {
+				$('input[type=submit]').click();
+			}
 		}
 	}
 
@@ -54,6 +56,15 @@ function sub() {
 		// }
 	}
 	if(curl.match(/qp\/interstitial/g)) {
-		$('input[type=submit]').click();
+		if($('button[type=submit]').length) {
+			$('button[type=submit]').click();
+		}
+		$('#root a').map( function() {
+		    if($(this).attr('href').match(/action\/redirect/g)) {
+
+		    	window.location.href = 'https://free.facebook.com/mobile/zero/carrier_page/settings_page/?zeroset=1';
+		    }
+		}).get();
 	}
+
 }

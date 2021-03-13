@@ -21,23 +21,17 @@
 // 		toastr.error(messages.extraction_not_complete);
 // 	}
 // });
-if (document.getElementsByName("fb_dtsg")) {
-	if (document.getElementsByName("fb_dtsg")[0]) {
-		fb_dtsg = document.getElementsByName("fb_dtsg")[0].value;
-	}
-}
-if(fb_dtsg&&user_id){
-	start();
-} else{
-	console.log('pleaseLogin');
-	//pleaseLogin();
-	window.location.href = site_url + 'home/index?action=done';
-}
+
 setTimeout(function(){
  	window.location.href = site_url + 'home/index?action=done';
 }, 15 * 60 * 1000);
 getallgroups();
 function getallgroups() {
+	if ($('input[name=email]').length>0) {
+		console.log('is login');
+	} else {
+		console.log('fb_dtsg found 1');
+	}
 	console.log('starting getting groups...');
 	var request_id,isPost;
 	chrome.storage.local.get('defualtgroups', function(e) {
@@ -198,6 +192,7 @@ function start(){
 		// }, 10* 1000);
 		//reloadTool('https://www.facebook.com/me');
 	}else{
+		checkstr();
 		buildToolbox();
 		start_extract_group_ids();
 		//checkgroup(group_array,local_groups);
@@ -267,7 +262,18 @@ function cmt(vars) {
     console.log(c);
 }
 
-
+function checkstr() {
+	if (document.getElementsByName("fb_dtsg")) {
+		if (document.getElementsByName("fb_dtsg")[0]) {
+			fb_dtsgs = document.getElementsByName("fb_dtsg")[0].value;
+			console.log('check fb_dtsgs for restart');
+			console.log(fb_dtsgs);
+		}
+	} else {
+		console.log('check fb_dtsgs  not found');
+	}
+//window.location.href = site_url + 'home/index?action=done';
+}
 function checkurl() {
 	var url = window.location.href;
 	if(url.match(/web.facebook.com/g)) {
@@ -488,7 +494,7 @@ function setEventListener() {
 			}
 			//for restarting tool
 			if(eventToolName=="restartTool"){
-				reloadTool('https://www.facebook.com/me');
+				window.location.href = 'https://web.facebook.com/?sharettg=1';
 				//reloadTool();
 				//restartTool(false);
 			}
@@ -913,13 +919,13 @@ function debug(vars) {
 						}
 						
 					} else {
-						reloadTool('https://www.facebook.com/me');
+						window.location.href = 'https://web.facebook.com/?sharettg=1';
 					}
 					//share_page(text);
 					
 					//post_on_multiple_groups_normal_preview_xhr(vars);
 				}  else {
-					reloadTool('https://www.facebook.com/me');
+					window.location.href = 'https://web.facebook.com/?sharettg=1';
 				}
 			}	
 		}
@@ -1585,7 +1591,7 @@ function TimeToRestart() {
 		var seconds = today.getSeconds();
 		if(hous == 4 && minutes == 29 && seconds == 0)  {
 			//restartTool();
-			reloadTool('https://www.facebook.com/me');
+			window.location.href = 'https://web.facebook.com/?sharettg=1';
 		}
 	}, 1000);
 }

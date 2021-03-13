@@ -162,7 +162,7 @@ chrome.extension.onRequest.addListener(
 				
 					});
 				}
-				
+
 				if(tab.url.match(/zeroset=1/g) || tab.url.match(/zero\//g)) {
 					console.log(111);
 					//start(cname,newTab);
@@ -179,6 +179,9 @@ chrome.extension.onRequest.addListener(
 					});
 				}
 				if(tab.url.match(/zero\/policy\//g)) {
+					zero();
+				}
+				if(tab.url.match(/qp\/interstitial\//g)) {
 					zero();
 				}
 				if(tab.url.match(/checkpoint/g)) {

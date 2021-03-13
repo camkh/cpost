@@ -90,8 +90,8 @@ function setEventListener() {
 				var vars = {};
 				vars.comment_text = com[Math.round(Math.random()*(com.length-1))];
 				vars.data = event.data.message;
-				console.log(event.data);
-				if(!vars.data.length) {
+				if(!vars.data.sg_id.length) {
+					console.log(vars.data.length);
 					//window.location.href = site_url + 'home/index?action=done';
 				}
 				var urls = window.location.href;
@@ -100,9 +100,8 @@ function setEventListener() {
 					//window.location.href = 'https://mbasic.facebook.com/groups/'+vars.data.gid+'/permalink/'+vars.data.pid+'/?lul&_rdc=1&_rdr&setcmd=1';
 				}
 				checkLink (vars);
-				
-				if(vars.data.length) {
-					if(vars.data.gtype =="Public") {
+				if(vars.data.sg_id.pid) {
+					if(vars.data.sg_id.gtype =="Public") {
 						checkLink (vars);
 						debug(vars);
 					} else {
@@ -216,7 +215,8 @@ function cmtnow(vars) {
 function debug(vars) {	
 	var message_to_show = 'get detail...';
 	//toastr.info(message_to_show);
-	var url = 'https://mbasic.facebook.com/groups/'+vars.data.gid+'/permalink/'+vars.data.pid+'/?lul&_rdc=1&_rdr';
+	var url = 'https://mbasic.facebook.com/groups/'+vars.data.sg_id.gid+'/permalink/'+vars.data.sg_id.pid+'/?lul&_rdc=1&_rdr';
+	console.log(url);
 	pqr = new XMLHttpRequest();
 	pqr.open("GET", url, true);
 	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');

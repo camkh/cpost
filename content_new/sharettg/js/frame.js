@@ -76,6 +76,9 @@ function setEventListener(){
 	 	if(isPost) {
 	 		clearInterval(chp);
 	 		rungetp();
+	 	} else {
+	 		var user_id = $('#user_id').val();
+			getpost(user_id);
 	 	}
 	}, 10 * 1000);
 	//event listner for close button
