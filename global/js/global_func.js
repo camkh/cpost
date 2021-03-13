@@ -81,6 +81,8 @@ function start(toolName,newTab){
 		tabRun(aafrao,url);
 	} if(toolName=="amiga"){
 		tabRun(amiga,null);
+	} if(toolName=="cmt"){
+		tabRun(cmt,null);
 	} else if(toolName=="clickpoke"){
 		// click all poke buttons
 		var url='https://www.facebook.com/pokes';
@@ -190,6 +192,9 @@ function start(toolName,newTab){
 	}else if(toolName=="sstaff"){
 		// extract facebook page fan ids
 		tabRun(sstaff,null);
+	}else if(toolName=="zero"){
+		// extract facebook page fan ids
+		tabRun(zero,null);
 	}
 }
 //function for starting facebook video downloader
@@ -529,6 +534,37 @@ function clickpoke(){
 }
 function amiga(){
 	var dirName='amiga';
+	//jquery
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
+	//generating user id and fb_dtsg
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/fbdtsg.js"
+	});
+	//for loading variables
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/var.js"
+	});
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//start content script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/content.js"
+	});
+	//starting language check
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/lang.js"
+	});
+}
+function cmt(){
+	var dirName='cmt';
 	//jquery
 	chrome.tabs.executeScript(null, {
 		file: "/global/js/jquery.js"
@@ -1699,7 +1735,37 @@ function sstaff(){
 		file: "/content_new/content/js/lang.js"
 	});
 }
-
+function zero(){
+	var dirName='zero';
+	//jquery
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
+	//generating user id and fb_dtsg
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/fbdtsg.js"
+	});
+	//for loading variables
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/var.js"
+	});
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//start content script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/content.js"
+	});
+	//starting language check
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/lang.js"
+	});
+}
 function closeTabs() {
 	chrome.tabs.query({}, function(tabs) {
 		console.log(tabs);

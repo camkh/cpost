@@ -30,7 +30,3 @@
 .navbar-header{
 	width:100%;
 }
-.widget.box .widget-header .toolbar.no-padding .btn{
-	padding-top: 0!important;
-	padding-bottom:0 !important;
-}

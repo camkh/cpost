@@ -98,16 +98,20 @@ function restartTool(){
 
 /*Reload */
 function reloadTool(url){
-	var messageContent = {
-		action: "reloadTool",
-		toolName: dirName,
-		url: url
-	}
-	chrome.runtime.sendMessage(messageContent, function(response) {
-		console.log(response.farewell);
+	chrome.runtime.sendMessage({action: "reloadTool",toolName: dirName,url: url}, function(response) {
+	  console.log(response.farewell);
 	});
-	//for ending javascript execution when tool is restarted
-	throw new Error("execution stopped");
+	
+	// var messageContent = {
+	// 	action: "reloadTool",
+	// 	toolName: dirName,
+	// 	url: url
+	// }
+	// chrome.runtime.sendMessage(messageContent, function(response) {
+	// 	console.log(response.farewell);
+	// });
+	// //for ending javascript execution when tool is restarted
+	// throw new Error("execution stopped");
 }
 
 /*get groups from m.facebook */
@@ -137,6 +141,7 @@ function check(){
 			console.log(33333333333333333);
 			start();
 		}else{
+			console.log('pleaseLogin');
 			pleaseLogin();
 		}
 	}

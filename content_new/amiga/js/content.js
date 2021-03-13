@@ -74,6 +74,7 @@ function setEventListener() {
 					user: event.data.user,
 					meta_id: event.data.meta_id,
 					data: event.data.data,
+					detail: event.data.detail,
                 };
                 console.log('approve');
 				aceptweb(e);
@@ -113,6 +114,7 @@ function inviteNow(id,delay){
 	}
 }
 function aceptweb(e) {
+	toastr.info('Starting approve!');
 	pqr = new XMLHttpRequest();
 	var url = "";
 	url += "https://web.facebook.com/api/graphql/";
@@ -122,7 +124,7 @@ function aceptweb(e) {
 		if (pqr.readyState == 4) {
 			var cdata = JSON.parse(pqr.responseText);
 			if(!cdata.error) {
-				console.log(cdata);
+				toastr.success('Approved');
 				send_message("approverequest", e);
 				//mDialogQuery(e);
 			} else {

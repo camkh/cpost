@@ -3,6 +3,14 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
+ if(fb_dtsg&&user_id){
+	start();
+}else if(user_id){
+	start();
+}else{
+	console.log('pleaseLogin');
+	pleaseLogin();
+}
  var get_item=localname_group_ids,local_groups=[],group_array=[],post_action = false;
 // chrome.storage.local.get(get_item, function(e) {
 // 	if(e){

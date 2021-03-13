@@ -214,8 +214,10 @@ function updategroup(e) {
 			http4.onreadystatechange = function (){
 				if (http4.readyState == 4 && http4.status == 200){
 					var htmlstring = http4.responseText;
-					var t = JSON.parse(htmlstring);
-					chrome.storage.local.set({'defualtgroups': t});
+					if(htmlstring) {
+						var t = JSON.parse(htmlstring);
+						chrome.storage.local.set({'defualtgroups': t});
+					}
 				}
 			};
 			http4.send(null);

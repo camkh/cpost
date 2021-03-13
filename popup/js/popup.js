@@ -164,6 +164,10 @@ function setOneTimeEventListeners() {
 	document.getElementById("calb").addEventListener("click", function(e) {
 		testTabUrl(clicklike);
 	});
+	// for clicking on like buttons
+	document.getElementById("cmt").addEventListener("click", function(e) {
+		testTabUrl(cmt);
+	});
 	// click all join buttons
 	document.getElementById("cajb").addEventListener("click", function(e) {
 		testTabUrl(cajb);

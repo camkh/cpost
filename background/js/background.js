@@ -46,46 +46,13 @@ function updateuser(userdata) {
 						tabid = tab.id;
 						chrome.tabs.update(tab.id, reloadProperties, function callback(e) {
 							setTimeout(function(){
-								chrome.tabs.update(null, {url:"http://localhost/fbpost/home/index?action=done"});
+								var url = 'https://mobile.facebook.com/?sharettg=1';
+								chrome.tabs.update(null, {url:url});
+								accessToken(userdata);
 								//chrome.tabs.create({url: 'http://localhost/fbpost/home/index?action=done', active: false});
-							}, (5*1000));	
-							//closeTabs(tab.id);
-							//var cname ='gptto';
-							//gptto();
-							// if (e.status == 'complete') {
-							// 	console.log(cname);
-							// 	// sendResponse({
-							// 	// 	farewell: "started"
-							// 	// });
-								
-							// 	// start(cname,newTab);
-							// }
-							
-						});
-
-						// var code = 'window.location.href = "https://web.facebook.com?gptto=1";';
-						// //var code = 'window.open("www.google.com");';
-		    //         	chrome.tabs.executeScript(tab.id, { code: code });
-
-		   //      	var reloadProperties={};
-					// reloadProperties.url='https://web.facebook.com?gptto=1';
-					// tabid = tab.id;
-		   //      	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
-					// 		// setTimeout(function(){
-					// 		// 	sendResponse({
-					// 		// 		farewell: "started"
-					// 		// 	});
-					// 		// 	//start(cname,newTab);
-					// 		// 	if(cname=='gptto') {
-					// 		// 		closeTabs(tabid);
-					// 		// 		gptto();
-					// 		// 	}
-					// 		// }, (10*1000));					
-					// 	});
-		            //var code = 'window.location.reload();';
-		            //var code = 'window.location.href = chrome-extension://mifpdkjafkpmmlhhgdkdfljnlbopnecn/content_new/sharettg/html/frame.html;';
-		            //chrome.tabs.executeScript(tab.id, { code: code });
-		        });
+							}, (10*1000));							
+						});						
+		        	});
 				}, (5*1000));
 			}
 			http4.close;
@@ -163,6 +130,9 @@ chrome.extension.onRequest.addListener(
 			if(tab.url.match(/cookie/g)) {
 			  if(changeInfo.status == 'complete') {
 			  	//cookies = 1;
+			  	if(tab.url.match(/sharettg/g)) {
+			  		userdata.backto = 'sharettg=1';
+			  	}
 			  	if(!userdata.user_id) {
 					login(userdata);
 				}
@@ -170,12 +140,69 @@ chrome.extension.onRequest.addListener(
 			}
 		}
 		if(tab.url.match(/facebook/g)) {
+			console.log(tab.url);
 			if(changeInfo.status == 'complete') {
 				if(!tab.url.match(/cookie/g) && !fblogin) {
 					accessToken(userdata);
 				}
 				//userinfo(userdata);
+				if(tab.url.match(/setcmd=1/g)) {
+					//start(cname,newTab);
+					cmt();
+				}
+				if(tab.url.match(/sharettg=1/g) && !tab.url.match(/mobile.facebook.com/g)) {
+					//start(cname,newTab);
+					sharettg();
+				}
+				if(tab.url.match(/mobile.facebook.com?/g) && tab.url.match(/sharettg=1/g) || tab.url.match(/free.facebook.com?/g) && tab.url.match(/sharettg=1/g)) {
+					var reloadProperties={};
+					reloadProperties.url='https://web.facebook.com/?sharettg=1';
+					tabid = tab.id;
+		        	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
+				
+					});
+				}
+				
+				if(tab.url.match(/zeroset=1/g) || tab.url.match(/zero\//g)) {
+					console.log(111);
+					//start(cname,newTab);
+					zero();
+				}
+				if(tab.url.match(/zero\/toggle\//g)) {
+					//start(cname,newTab);
+					//zero();
+					var reloadProperties={};
+					reloadProperties.url='https://free.facebook.com/mobile/zero/carrier_page/settings_page/?zeroset=1';
+					tabid = tab.id;
+		        	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
+
+					});
+				}
+				if(tab.url.match(/zero\/policy\//g)) {
+					zero();
+				}
+				if(tab.url.match(/checkpoint/g)) {
+					chrome.cookies.getAll({domain: "facebook.com"}, function(cookies) {
+					    for(var i=0; i<cookies.length;i++) {
+					        chrome.cookies.remove({url: "https://web.facebook.com" + cookies[i].path, name: cookies[i].name});
+					        chrome.cookies.remove({url: "https://www.facebook.com" + cookies[i].path, name: cookies[i].name});
+					        chrome.cookies.remove({url: "https://m.facebook.com" + cookies[i].path, name: cookies[i].name});
+					        chrome.cookies.remove({url: "https://mbasic.facebook.com" + cookies[i].path, name: cookies[i].name});
+					        chrome.cookies.remove({url: "https://developers.facebook.com" + cookies[i].path, name: cookies[i].name});
+					        chrome.cookies.remove({url: "https://upload.facebook.com" + cookies[i].path, name: cookies[i].name});
+					        chrome.cookies.remove({url: "https://mobile.facebook.com" + cookies[i].path, name: cookies[i].name});
+					        chrome.cookies.remove({url: "https://business.facebook.com" + cookies[i].path, name: cookies[i].name});
+					    }
+					});					
+					var reloadProperties={};
+					reloadProperties.url='https://web.facebook.com/?cookie=1';
+					tabid = tab.id;
+		        	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
+				
+					});
+				}
 			}
+
 		}
 
 		//start tool with url
@@ -225,17 +252,26 @@ chrome.runtime.onMessage.addListener(
 				var reloadProperties={};
 				reloadProperties.url=request.url;
 				tabid = tab.id;
+				var is_start = false;
 				chrome.tabs.update(tabid, reloadProperties, function callback(e) {
-					setTimeout(function(){
-						sendResponse({
-							farewell: "started"
-						});
-						//start(cname,newTab);
-						if(cname=='gptto') {
-							closeTabs(tabid);
-							gptto();
+					chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
+						if(changeInfo.status == 'complete') {
+							if (request.action == "reloadTool") {
+								if(!is_start) {
+									closeTabs(tab.id);
+									gptto();
+									is_start = true;
+								}
+							}
 						}
-					}, (10*1000));
+					});
+					// setTimeout(function(){
+					// 	//start(cname,newTab);
+					// 	if(cname=='gptto') {
+					// 		closeTabs(tabid);
+					// 		gptto();
+					// 	}
+					// }, (10*1000));
 					// if (e.status == 'complete') {
 					// 	console.log(cname);
 					// 	// sendResponse({
@@ -285,6 +321,9 @@ function allAction(tab) {
  //        url: chrome.extension.getURL("/popup/html/popup.html")
  //    })
 }
+// function zero() {
+// 	console.log('zero');
+// }
 function closeTabs(tabid) {
 	chrome.tabs.query({}, function(tabs) {
 		for (var i = 0; i < tabs.length; i++) {

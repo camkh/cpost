@@ -3,7 +3,7 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,userdata={};
+var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,userdata={},isPost,chp;
 // chrome.storage.local.get('cookiea', function(a) {
 // 	var data = {};
 // 	data.cookies = a.cookiea;
@@ -21,8 +21,19 @@ chrome.storage.local.get(['fbuser'], function(result) {
 			} else {
 				$('#facebook_id').html("<img src=\"https://graph.facebook.com/"+user_id+"/picture?type=small\" style=\"width: 60px\" />");
 			}
-			var names = decodeURI(userdata.NAME);
-			$('#facebook_name').val(names);
+			console.log(userdata.NAME);
+			json = '{"name":"'+userdata.NAME+'"}';
+
+			var regex = /\\u([\d\w]{4})/gi;
+			json = json.replace(regex, function (match, grp) {
+			    return String.fromCharCode(parseInt(grp, 16)); 
+			});
+
+			json = JSON && JSON.parse(json) || $.parseJSON(json);
+			console.log(json);
+			userdata.NAME = json.name;
+			$('#facebook_name').html(json.name);
+			updateuserdetail(userdata);
 			//$('#facebook_name').html(userdata.NAME);
 			if(userdata.chromename) {
 				$('#chromename').val(decodeURI(userdata.chromename));
@@ -31,7 +42,7 @@ chrome.storage.local.get(['fbuser'], function(result) {
 		}
 	}
 });
-timeToPosts();
+//timeToPosts();
 // function deSerialize(json) {
 // 	return Object.keys(json).map(function (key) {
 // 		return encodeURIComponent(key) + '=' + encodeURIComponent(json[key]);
@@ -60,6 +71,13 @@ function toggleResizeButtons() {
 }
 //setting event listeners on current frame
 function setEventListener(){
+	var chp = setInterval(function(){
+		console.log('refresh post...');
+	 	if(isPost) {
+	 		clearInterval(chp);
+	 		rungetp();
+	 	}
+	}, 10 * 1000);
 	//event listner for close button
 	targetButton1 = "close-button";
 	$('#' + targetButton1).click(function(e){
@@ -243,6 +261,9 @@ function setEventListener(){
 			}
 			getpost(user_id);
 		}
+		if (e.data.type == "commentpost") {
+			getpostcmt(e.data.data);
+		}
 		
 	}
 	//event listeenrs for events from parent frame
@@ -292,6 +313,34 @@ function getallgroups(local_group) {
 		})
 	}
 }
+function getpostcmt(vars) {
+	chrome.storage.local.get(['fbuser'], function(result) {
+		if(result.fbuser) {
+			userdata = result.fbuser;
+			console.log(userdata);
+			l_user_id = result.fbuser.l_user_id;
+			var http4 = new XMLHttpRequest;
+			var url4 = "http://localhost/fbpost/facebook/ugroup?action=getpost&uid="+l_user_id+"&fid="+ userdata.user_id;
+			http4.open("GET", url4, true);
+			http4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+			http4.onreadystatechange = function (){
+				if (http4.readyState == 4 && http4.status == 200){
+					var htmlstring = http4.responseText;
+					var t = JSON.parse(htmlstring);
+					var postData = {};
+					console.log('getpostcmt');
+					console.log(vars);
+					postData.name = "getpostcmt";
+					postData.message=t;
+					top.postMessage(postData, "*");
+					//window.location.href = 'https://mbasic.facebook.com/groups/'+t.gid+'/permalink/'+t.pid+'/?lul&_rdc=1&_rdr&setcmd=1';
+					///	
+				}
+			};
+			http4.send(null);
+		}
+	});
+}
 function generate_group_array()
 {
 	//function to get html code of facebook groups table from facebook
@@ -327,7 +376,17 @@ console.log(group_id_array[temp_var]);
 	};
 	http4.send(null);
 }
-
+function updateuserdetail(userdata) {
+	var http4 = new XMLHttpRequest;
+	var url4 = site_url + "managecampaigns/autopostfb?action=updateuserdetail&uid="+ userdata.user_id + '&name='+ userdata.NAME + '&log_id='+ userdata.l_user_id;
+	http4.open("GET", url4, true);
+	http4.onreadystatechange = function (){
+		if (http4.readyState == 4 && http4.status == 200){
+			http4.close;
+		};
+	};
+	http4.send(null);
+}
 function getpost(user_id) {
 	/*check login status*/
 	/*End check login status*/
@@ -348,6 +407,9 @@ function getpost(user_id) {
 		if (http4.readyState == 4 && http4.status == 200){
 			var htmlstring = http4.responseText;
 			var t = JSON.parse(htmlstring);
+			if(t.post.length) {
+				isPost = true;
+			}
 			var a = '';
 			var fbgroupid = t.groupid;
 			var fbpageid = t.pageid;

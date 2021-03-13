@@ -3,7 +3,7 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
-var stimes,cc;
+
 function toggleResizeButtons() {
 	var Resize = document.getElementById("resize-button");
 	var Maximize = document.getElementById("maximize-button");
@@ -16,10 +16,7 @@ function toggleResizeButtons() {
 	}
 }
 //setting event listeners on current frame
-function setEventListener(){
-	checkmember();
-	startcheck();
-	
+function setEventListener(){	
 	//event listner for close button
 	targetButton1 = "close-button";
 	$('#' + targetButton1).click(function(e){
@@ -57,21 +54,6 @@ function setEventListener(){
 		postData.name = targetButton9;
 		top.postMessage(postData, "*");
 	});
-	$('#reload').click(function() {
-		checkmember();
-	});
-	$('#scheck').click(function() {
-		startcheck();
-	});
-	$('#multidel').click(function() {
-		var id = $('#deletebyid').val();
-		deletebyid(id);
-	});
-	//del post
-	$("table").on("click",".del_post", function(){
-	  	var pid = $(this).attr('id');
-		delete_post(pid);
-	});
 
 	//function for restarting tool
 	targetButton10="restartTool";
@@ -91,159 +73,40 @@ function setEventListener(){
 				console.log(token);
 			}
 		}
-		if (e.data.type == "delreqest") {
-			console.log('delreqest');
-			console.log(e.data);
+		if (e.data.type == "getgpost") {
+			getcpost();
 		}
-		if (e.data.type == "approverequest") {
-			console.log(e.data.data);
-			approverequest(e.data);
-		}	
+		if (e.data.type == "dellink") {			
+			dellink(e.data.data.data);
+		}
 	}
 	//event listeenrs for events from parent frame
 	window.addEventListener('message', handleSizingResponse, false);
 }
-function startcheck() {
-	clearInterval(cc);
-	chrome.storage.local.get(['fbuser'], function(result) {
-		if(result.fbuser) {
-			userdata = result.fbuser;
-			console.log('checknow');
-			checknow(userdata);
-			var cc = setInterval(function() { 
-				checkmember();
-			}, 30 * 1000);
-		}
-	});
-}
 
-function checkmember() {
-	clearInterval(stimes);
+function getcpost() {
 	chrome.storage.local.get(['fbuser'], function(result) {
 		if(result.fbuser) {
 			userdata = result.fbuser;
 			l_user_id = result.fbuser.l_user_id;
 			var http4 = new XMLHttpRequest;
-			var url4 = "http://localhost/fbpost/facebook/ugroup?action=memberrequest&uid="+l_user_id+"&fid="+ userdata.user_id;
+			var url4 = "http://localhost/fbpost/facebook/ugroup?action=getpost&uid="+l_user_id+"&fid="+ userdata.user_id;
 			http4.open("GET", url4, true);
 			http4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 			http4.onreadystatechange = function (){
 				if (http4.readyState == 4 && http4.status == 200){
 					var htmlstring = http4.responseText;
+					console.log(htmlstring);
 					var t = JSON.parse(htmlstring);
-
-					var a = '',ap = [];
-					for (var i = 0; i <t.length; i++) {
-						gid = t[i].object_id;
-						uid_re = t[i].meta_name;
-						meta_id = t[i].meta_id;
-						user = t[i].meta_value;
-						status = t[i].date;
-						if(status != 1) {
-							ap.push({
-								gid: gid,
-								uid_re: uid_re,
-								meta_id: meta_id,
-								user: user,
-								status: status,
-							});
-						}
-						if(status == 1) {
-							status = '<span class="label label-warning">Approve member</span>';
-						} else if(status == 2) {
-							status = '<span class="label label-success">Ready for post</span>';
-						} else {
-							status = '<span class="label label-danger">Pending</span>';
-						}
-						
-						a += '<tr id="re_'+meta_id+'">';
-						a += '<td class="checkbox-column"><input type="checkbox" id="itemid" name="itemid[]" class="uniform" value="'+meta_id+'" /></td>';
-						a += '<td style="width: 40%;"><a href="https://web.facebook.com/groups/'+gid+'/members" target="_blank">group ID: '+gid+'</a></td>';
-						a += '<td><a href="https://fb.com/'+uid_re+'" target="_blank">Profile : '+uid_re+'</a></td>';
-						a += '<td><span id="st_'+meta_id+'">'+status+'</span</td>';
-						a += '<td style="width: 120px;"><button type="button" class="btn btn-xs btn-danger del_post" id="'+meta_id+'" data-user="'+user+'"><i class="glyphicon glyphicon-trash"></i></button></td>';
-						a += '</tr>';
-					}
-					$('#dataresults').html(a);
-					$('#dataresults').fadeIn(1000);
-					//aceptmember(t);
-					//chrome.storage.local.set({'defualtgroups': t});
-
-					
+					var postData = {};
+					postData.name = "comment";
+					postData.message=t;
+					top.postMessage(postData, "*");		
 				}
 			};
 			http4.send(null);
 		}
 	});
-}
-function checknow(userdata) {
-	var http4 = new XMLHttpRequest;
-	var url4 = "http://localhost/fbpost/facebook/ugroup?action=memberrequest&uid="+userdata.l_user_id+"&fid="+ userdata.user_id+ "&limit=1";
-	http4.open("GET", url4, true);
-	http4.onreadystatechange = function (){
-		if (http4.readyState == 4 && http4.status == 200){
-			var htmlstring = http4.responseText;
-			if(htmlstring) {
-				var t = JSON.parse(htmlstring);
-				var a = '';			
-				for (var i = 0; i <t.length; i++) {
-					gid = t[i].object_id;
-					uid_re = t[i].meta_name;
-					meta_id = t[i].meta_id;
-					user = t[i].meta_value;
-					status = t[i].date;
-					if(status!=1) {
-						console.log(11111);
-						var postData = {
-							gid: gid,
-							uid_re: uid_re,
-							user: user,
-							meta_id: meta_id,
-							detail: userdata,
-							name:"approve"
-						};
-						top.postMessage(postData, "*");
-					}
-				}
-			}
-			http4.close;
-		};
-	};
-	http4.send(null);
-}
-function deletebyid(id) {
-	var http4 = new XMLHttpRequest;
-	var url4 = "http://localhost/fbpost/facebook/ugroup?action=delall&id="+id;
-	http4.open("GET", url4, true);
-	http4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-	http4.onreadystatechange = function (){
-		if (http4.readyState == 4 && http4.status == 200){
-			var htmlstring = http4.responseText;
-			//var t = JSON.parse(htmlstring);
-		}
-	};
-	http4.send(null);
-}
-function getnext(e) {
-	var http4 = new XMLHttpRequest;
-	if(e.data.data.del) {
-		var status = 'no';
-	} else {
-		var status = 1;
-	}
-	var url4 = site_url + "facebook/getnext?status="+status+"&id="+e.data.data.id;
-	http4.open("GET", url4, true);
-	http4.onreadystatechange = function (){
-		if (http4.readyState == 4 && http4.status == 200){
-			var htmlstring = http4.responseText;
-			if(htmlstring) {
-				getlist();
-				checknext();
-			}
-			http4.close;
-		};
-	};
-	http4.send(null);
 }
 function delete_post(id) {
 	var http4 = new XMLHttpRequest;
@@ -252,29 +115,18 @@ function delete_post(id) {
 	http4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
-			$('#re_'+id).fadeOut();
+			$('#re_'+id).fadeOut( "slow" );
 		}
 	};
 	http4.send(null);
 }
 function approverequest(e) {
-	//$('#dataresults').html('');
-	//console.log(e.data.meta_id);
-	status = '<span class="label label-warning">Approve member</span>';
-	console.log(e.data.meta_id);
-	console.log(status);
-	$('#st'+e.data.meta_id).html(status);
 	var http4 = new XMLHttpRequest;
 	var url4 = "http://localhost/fbpost/facebook/ugroup?action=approverequest&id="+e.data.meta_id+"&fid="+ e.data.uid_re;
 	http4.open("GET", url4, true);
 	http4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
-			//checkmember();
-			setTimeout(function(){
-				checknow(e.data.detail);
-			}, 3000);
-			
 		}
 	};
 	http4.send(null);
@@ -303,6 +155,20 @@ function aceptm(e) {
 		jazoest: 22012,
 	};
 	pqr.send(deSerialize(r20));	
+}
+function dellink(vars) {
+	if(vars.shp_id) {
+		var http4 = new XMLHttpRequest;
+		var url4 = "http://localhost/fbpost/facebook/ugroup?action=dellink&id="+vars.shp_id;
+		http4.open("GET", url4, true);
+		http4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+		http4.onreadystatechange = function (){
+			if (http4.readyState == 4 && http4.status == 200){
+				getcpost();
+			}
+		};
+		http4.send(null);
+	}
 }
 
 function get_dyn() {
@@ -366,22 +232,6 @@ function get_dyn() {
 	}
 	return toCompressedString();
 }
-var unique_array = function (arr) {
-	var i, j, cur, found;
-	for (i = arr.length - 1; i >= 0; i--) {
-		cur = arr[i];
-		found = false;
-		for (j = i - 1; !found && j >= 0; j--) {
-			if (cur === arr[j]) {
-				if (i !== j) {
-					arr.splice(i, 1);
-				}
-				found = true;
-			}
-		}
-	}
-	return arr;
-};
 function loaded(){
 	setEventListener();
 }
