@@ -5,9 +5,7 @@
  * */
  var csent =0;
 check();
-setTimeout(function(){
- 	//window.location.href = site_url + 'home/index?action=done';
-}, 3 * 60 * 1000);
+
 function start(){
 	buildToolbox();
 }
@@ -87,13 +85,18 @@ function setEventListener() {
 				aceptweb(e);
 			}
 			if (eventToolName == "comment") {
+				setTimeout(function(){
+				 	window.location.href = site_url + 'home/index?action=done';
+				}, 2 * 60 * 1000);
 				var com = ['thanks','Ok','😍 ขอบคุณ','🥰 ขอบคุณ','😘 ขอบคุณ','😗','😙','😚','🖐','👌','✌️','💋','🙏 ขอบคุณ','👍 ขอบคุณ','🌺','🌸','🌼','🌷'];
 				var vars = {};
 				vars.comment_text = com[Math.round(Math.random()*(com.length-1))];
 				vars.data = event.data.message;
 				var urls = window.location.href;
+
 				urlss = urls.match(/permalink\/(.*?)\//)[1];
 				console.log('permalink ' + urlss);
+				vars.permalink = urlss;
 				console.log('db pid: ' + vars.data.pid);
 				if(urlss =='undefined' && !vars.data.gid) {
 					console.log('Resent...');
@@ -129,7 +132,7 @@ function checkLink(vars) {
 		}
 	}
 	if(!gfb_dtsg) {
-		send_message("dellink", vars);
+		//send_message("dellink", vars);
 	}
 }
 //for adding UI components to DOM
@@ -200,7 +203,7 @@ function cmtnow(vars) {
 		if (pqr.readyState == 4) {
 			t = pqr.responseText;
 			setTimeout(function(){ 
-				clickNow(); 
+				clickNow(vars); 
 			}, 15000);
 			//clickNow();
 			//console.log(t);
@@ -254,7 +257,7 @@ function debug(vars) {
 	pqr.send();
 }
 
-function clickNow(){
+function clickNow(vars){
 	new clickAllJoinButtonsNow();
 }
 function resetLinks(){

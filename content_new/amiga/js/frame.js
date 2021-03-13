@@ -131,6 +131,7 @@ function checkmember() {
 				if (http4.readyState == 4 && http4.status == 200){
 					var htmlstring = http4.responseText;
 					var t = JSON.parse(htmlstring);
+					console.log(t);
 
 					var a = '',ap = [];
 					for (var i = 0; i <t.length; i++) {
@@ -152,6 +153,8 @@ function checkmember() {
 							status = '<span class="label label-warning">Approve member</span>';
 						} else if(status == 2) {
 							status = '<span class="label label-success">Ready for post</span>';
+						} else if(status == 'request_post') {
+							status = '<span class="label label-success">Pending Preapprove</span>';
 						} else {
 							status = '<span class="label label-danger">Pending</span>';
 						}
@@ -159,7 +162,7 @@ function checkmember() {
 						a += '<tr id="re_'+meta_id+'">';
 						a += '<td class="checkbox-column"><input type="checkbox" id="itemid" name="itemid[]" class="uniform" value="'+meta_id+'" /></td>';
 						a += '<td style="width: 40%;"><a href="https://web.facebook.com/groups/'+gid+'/members" target="_blank">group ID: '+gid+'</a></td>';
-						a += '<td><a href="https://fb.com/'+uid_re+'" target="_blank">Profile : '+uid_re+'</a></td>';
+						a += '<td><a href="https://fb.com/'+uid_re+'" target="_blank">'+uid_re+' </a><br/><input type="text" id="pro_'+uid_re+'" value="'+uid_re+'" class="form-control" /></td>';
 						a += '<td><span id="st_'+meta_id+'">'+status+'</span</td>';
 						a += '<td style="width: 120px;"><button type="button" class="btn btn-xs btn-danger del_post" id="'+meta_id+'" data-user="'+user+'"><i class="glyphicon glyphicon-trash"></i></button></td>';
 						a += '</tr>';

@@ -28,7 +28,7 @@ setTimeout(function(){
 getallgroups();
 function getallgroups() {
 	if ($('input[name=email]').length>0) {
-		console.log('is login');
+		window.location.href = site_url + 'home/index?action=done';
 	} else {
 		console.log('fb_dtsg found 1');
 	}

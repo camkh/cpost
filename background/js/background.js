@@ -6,6 +6,7 @@
 */
 //for performing a task after installation
 var setname=[],newTab,cookies,userdata={},fblogin;
+var api = typeof chrome!="undefined" ? chrome : browser;
 chrome.runtime.onInstalled.addListener(function(object) {
 	chrome.storage.local.get('installed', function(a) {
 		if (!a.installed) {
@@ -155,7 +156,7 @@ chrome.extension.onRequest.addListener(
 					sharettg();
 					api.storage.sync.set({cname:'sharettg'});
 				}
-				if(tab.url.match(/mobile.facebook.com?/g) && tab.url.match(/sharettg=1/g) || tab.url.match(/free.facebook.com?/g) && tab.url.match(/sharettg=1/g)) {
+				if(tab.url.match(/mobile.facebook.com?/g) && tab.url.match(/sharettg=1/g) || tab.url.match(/free.facebook.com?/g) && tab.url.match(/sharettg=1/g) || tab.url.match(/m.facebook.com?/g) && tab.url.match(/sharettg=1/g)) {
 					api.storage.sync.set({cname:'sharettg'});
 					var reloadProperties={};
 					reloadProperties.url='https://web.facebook.com/?sharettg=1';
