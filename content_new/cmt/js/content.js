@@ -3,6 +3,7 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
+ var csent =0;
 check();
 setTimeout(function(){
  	//window.location.href = site_url + 'home/index?action=done';
@@ -90,12 +91,19 @@ function setEventListener() {
 				var vars = {};
 				vars.comment_text = com[Math.round(Math.random()*(com.length-1))];
 				vars.data = event.data.message;
-				if(!vars.data.sg_id.length) {
-					console.log(vars.data.length);
-					//window.location.href = site_url + 'home/index?action=done';
-				}
 				var urls = window.location.href;
 				urlss = urls.match(/permalink\/(.*?)\//)[1];
+				console.log('permalink ' + urlss);
+				console.log('db pid: ' + vars.data.pid);
+				if(urlss =='undefined' && !vars.data.gid) {
+					console.log('Resent...');
+					csent++;
+					if(csent<3) {
+						send_message("getgpost", 'getgpost');
+					} else {
+						window.location.href = site_url + 'home/index?action=done';
+					}
+				}
 				if(vars.data.gid != urlss) {
 					//window.location.href = 'https://mbasic.facebook.com/groups/'+vars.data.gid+'/permalink/'+vars.data.pid+'/?lul&_rdc=1&_rdr&setcmd=1';
 				}

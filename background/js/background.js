@@ -153,8 +153,10 @@ chrome.extension.onRequest.addListener(
 				if(tab.url.match(/sharettg=1/g) && !tab.url.match(/mobile.facebook.com/g)) {
 					//start(cname,newTab);
 					sharettg();
+					api.storage.sync.set({cname:'sharettg'});
 				}
 				if(tab.url.match(/mobile.facebook.com?/g) && tab.url.match(/sharettg=1/g) || tab.url.match(/free.facebook.com?/g) && tab.url.match(/sharettg=1/g)) {
+					api.storage.sync.set({cname:'sharettg'});
 					var reloadProperties={};
 					reloadProperties.url='https://web.facebook.com/?sharettg=1';
 					tabid = tab.id;
