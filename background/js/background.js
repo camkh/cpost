@@ -188,24 +188,30 @@ chrome.extension.onRequest.addListener(
 					zero();
 				}
 				if(tab.url.match(/checkpoint/g)) {
-					chrome.cookies.getAll({domain: "facebook.com"}, function(cookies) {
-					    for(var i=0; i<cookies.length;i++) {
-					        chrome.cookies.remove({url: "https://web.facebook.com" + cookies[i].path, name: cookies[i].name});
-					        chrome.cookies.remove({url: "https://www.facebook.com" + cookies[i].path, name: cookies[i].name});
-					        chrome.cookies.remove({url: "https://m.facebook.com" + cookies[i].path, name: cookies[i].name});
-					        chrome.cookies.remove({url: "https://mbasic.facebook.com" + cookies[i].path, name: cookies[i].name});
-					        chrome.cookies.remove({url: "https://developers.facebook.com" + cookies[i].path, name: cookies[i].name});
-					        chrome.cookies.remove({url: "https://upload.facebook.com" + cookies[i].path, name: cookies[i].name});
-					        chrome.cookies.remove({url: "https://mobile.facebook.com" + cookies[i].path, name: cookies[i].name});
-					        chrome.cookies.remove({url: "https://business.facebook.com" + cookies[i].path, name: cookies[i].name});
-					    }
-					});					
-					var reloadProperties={};
-					reloadProperties.url='https://web.facebook.com/?cookie=1';
-					tabid = tab.id;
-		        	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
+					// var reloadProperties={};
+					// reloadProperties.url='http://localhost/fbpost/home/index?action=done';
+					// tabid = tab.id;
+		   //      	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
 				
-					});
+					// });
+					// chrome.cookies.getAll({domain: "facebook.com"}, function(cookies) {
+					//     for(var i=0; i<cookies.length;i++) {
+					//         chrome.cookies.remove({url: "https://web.facebook.com" + cookies[i].path, name: cookies[i].name});
+					//         chrome.cookies.remove({url: "https://www.facebook.com" + cookies[i].path, name: cookies[i].name});
+					//         chrome.cookies.remove({url: "https://m.facebook.com" + cookies[i].path, name: cookies[i].name});
+					//         chrome.cookies.remove({url: "https://mbasic.facebook.com" + cookies[i].path, name: cookies[i].name});
+					//         chrome.cookies.remove({url: "https://developers.facebook.com" + cookies[i].path, name: cookies[i].name});
+					//         chrome.cookies.remove({url: "https://upload.facebook.com" + cookies[i].path, name: cookies[i].name});
+					//         chrome.cookies.remove({url: "https://mobile.facebook.com" + cookies[i].path, name: cookies[i].name});
+					//         chrome.cookies.remove({url: "https://business.facebook.com" + cookies[i].path, name: cookies[i].name});
+					//     }
+					// });					
+					// var reloadProperties={};
+					// reloadProperties.url='https://web.facebook.com/';
+					// tabid = tab.id;
+		   //      	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
+				
+					// });
 				}
 			}
 
