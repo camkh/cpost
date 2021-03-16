@@ -936,6 +936,78 @@ function debug(vars) {
 / debug url link get some data
 / on old interface
 */
+function debugDynamic(vars) {	
+	var shareid;
+	var r20 = {
+		__user: vars.user_id,
+		__a: 1,
+		__dyn: "7AgNe-4amaWxd2u6aJGi9FxqeCwDKEyGgS8WyAAjFGUqxe2qdwIhEpyA4WCHxC7oG5VEc8yGDyUJu9xK5WAxamqnKaxeAcUeUG5E-44czorx6ih4-e-2h1yuiaAzazpFQcy412xuHBy8G6Ehwj8lg8VECqQh0WQfxSq5K9wlFVk1nyFFEy2haUhKFprzooAmfxKq9BQnjG3tummfx-bKq58CcBAyoGi1uUkGE-WUnyoqxi4otQdhVoOjyEaLK6Ux4ojUC6p8gUScBKm4U-5898G9BDzufwyyUnG2qbzV5Gh2bLCDKi8z8hyUlxeaKE-17Kt7Gmu48y8xuUsVoC9zFAdxp2UtDxtyUixOby8ixK6E4-4okwDxy5qxNDxeu3G4p8tyb-2efxW8Kqi5pob89EbaxS2G",
+		__req: "4t",
+		__be: 0,
+		__pc: "PHASED:DEFAULT",
+		fb_dtsg: fb_dtsg,
+		ttstamp: vars.ttstamp,
+		__rev: vars.__rev
+	};
+	if(!vars.fb_page_id) {
+		var av = vars.user_id;
+	} else {
+		var av = vars.fb_page_id;
+	}
+	if(!vars.fb_group_id) {
+		var target_id = vars.group;
+	} else {
+		var target_id = vars.fb_group_id;
+	}
+	if(vars.set_taget) {
+		var target_id = vars.set_taget;
+	}
+	var request = new XMLHttpRequest;
+	for (var i = 0; i < target_id.length; i++) {
+		if(i == 0) {
+			target_ids = target_id[i];
+		}
+	}
+	request["open"]("POST", checkurl()+ "react_composer/scraper/?composer_id=rc.js_21l&target_id=" + target_ids + "&scrape_url=" + vars.link + "&entry_point=group&source_attachment=STATUS&source_logging_name=link_pasted&av=" + av);
+	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
+	request["onreadystatechange"] = function () {
+		if (request["readyState"] == 4 && request["status"] == 200) {
+
+			if (request["responseText"].indexOf("Sorry")==0) {
+				console.log('debug');
+				if(vars.fb_page_id) {
+					vars.set_taget = vars.fb_page_id;
+					debug(vars);
+				} else {
+					toastr.error(request["responseText"]);
+				}
+			} else {
+				console.log('send_group_link');
+				var suiteView = JSON["parse"](request["responseText"]["replace"]("for (;;);", ""));
+				if (!suiteView["error"]) {
+					vars.attachmentConfig = searchArray(suiteView, "attachmentConfig");
+					if(vars.attachmentConfig) {
+						if(shareid!= vars.fb_group_id) {
+							return vars;
+						}
+					} else {
+						return false;
+					}
+					//share_page(text);
+					
+					//post_on_multiple_groups_normal_preview_xhr(vars);
+				}  else {
+					return false;
+				}
+			}	
+		}
+	};
+	request["send"](deSerialize(r20));
+}
+/*
+/ debug url link get some data
+/ on old interface
+*/
 function ni_debug(vars) {
 	console.log('ccccccccccccccccccc');
 	if(!vars.fb_page_id) {

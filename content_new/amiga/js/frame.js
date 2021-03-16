@@ -158,10 +158,14 @@ function checkmember() {
 						} else {
 							status = '<span class="label label-danger">Pending</span>';
 						}
-						
+						if(gid == '2114780255405136') {
+							gids = gid + '/people';
+						} else {
+							gids = gid + '/member-requests';
+						}
 						a += '<tr id="re_'+meta_id+'">';
 						a += '<td class="checkbox-column"><input type="checkbox" id="itemid" name="itemid[]" class="uniform" value="'+meta_id+'" /></td>';
-						a += '<td style="width: 40%;"><a href="https://web.facebook.com/groups/'+gid+'/members" target="_blank">group ID: '+gid+'</a></td>';
+						a += '<td style="width: 40%;"><a href="https://web.facebook.com/groups/'+gids+'" target="_blank">'+gid+'</a> <br/>'+gid+'</td>';
 						a += '<td><a href="https://fb.com/'+uid_re+'" target="_blank">'+uid_re+' </a><br/><input type="text" id="pro_'+uid_re+'" value="'+uid_re+'" class="form-control" /></td>';
 						a += '<td><span id="st_'+meta_id+'">'+status+'</span</td>';
 						a += '<td style="width: 120px;"><button type="button" class="btn btn-xs btn-danger del_post" id="'+meta_id+'" data-user="'+user+'"><i class="glyphicon glyphicon-trash"></i></button></td>';
