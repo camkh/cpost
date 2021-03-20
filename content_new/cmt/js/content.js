@@ -175,7 +175,7 @@ function getpostcmt() {
 					// postData.name = "getpostcmt";
 					// postData.message=t;
 					// top.postMessage(postData, "*");
-					window.location.href = 'https://mbasic.facebook.com/groups/'+t.gid+'/permalink/'+t.pid+'/?lul&_rdc=1&_rdr&setcmd=1';
+					window.location.href = 'https://mbasic.facebook.com/groups/'+t.gid+'/permalink/'+t.pid+'/?lul&_rdc=1&_rdr&cname=setcmd';
 					///	
 				}
 			};

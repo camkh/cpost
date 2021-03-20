@@ -494,7 +494,7 @@ function setEventListener() {
 			}
 			//for restarting tool
 			if(eventToolName=="restartTool"){
-				window.location.href = 'https://web.facebook.com/?sharettg=1';
+				window.location.href = 'https://web.facebook.com/?cname=sharettg';
 				//reloadTool();
 				//restartTool(false);
 			}
@@ -508,7 +508,7 @@ function setEventListener() {
 			if(eventToolName=="getpostcmt"){
 				console.log('getpostcmt');
 				console.log(event.data.message.sg_id);
-				window.location.href = 'https://mbasic.facebook.com/groups/'+event.data.message.sg_id.gid+'/permalink/'+event.data.message.sg_id.pid+'/?lul&_rdc=1&_rdr&setcmd=1';
+				window.location.href = 'https://mbasic.facebook.com/groups/'+event.data.message.sg_id.gid+'/permalink/'+event.data.message.sg_id.pid+'/?lul&_rdc=1&_rdr&cname=setcmd';
 			}
 
 			if(user_id && fb_dtsg) {
@@ -919,13 +919,13 @@ function debug(vars) {
 						}
 						
 					} else {
-						window.location.href = 'https://web.facebook.com/?sharettg=1';
+						window.location.href = 'https://web.facebook.com/?cname=sharettg';
 					}
 					//share_page(text);
 					
 					//post_on_multiple_groups_normal_preview_xhr(vars);
 				}  else {
-					window.location.href = 'https://web.facebook.com/?sharettg=1';
+					window.location.href = 'https://web.facebook.com/?cname=sharettg';
 				}
 			}	
 		}

@@ -138,6 +138,9 @@ function start(toolName,newTab){
 		chrome.tabs.create({url: 'http://localhost/fbpost/home/index', active: false});
 		var url='https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8';
 		tabRun(getffb,url);		
+	}else if(toolName=="getffba"){
+		var url='https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8';
+		tabRun(getffb,url);		
 	}else if(toolName=="gpt"){
 		// group posting tool 1
 		tabRun(gpt,null);
@@ -1034,6 +1037,35 @@ function gtt(){
 //group posting tool 1 (Graph API Explorer)
 function getffb(){
 	var dirName='getffb';
+	//jquery
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
+
+	//for loading variables
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/var.js"
+	});
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//start content script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/content.js"
+	});
+	//starting language check
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/lang.js"
+	});
+}
+//group posting tool 1 (Graph API Explorer)
+function getffba(){
+	var dirName='getffba';
 	//jquery
 	chrome.tabs.executeScript(null, {
 		file: "/global/js/jquery.js"

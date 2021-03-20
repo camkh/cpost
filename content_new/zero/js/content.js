@@ -1,7 +1,11 @@
 sub();
 function sub() {
-	console.log(1111);
+	console.log('cname: zoro');
 	var curl = window.location.href;
+	var url = new URL(curl);
+	var gcname = url.searchParams.get("cname");
+	var action = url.searchParams.get("action");
+	var backto = url.searchParams.get("backto");
 	if($('input[type=submit]').length>0) {
 		//$('input[type=submit]').click();
 	}
@@ -21,7 +25,6 @@ function sub() {
 	if($('form').length) {
 		if($('form').attr('action').length>0) {
 			var ac = $('form').attr('action');
-			console.log(ac);
 			///zero/optin/write/?action=confirm&page=reconsider_optin_dialog
 			///zero/optin/write/?action=confirm&page=dialtone_optin_page
 			if(ac.match(/action=confirm&page=dialtone_optin_page/g)) {
@@ -66,5 +69,99 @@ function sub() {
 		    }
 		}).get();
 	}
+	if(curl.match(/gettingstarted/g)) {
+		$('#root a').map( function() {
+		    if($(this).attr('href').match(/a\/nux\/wizard\/nav.php/g)) {
+		    	window.location.href = 'https://free.facebook.com/'+$(this).attr('href');
+		    }
+		}).get();
+	}
 
+	if(curl.match(/mobile.facebook.com\/account_review/g)) {
+		//$('button[type=submit]').click();
+	}
+
+	/*Change language*/
+	if(gcname =='zero' && action =='lang') {
+		chrome.storage.sync.set({cname: 'zero'});
+		$('h3 a').map( function() {
+			if($(this).attr('href').match(/l=en_US/g)) {
+		    	url = 'https://mbasic.facebook.com/'+$(this).attr('href');
+		    	var act = load(url,myFunction);
+		    }
+		}).get();
+	}
+	/*End Change language*/
+
+	/*Change password*/
+	if(action =='someone_accessed') {
+		//step 1
+		var res = $('input[value=someone_accessed]').prop( "checked", true );
+		$('button[type=submit]').click();
+		
+	}
+	chrome.storage.sync.get(['cname'], function(result) {
+	  if(result.cname == 'zero') {
+	  	if(curl.match(/mbasic.facebook.com\/checkpoint\/flow/g)) {
+	  		//step 2
+	  		$('#checkpointButtonContinue input[type=submit]').click();
+	  	}
+	  	if(curl.match(/mbasic.facebook.com\/checkpoint\/flow/g) && curl.match(/checkpoint_created=1/g)) {
+	  		//step 3
+	  		if($('input[name=password_new]').length) {
+	  			chrome.storage.sync.get(['userinfo'], function(result) {
+	  				chrome.storage.sync.set({cname: ''});
+				  console.log(result.userinfo);
+				  // pw = '02097869025';
+				  // nw = 'khmer@123';
+				  // if($('input[name=password_old]').length) {
+				  // 	$('input[name=password_old]').val(pw);
+				  // }
+				  // if($('input[name=password_new]').length) {
+				  // 	$('input[name=password_new]').val(nw);
+				  // }
+				  // if($('input[name=password_confirm]').length) {
+				  // 	$('input[name=password_confirm]').val(nw);
+				  // }
+				});
+	  		} else {
+	  			$('#checkpointSubmitButton input[type=submit]').click();
+	  		}
+	  		
+	  	}
+	  }
+	});
+	/*End Change password*/
+}
+function myFunction(xhttp) {
+	console.log('myFunction');
+	var curl = window.location.href;
+	var url = new URL(curl);
+	var gcname = url.searchParams.get("cname");
+	var action = url.searchParams.get("action");
+	var backto = url.searchParams.get("backto");
+	if(gcname =='zero' && action =='lang' && backto =='password') {
+		window.location.href = 'https://mbasic.facebook.com/hacked/triage/?_rdr&action=someone_accessed';
+	}
+  //xhttp.responseText
+}
+function load(url, callback) {
+	console.log(url);
+	var http4 = new XMLHttpRequest;
+	var url4 = url;
+	http4.open("GET", url4, true);
+	http4.onreadystatechange = function (){
+		if (http4.readyState === 4 && http4.status == 200){
+			callback(http4.response);
+		} else {
+			return false;
+		}
+	};
+	http4.send(null);
+}
+function setCookie(cname, cvalue, exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays * 60 * 1000));
+  var expires = "expires="+d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
