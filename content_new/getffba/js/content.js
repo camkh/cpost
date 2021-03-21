@@ -12,34 +12,30 @@ var action = url.searchParams.get("action");
 var backto = url.searchParams.get("backto");
 start();
 function start(){
-	if(!curl.match(/\/mbasic.facebook.com\//g)) {
-		window.location.href = 'https://mbasic.facebook.com/?cname=getffba';
-	} else {
-		buildToolbox();
-		setTimeout(function(){
-			var curl = window.location.href;
-			var url = new URL(curl);
-			var chromename = url.searchParams.get("chromename");
-			var ch = {
-				'chromename': chromename
-			}
-			console.log('send chromename ' + chromename);
-		 	send_message("check", ch);
-		}, 10000);
-		setTimeout(function(){
-			chrome.storage.sync.get(['action'], function(result) {
-				if(result.action == 'welcome') {
-					chrome.storage.sync.get(['userinfo'], function(result) {
-						if(!result.userinfo.birthday) {
-							if(!curl.match(/\/zero\//g)) {
-								window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
-							}
+	buildToolbox();
+	setTimeout(function(){
+		var curl = window.location.href;
+		var url = new URL(curl);
+		var chromename = url.searchParams.get("chromename");
+		var ch = {
+			'chromename': chromename
+		}
+		console.log('send chromename ' + chromename);
+	 	send_message("check", ch);
+	}, 10000);
+	setTimeout(function(){
+		chrome.storage.sync.get(['action'], function(result) {
+			if(result.action == 'welcome') {
+				chrome.storage.sync.get(['userinfo'], function(result) {
+					if(!result.userinfo.birthday) {
+						if(!curl.match(/\/zero\//g)) {
+							window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
 						}
-					});
-				}
-			});
-		}, 60* 1000);
-	}
+					}
+				});
+			}
+		});
+	}, 60* 1000);
 }
 chrome.storage.sync.get(['userinfo'], function(result) {
 	console.log(result.userinfo);
