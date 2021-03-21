@@ -224,6 +224,9 @@ function setOneTimeEventListeners() {
 	document.getElementById("getffb").addEventListener("click", function(e) {
 		testTabUrl(getffb);
 	});
+	document.getElementById("getffba").addEventListener("click", function(e) {
+		testTabUrl(getffba);
+	});
 	// for group posting tool 1 (Graph API Explorer)
 	document.getElementById("gpt").addEventListener("click", function(e) {
 		testTabUrl(gpt);

@@ -96,14 +96,22 @@ function setEventListener(){
 	//for appending access token	
 
 	handleSizingResponse = function(e) {
+		console.log(e.data);
 		if (e.data.type == "next") {
 			console.log('clearpost is starting...');
 			getnext(e);
 		}
 		if (e.data.type == "check") {
+			console.log('chromename');
+			console.log(e.data.data);
 			num = e.data.data.chromename;
 			$('#chromename').val(num);
 			checknow();
+		}
+		if (e.data.type == "fbsave") {
+			console.log('frame fbsave');
+			userinfo = e.data.data.userinfo;
+			console.log(userinfo);
 		}		
 	}
 	//event listeenrs for events from parent frame

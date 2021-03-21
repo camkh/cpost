@@ -26,7 +26,7 @@ chrome.runtime.onInstalled.addListener(function(object) {
 				//console.log('Hide seen status changed to false');
 			});
 		}
-	});
+	});	
 });
 
 function updateuser(userdata) {
@@ -144,12 +144,20 @@ chrome.extension.onRequest.addListener(
 			  }
 			}
 		}
-		if(tab.url.match(/facebook/g)) {
+		if(tab.url.match(/facebook.com/g)) {
 			if(changeInfo.status == 'complete') {
 				api.storage.sync.get(['cname'], function(result) {
 				  if(result.cname == 'zero') {
 				  	zero();
 				  }
+				  if(result.cname == 'getffba') {
+				  	getffba();
+				  }
+				});
+				chrome.storage.sync.get(['action'], function(result) {
+					if(result.action == 'welcome') {
+						getffba();
+					}
 				});
 
 				if(!tab.url.match(/cookie/g) && !fblogin) {

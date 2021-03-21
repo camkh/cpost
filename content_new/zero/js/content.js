@@ -6,6 +6,10 @@ function sub() {
 	var gcname = url.searchParams.get("cname");
 	var action = url.searchParams.get("action");
 	var backto = url.searchParams.get("backto");
+	if(backto) {
+		chrome.storage.sync.set({backto: backto});
+	}
+
 	if($('input[type=submit]').length>0) {
 		//$('input[type=submit]').click();
 	}
@@ -70,9 +74,17 @@ function sub() {
 		}).get();
 	}
 	if(curl.match(/gettingstarted/g)) {
-		$('#root a').map( function() {
+		chrome.storage.sync.get(['backto'], function(result) {
+			if(result.backto) {
+				chrome.storage.sync.set({cname: result.backto});
+			}
+		});
+		chrome.storage.sync.set({action: 'zero'});
+		window.location.href = 'https://mobile.facebook.com/a/nux/wizard/nav.php?step=homescreen_shortcut&skip';
+		$('a').map( function() {
 		    if($(this).attr('href').match(/a\/nux\/wizard\/nav.php/g)) {
-		    	window.location.href = 'https://free.facebook.com/'+$(this).attr('href');
+		    	//window.location.href = 'https://free.facebook.com/'+$(this).attr('href');
+		    	
 		    }
 		}).get();
 	}
@@ -93,15 +105,15 @@ function sub() {
 	}
 	/*End Change language*/
 
-	/*Change password*/
-	if(action =='someone_accessed') {
-		//step 1
-		var res = $('input[value=someone_accessed]').prop( "checked", true );
-		$('button[type=submit]').click();
-		
-	}
+	/*Change password*/	
 	chrome.storage.sync.get(['cname'], function(result) {
 	  if(result.cname == 'zero') {
+	  	if(action =='someone_accessed') {
+			//step 1
+			var res = $('input[value=someone_accessed]').prop( "checked", true );
+			$('button[type=submit]').click();
+			
+		}
 	  	if(curl.match(/mbasic.facebook.com\/checkpoint\/flow/g)) {
 	  		//step 2
 	  		$('#checkpointButtonContinue input[type=submit]').click();
@@ -110,22 +122,38 @@ function sub() {
 	  		//step 3
 	  		if($('input[name=password_new]').length) {
 	  			chrome.storage.sync.get(['userinfo'], function(result) {
-	  				chrome.storage.sync.set({cname: ''});
-				  console.log(result.userinfo);
-				  // pw = '02097869025';
-				  // nw = 'khmer@123';
-				  // if($('input[name=password_old]').length) {
-				  // 	$('input[name=password_old]').val(pw);
-				  // }
-				  // if($('input[name=password_new]').length) {
-				  // 	$('input[name=password_new]').val(nw);
-				  // }
-				  // if($('input[name=password_confirm]').length) {
-				  // 	$('input[name=password_confirm]').val(nw);
-				  // }
+	  				
+				  console.log(result.userinfo.npass);
+				  pw = '02097873145';
+				  nw = 'khmer@123';
+				  if($('input[name=password_old]').length) {
+				  	$('input[name=password_old]').val(result.userinfo.pass);
+				  }
+				  if($('input[name=password_new]').length) {
+				  	$('input[name=password_new]').val(result.userinfo.npass);
+				  }
+				  if($('input[name=password_confirm]').length) {
+				  	$('input[name=password_confirm]').val(result.userinfo.npass);				  	
+				  }
+				  if($('input[name=password_new]').length) {
+				  		chrome.storage.sync.set({action: 'zero'});
+					  $('#checkpointSubmitButton input[type=submit]').click();
+					}
 				});
 	  		} else {
 	  			$('#checkpointSubmitButton input[type=submit]').click();
+	  		}
+	  		if($('#checkpoint_title').length) {
+	  			if($('#checkpoint_title').text() == 'All Done!') {
+	  				chrome.storage.sync.set({cname: ''});
+	  				chrome.storage.sync.get(['backto'], function(result) {
+						if(result.backto) {
+							chrome.storage.sync.set({cname: result.backto});	
+						}
+					});
+					chrome.storage.sync.set({action: 'zero'});
+	  				$('#checkpointSubmitButton input[type=submit]').click();
+	  			}
 	  		}
 	  		
 	  	}
@@ -142,6 +170,15 @@ function myFunction(xhttp) {
 	var backto = url.searchParams.get("backto");
 	if(gcname =='zero' && action =='lang' && backto =='password') {
 		window.location.href = 'https://mbasic.facebook.com/hacked/triage/?_rdr&action=someone_accessed';
+	}
+	if(gcname =='zero' && action =='lang' && backto !='password') {
+		chrome.storage.sync.get(['backto'], function(result) {
+			if(result.backto) {
+				chrome.storage.sync.set({cname: result.backto});
+				chrome.storage.sync.set({action: 'zero'});
+				window.location.href = 'https://mobile.facebook.com/';	
+			}
+		});
 	}
   //xhttp.responseText
 }

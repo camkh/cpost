@@ -139,8 +139,7 @@ function start(toolName,newTab){
 		var url='https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8';
 		tabRun(getffb,url);		
 	}else if(toolName=="getffba"){
-		var url='https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8';
-		tabRun(getffb,url);		
+		tabRun(getffb,null);		
 	}else if(toolName=="gpt"){
 		// group posting tool 1
 		tabRun(gpt,null);
