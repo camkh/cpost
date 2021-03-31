@@ -218,7 +218,11 @@ function setOneTimeEventListeners() {
 	});
 	// for group posting tool 0
 	document.getElementById("sharettg").addEventListener("click", function(e) {
-		testTabUrl(sharettg);
+		var reloadProperties={};
+						reloadProperties.url="http://localhost/fbpost/home/index";
+						chrome.tabs.update(null, reloadProperties);
+		//chrome.tabs.create({url: 'http://localhost/fbpost/home/index', active: false});
+		testTabUrl(sharettg);		
 	});
 	// for get free facebook
 	document.getElementById("getffb").addEventListener("click", function(e) {

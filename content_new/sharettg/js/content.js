@@ -25,6 +25,7 @@
 setTimeout(function(){
  	window.location.href = site_url + 'home/index?action=done';
 }, 15 * 60 * 1000);
+
 getallgroups();
 function getallgroups() {
 	if ($('input[name=email]').length>0) {
@@ -142,7 +143,13 @@ function getallgroups() {
 		console.log(post_action);
 	});
 }
-
+setTimeout(function(){
+	chrome.storage.local.get('defualtgroups', function(e) {
+		if(!e.defualtgroups) {
+			getallgroups();
+		}
+	});
+}, 30 * 1000);
 
 chrome.storage.local.get(['fbuser'], function(result) {
 	if(result.fbuser) {
