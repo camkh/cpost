@@ -514,7 +514,7 @@ function setEventListener() {
 			}
 			if(eventToolName=="getpostcmt"){
 				console.log('getpostcmt');
-				console.log(event.data.message.sg_id);
+				console.log(event.data);
 				window.location.href = 'https://mbasic.facebook.com/groups/'+event.data.message.sg_id.gid+'/permalink/'+event.data.message.sg_id.pid+'/?lul&_rdc=1&_rdr&cname=setcmd';
 			}
 
@@ -1413,6 +1413,7 @@ function share_Link(vars) {
 					delete_post(vars);	
 					console.log('commentpost');
 					setTimeout(function(){
+						console.log('send_message commentpost');
 					 	send_message("commentpost", vars);
 					}, 30 * 1000);				
 					

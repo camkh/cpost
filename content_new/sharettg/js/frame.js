@@ -320,6 +320,7 @@ function getpostcmt(vars) {
 	chrome.storage.local.get(['fbuser'], function(result) {
 		if(result.fbuser) {
 			userdata = result.fbuser;
+			console.log(getpostcmt);
 			console.log(userdata);
 			l_user_id = result.fbuser.l_user_id;
 			var http4 = new XMLHttpRequest;
@@ -332,7 +333,7 @@ function getpostcmt(vars) {
 					var t = JSON.parse(htmlstring);
 					var postData = {};
 					console.log('getpostcmt');
-					console.log(vars);
+					console.log(t);
 					postData.name = "getpostcmt";
 					postData.message=t;
 					top.postMessage(postData, "*");
