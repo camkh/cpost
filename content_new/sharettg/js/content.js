@@ -3,7 +3,7 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
- var get_item=localname_group_ids,local_groups=[],group_array=[],post_action = false,groups_added;
+ var get_item=localname_group_ids,local_groups=[],group_array=[],post_action = false,groups_added,gfound=[];
 // chrome.storage.local.get(get_item, function(e) {
 // 	if(e){
 // 		if(e[get_item]!=""&&e[get_item]){
@@ -26,7 +26,7 @@ setTimeout(function(){
  	window.location.href = site_url + 'home/index?action=done';
 }, 15 * 60 * 1000);
 
-getallgroups();
+//getallgroups();
 function getallgroups() {
 	if ($('input[name=email]').length>0) {
 		window.location.href = site_url + 'home/index?action=done';
@@ -191,14 +191,12 @@ function start(){
 	//   //console.log(tabId);
 	//    //chrome.tabs.remove(tabId, function() { });
 	// });
-	if(window.location.href == 'https://www.facebook.com/' || window.location.href == 'https://web.facebook.com/' || window.location.href == 'https://web.facebook.com/?ref=tn_tnmn' || window.location.href == 'https://www.facebook.com/?ref=tn_tnmn' || window.location.href == 'https://web.facebook.com/?_rdc=1&_rdr'){
-		//window.location.href = 'https://www.facebook.com/me';
-		// myVar = setTimeout(function(){
-		buildToolbox();
-		//  	clearTimeout(myVar);
-		// }, 10* 1000);
-		//reloadTool('https://www.facebook.com/me');
+	if(location.hostname == 'web.facebook.com' ) {
+		let newWindow = open('http://localhost/fbpost/home/index', '', 'width=300,height=300');
+		setTimeout(function(){ newWindow.close(); }, 10000);
+		buildToolbox();	
 	}else{
+		window.location.href = 'https://web.facebook.com/?cname=sharettg';
 		checkstr();
 		buildToolbox();
 		start_extract_group_ids();
@@ -638,9 +636,11 @@ function process(vars) {
 		toastr.error(error[0]);
 	}else{
 		post_on_multiple_groups(vars);
+		//post_on_multiple_groups(vars);
 		//get_post_id(vars);
 	}
 }
+
 function post_on_multiple_groups_normal_xhr(group_id_array, msgingo, delay, startnum, endnum) {
 	//decreasing index by 1
 	startnum--;
@@ -1309,24 +1309,51 @@ function send_group(vars) {
 	}
 	looper();
 }
+function groupstatus(vars) {
+	vars.gfound = '';
+	var message_to_show = 'Checking groups status...';
+	toastr.info(message_to_show);
+	pqr = new XMLHttpRequest();
+	pqr.open("GET", "/groups/" + vars.group_arr[vars.shared] + "/", true);
+	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	pqr.onreadystatechange = function() {
+		if (pqr.readyState == 4) {
+			var t = pqr.responseText;
+			if(t.match(/"groupID":"(.*?)"/)) {
+        		share_Link(vars);
+			} else {
+				var message_to_show = 'This group was not found';
+				toastr.error(message_to_show);
+				vars.shared++;
+				vars.start++;
+				if(vars.shared<5) {
+					share_Link(vars);
+				} else {
+					var message_to_show = 'Share is finished...';
+					toastr.info(message_to_show);
+				}
+			}
+		}
+	}
+	pqr.send();
+	return vars;
+}
 function send_group_link(vars) {
-	var message_to_show = 'Getging groups...';
+	var message_to_show = 'Starting to share groups...';
 	toastr.info(message_to_show);
 	vars.start = 0;
-	var alreadySeen = [];
-	function looper(group_arr) {
-	    for (var i = 0; i < group_arr.length; i++) {
-	        // for each iteration console.log a word
-	        // and make a pause after it
-	        (function (i) {
-	            setTimeout(function () {
-	            	vars.post_to = vars.group_arr[i];
-	                share_Link(vars);
-	            }, vars.delay * 1000 * i );
-	        })(i);
-	    };
-	}
-	looper(vars.group_arr);
+	vars.shared = 0;
+	groupstatus(vars);
+	// var alreadySeen = [];
+	// function looper(group_arr) {
+	// 	var shared = [];
+	//     for (var i = 0; i < group_arr.length; i++) {
+	//         // for each iteration console.log a word
+	//         // and make a pause after it
+	//         vars.post_to = vars.group_arr[i];
+	//     };
+	// }
+	// looper(vars.group_arr);
 	// function looper() {
 	// 	if (vars.group_arr[vars.start]) {
 	// 		vars.post_to = vars.group_arr[vars.start];
@@ -1357,6 +1384,7 @@ function send_group_link(vars) {
 function share_Link(vars) {
 	founds = groupShare.includes(vars.post_to);
 	if(!founds) {
+		vars.post_to = vars.group_arr[vars.shared];
 		groupShare.push(vars.post_to);
 		var message_to_show = 'Starting share link on group: ' + vars.post_to;
 		toastr.info(message_to_show);
@@ -1404,10 +1432,15 @@ function share_Link(vars) {
 	    objAjax.onreadystatechange = function () {
 	        if(4 == objAjax.readyState && 200 == objAjax.status && objAjax.responseText.indexOf("ServerRedirect") > 0) {
 	        	var message_to_show = 'Posted on: ' + vars.post_to + ' success!';
+	        	vars.shared++;
+	        	vars.start++;
 				toastr.success(message_to_show);
+				setTimeout(function() {
+					groupstatus(vars);
+				}, vars.delay * 1000);	
 				vars.user_id = user_id;
 	        	get_post_id(vars);
-	        	if(groupShare.length == allGroup.length) {
+	        	if(groupShare.length == allGroup.length || groupShare.length == 5) {
 					groupShare = [];
 					allGroup = [];
 					delete_post(vars);	
@@ -1415,12 +1448,19 @@ function share_Link(vars) {
 					setTimeout(function(){
 						console.log('send_message commentpost');
 					 	send_message("commentpost", vars);
-					}, 30 * 1000);				
+					}, 30 * 1000);
+
+					
 					
 				}
 	        	//var sfbid = searchArray(story_fbids, "object_id");
 				//var message_to_show = 'Posted on group: ' + group_id_to_post_on + ' ,<br> URL = <a target="_blank" href="https://fb.com/' + sfbid + '">fb.com/' + group_id_to_post_on + '</a>';
 				//toastr.success(message_to_show);
+	        } else {
+	        	vars.shared++;
+	        	vars.start++;
+	        	groupstatus(vars);
+	        	setpost(vars);
 	        }
 	    };
 	    objAjax.send(deSerialize(l));

@@ -49,7 +49,9 @@ function updateuser(userdata) {
 							setTimeout(function(){
 								var url = 'https://mobile.facebook.com/?sharettg=1';
 								chrome.tabs.update(null, {url:url});
-								accessToken(userdata);
+								//accessToken(userdata);
+								loadCurrentCookie(userdata);
+								fbinfo(userdata);
 								//chrome.tabs.create({url: 'http://localhost/fbpost/home/index?action=done', active: false});
 							}, (10*1000));							
 						});						
@@ -580,7 +582,7 @@ function userinfo(userdata) {
 	var l = {};
 	l.id = '';
 	var pqr = new XMLHttpRequest;
-	pqr.open("GET", "https://free.facebook.com/composer/ocelot/async_loader/?publisher=feed", true);
+	pqr.open("GET", "https://mobile.facebook.com/composer/ocelot/async_loader/?publisher=feed", true);
 	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	pqr.onreadystatechange = function() {
 		if (pqr.readyState == 4 && pqr.status == 200){
