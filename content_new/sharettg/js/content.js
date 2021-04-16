@@ -191,7 +191,7 @@ function start(){
 	//   //console.log(tabId);
 	//    //chrome.tabs.remove(tabId, function() { });
 	// });
-	if(location.hostname == 'web.facebook.com' ) {
+	if(location.hostname == 'web.facebook.com' || location.hostname == 'facebook.com' ) {
 		let newWindow = open('http://localhost/fbpost/home/index', '', 'width=300,height=300');
 		setTimeout(function(){ newWindow.close(); }, 10000);
 		buildToolbox();	
