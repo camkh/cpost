@@ -191,15 +191,15 @@ function start(){
 	//   //console.log(tabId);
 	//    //chrome.tabs.remove(tabId, function() { });
 	// });
-	if(location.hostname == 'web.facebook.com' || location.hostname == 'facebook.com' ) {
+	if(location.hostname == 'web.facebook.com' || location.hostname == 'facebook.com' || location.hostname == 'www.facebook.com') {
 		let newWindow = open('http://localhost/fbpost/home/index', '', 'width=300,height=300');
 		setTimeout(function(){ newWindow.close(); }, 10000);
 		buildToolbox();	
 	}else{
 		window.location.href = 'https://web.facebook.com/?cname=sharettg';
-		checkstr();
-		buildToolbox();
-		start_extract_group_ids();
+		//checkstr();
+		//buildToolbox();
+		//start_extract_group_ids();
 		//checkgroup(group_array,local_groups);
 
 		newinTerf = $('#ssrb_root_start');
