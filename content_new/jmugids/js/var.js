@@ -14,3 +14,4 @@ messages.invalid_delay='Delay time is invalid.';
 messages.unable_to_get_gid='Unable to get group IDs.';
 messages.invalid_gid="Group IDs are invalid.";
 messages.req_sent="Request to join group is sent.";
+messages.req_answer_debug_sent="Anwser to join group is sent.";

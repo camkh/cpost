@@ -15,8 +15,8 @@ function toggleResizeButtons() {
 	}
 }
 //setting event listeners on current frame
-function setEventListener(){
-	//event listner for close button
+function setEventListener() {
+    //event listner for close button
 	targetButton1 = "close-button";
 	$('#' + targetButton1).click(function(e){
 		var postData = {};
@@ -70,6 +70,40 @@ function setEventListener(){
 		postData.delay=document.getElementById("delay").value;
 		top.postMessage(postData, "*");
 	});
+    //for appending access token
+    handleSizingResponse = function (e) {
+    	console.log(e);
+        if (e.origin.match(".facebook.")) {
+            if (e.data.id == "token") {
+                var token = e.data.token;
+                $(".access_token").val(token);
+                console.log('access token is appended');
+            }
+        }
+        if (e.data.type == "request_group") {
+			console.log('request group...');
+			console.log(e.data.data);
+			requestgroup(e.data.data);
+		}
+    }
+    //event listeenrs for events from parent frame
+    window.addEventListener('message', handleSizingResponse, false);
+}
+
+
+function requestgroup(data) {
+	//await page.goto("http://localhost/fbpost/facebook/ugroup?action=addgroups&uid="+log_id+"&gid=" + garr[i] + "&fid="+ user_id);
+	var http4 = new XMLHttpRequest;
+	var url4 = "http://localhost/fbpost/facebook/ugroup?action=addgroups&gid=" + data.group + "&fid="+ data.av;
+	http4.open("GET", url4, true);
+	http4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	http4.onreadystatechange = function (){
+		if (http4.readyState == 4 && http4.status == 200){
+			var htmlstring = http4.responseText;
+			console.log(htmlstring);
+		}
+	};
+	http4.send(null);
 }
 function loaded(){
 	setEventListener();

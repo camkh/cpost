@@ -12,6 +12,8 @@ var x,days,hours,minutes,seconds,distance,loginStatus = 0,user_id,interface,user
 chrome.storage.local.get(['fbuser'], function(result) {
 	if(result.fbuser) {
 		userdata = result.fbuser;
+		console.log('fbuser');
+		console.log(userdata);
 		//fb_dtsg = result.fbuser.fb_dtsg;
 		user_id = result.fbuser.user_id;
 		getpost(userdata.user_id);
@@ -577,11 +579,16 @@ function getgroup(user_id) {
 	http4.send(null);
 }
 function topost(vars) {
-	var garray = []
+	var garray = [],allgroups=[];
 	var checkboxes = document.querySelectorAll('.group:checked');
 	for (var i = 0; i < checkboxes.length; i++) {
 		garray.push(checkboxes[i].value);
 	}
+	var cboxes = document.querySelectorAll('.group');
+	for (var i = 0; i < cboxes.length; i++) {
+		allgroups.push(cboxes[i].value);
+	}
+
 	var min = parseInt($('#next_post').val());
 	var max = parseInt($('#next_post_b').val());
 	var rand = randomInt(min,max);
@@ -606,6 +613,7 @@ function topost(vars) {
 			postData.fbgroupid=vars.fbgroupid;
 			postData.fbpageid=vars.fbpageid;
 			postData.user_id= user_id;
+			postData.allgroups= allgroups;
 			top.postMessage(postData, "*");
 		}
 	}
@@ -632,6 +640,7 @@ function topost(vars) {
 			postData.fbpageid=page_id;
 			postData.interface=interface;
 			postData.user_id=user_id;
+			postData.allgroups=allgroups;
 			top.postMessage(postData, "*");
 		}
 	}	
@@ -737,11 +746,11 @@ function share_post_count(data) {
 		var post_id = $('#post_id').val();
 		var delay = $('#delay').val();
 		var autoPost;
-		if(x!= 0 && data.pid ==post_id) {
+		/*if(x!= 0 && data.pid ==post_id) {
 			autoPost = setTimeout(function() {
-				topost();
+				topost(data);
 			}, delay * 1000);
-		}
+		}*/
 		if(x == 0) {
 			clearTimeout(autoPost);
 			delete_post(post_id);
@@ -921,6 +930,8 @@ function getpostid(vars) {
 			var post_id = htmlstring.split('permalink/')[1];
 			vars.post_id = post_id.split('/')[0];
 			vars.name = "getpostid";
+			console.log('getpostid');
+			console.log(vars.post_id);
 			top.postMessage(vars, "*");
 			// if(post_id) {
 			// 	savepostid(vars);

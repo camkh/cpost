@@ -3,7 +3,7 @@
  * See license file for more information
  * Contact developers at mr.dinesh.bhosale@gmail.com
  * */
- var get_item=localname_group_ids,local_groups=[],group_array=[],post_action = false,groups_added,gfound=[];
+ var get_item=localname_group_ids,local_groups=[],group_array=[],post_action = false,groups_added,gfound=[],lfound=[],csahred=[];
 // chrome.storage.local.get(get_item, function(e) {
 // 	if(e){
 // 		if(e[get_item]!=""&&e[get_item]){
@@ -423,7 +423,7 @@ function request_all_groups(e) {
 	}
 	pqr.send(deSerialize(r));
 }
-function graphql(userdata,data) {
+function graphql(data,vars,callback) {
 	console.log('graphql userdata');
 	var pqr = new XMLHttpRequest;
 	pqr.open("POST", "/api/graphql/", true);
@@ -431,11 +431,9 @@ function graphql(userdata,data) {
 	pqr.onreadystatechange = function() {
 		if (pqr.readyState == 4 && pqr.status == 200){
 			var t = pqr.responseText;
-			if(!t.error) {
-				return t;
-			} else {
-				return false;
-			}
+			vars.responseText = t;
+			vars.data = data;
+			callback(vars);
 			//accessToken(userdata);
 		}
 	}
@@ -575,11 +573,14 @@ function setEventListener() {
 					pid: pid,
 					picture: picture,
 					group: [],
+					allgroups: event.data.allgroups,
 					post_id: "",
 					__dyn: "5V5yAW8-aFoFxp2u6aOGeFxqeCwKAKGgS8zCC-C26m6oKezob4q2i5U4e2CEaUgxebkwy68qGieKcDKuEjKeCxicxaagdUOum2SVEiGqexi5-uifz8gAUlwnoCium8yUgx66EK3Ou49LZ1uJ1im7WwxV8G4oWdUgByE",
 					fb_dtsg: fb_dtsg,
 					__rev: "1033590"
 				};
+				vars.start = 0;
+				vars.shared = vars.allgroups.length - vars.group_arr.length;
 				process(vars);
 				// process(
 				// 	message_inp,
@@ -905,7 +906,7 @@ function debug(vars) {
 	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
 	request["onreadystatechange"] = function () {
 		if (request["readyState"] == 4 && request["status"] == 200) {
-
+			lfound.push(vars.link);
 			if (request["responseText"].indexOf("Sorry")==0) {
 				console.log('debug');
 				if(vars.fb_page_id) {
@@ -921,6 +922,7 @@ function debug(vars) {
 					vars.attachmentConfig = searchArray(suiteView, "attachmentConfig");
 					if(vars.attachmentConfig) {
 						if(shareid!= vars.fb_group_id) {
+							console.log(vars);
 							send_group_link(vars);
 							shareid = vars.fb_group_id;
 						}
@@ -937,7 +939,13 @@ function debug(vars) {
 			}	
 		}
 	};
-	request["send"](deSerialize(r20));
+	var n = lfound.includes(vars.link);
+	if(!n) {
+		request["send"](deSerialize(r20));
+	} else {
+		send_group_link(vars);
+	}
+	
 }
 /*
 / debug url link get some data
@@ -1309,40 +1317,138 @@ function send_group(vars) {
 	}
 	looper();
 }
-function groupstatus(vars) {
-	vars.gfound = '';
+function checkgroup(vars) {
 	var message_to_show = 'Checking groups status...';
 	toastr.info(message_to_show);
-	pqr = new XMLHttpRequest();
-	pqr.open("GET", "/groups/" + vars.group_arr[vars.shared] + "/", true);
-	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-	pqr.onreadystatechange = function() {
-		if (pqr.readyState == 4) {
-			var t = pqr.responseText;
-			if(t.match(/"groupID":"(.*?)"/)) {
-        		share_Link(vars);
-			} else {
-				var message_to_show = 'This group was not found';
-				toastr.error(message_to_show);
-				vars.shared++;
-				vars.start++;
-				if(vars.shared<5) {
-					share_Link(vars);
-				} else {
-					var message_to_show = 'Share is finished...';
-					toastr.info(message_to_show);
+	if(vars.responseText) {
+		if(vars.data.fb_api_req_friendly_name == 'CometHovercardQueryRendererQuery') {
+			//console.log(vars.responseText);
+			var js,gs,gid;
+			if(vars.responseText.match(/"id":"(.*?)"/)) {
+				if(vars.responseText.match(/"viewer_join_state":"(.*?)"/)) {
+					js = vars.responseText.match(/"viewer_join_state":"(.*?)"/)[1];
 				}
-			}
+				if(vars.responseText.match(/"group_join_state":"(.*?)"/)) {
+					gs = vars.responseText.match(/"group_join_state":"(.*?)"/)[1];
+				}
+				if(js == 'CAN_JOIN' || gs == 'CAN_JOIN' || js == 'REQUESTED' || gs == 'REQUESTED' || js == 'CAN_REQUEST' || gs == 'CAN_REQUEST') {
+
+				} else {
+					vars.responseText = '';
+					vars.data = '';
+					console.log('go to share...');
+					share_Link(vars);	 				
+				}
+			} 
+			
+			//MEMBER is approve
+			console.log('js');
+			console.log(js);
+			console.log('gs');
+			console.log(gs);
 		}
 	}
-	pqr.send();
-	return vars;
+}
+function groupstatus(vars) {	
+	console.log('count');
+	console.log('start ' + vars.start);
+	console.log('shared ' + csahred.length);
+	console.log('group ' + vars.group_arr.length);
+	vars.post_to = vars.group_arr[vars.start];
+	var a = Math.floor(801792123 * Math.random()) + 1001792123;
+	var r = {
+		av: user_id,
+		__user: user_id,
+		__a: 1,
+		__dyn: '7AzHxqU5a5Q2m3mbG2KnFw9uu2i5U4e0yoW3q322aewXwnEbotwp8O2S1DwUx609vCxS320om78-0BE88628wgolzUO0-E4a3aUS2G2Caw9m8wsU9kbxSE6q0Mo4G4UcUC68gwHwxwQzXxG1Pxi4UaEW1-xS6Fobrxu5Elxm3y2K5ojUlDw-wUws9o8oy5oO2-0B8d9o',
+		__req: '1v',
+		__beoa: 0,
+		__pc: 'EXP2:comet_pkg',
+		dpr: 1,
+		__ccg: 'GOOD',
+		__rev: 1003419127,
+		__s: '31j73y:byeu5y:g2t6e8',
+		__hsi: '6937624580090098028-0',
+		__bhv: 2,
+		__no_rdbl: 1,
+		__comet_req: 1,
+		fb_dtsg: fb_dtsg,
+		jazoest: 21991,
+		__spin_r: a,
+		__spin_b: 'trunk',
+		__spin_t: 1615291596,
+		fb_api_caller_class: 'RelayModern',
+		fb_api_req_friendly_name: 'CometHovercardQueryRendererQuery',
+		variables: '{"actorID":"'+ vars.post_to +'","context":"DEFAULT","scale":1}',
+		//variables: '{"actorID":"1010097179357978","context":"DEFAULT","scale":1}',
+		server_timestamps: true,
+		group: vars.post_to,
+		doc_id: 4167014146662393
+	};
+	
+	var n = gfound.includes(vars.post_to);
+	console.log(vars.post_to + ' duplicate is ' + n);
+	console.log(gfound.length);
+	console.log(gfound);
+	if(!n) {
+		gfound.push(vars.post_to);		
+		graphql(r,vars,checkgroup);
+	}
+	
+	if(vars.start >= vars.group_arr.length || csahred.length==5) {
+		groupShare = [];
+		allGroup = [];
+		delete_post(vars);	
+		console.log('commentpost');
+		send_message("commentpost", vars);
+	} else {
+		setTimeout(function(){
+			vars.start++;
+			console.log('starting share...');
+			console.log(vars.start);
+			groupstatus(vars);
+		}, (vars.delay * 1000));
+	}
+
+	
+
+	// vars.gfound = '';
+	// var message_to_show = 'Checking groups status...';
+	// toastr.info(message_to_show);
+	// pqr = new XMLHttpRequest();
+	// pqr.open("GET", "/groups/" + vars.group_arr[vars.shared] + "/", true);
+	// pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+	// pqr.onreadystatechange = function() {
+	// 	if (pqr.readyState == 4) {
+	// 		var t = pqr.responseText;
+	// 		if(t.match(/if_viewer_can_post_without_approval(.*?)/)) {
+	// 			approval = t.match(/"if_viewer_can_post_without_approval":(.*?)/);
+	// 			console.log(approval);
+	// 		}
+	// 		if(t.match(/"groupID":"(.*?)"/)) {
+
+ //        		//share_Link(vars);
+	// 		} else {
+	// 			var message_to_show = 'This group was not found';
+	// 			toastr.error(message_to_show);
+	// 			vars.shared++;
+	// 			vars.start++;
+	// 			if(vars.shared<=5) {
+	// 				groupstatus(vars);
+	// 				//share_Link(vars);
+	// 			} else {
+	// 				var message_to_show = 'Share is finished...';
+	// 				toastr.info(message_to_show);
+	// 			}
+	// 		}
+	// 	}
+	// }
+	// pqr.send();
+	// return vars;
 }
 function send_group_link(vars) {
 	var message_to_show = 'Starting to share groups...';
 	toastr.info(message_to_show);
-	vars.start = 0;
-	vars.shared = 0;
 	groupstatus(vars);
 	// var alreadySeen = [];
 	// function looper(group_arr) {
@@ -1381,12 +1487,214 @@ function send_group_link(vars) {
 	// 	share_Link(vars);
 	// }
 }
-function share_Link(vars) {
+function shareLink(vars) {
+	if(vars.responseText) {
+		console.log('share_Link');
+		console.log(vars.responseText);
+	}
+}
+function share_Link1(vars) {
+	founds = groupShare.includes(vars.post_to);
+	if(!founds) {	
+		vars.post_to = vars.group_arr[vars.start];	
+		groupShare.push(vars.post_to);	
+		var message_to_show = 'Starting share link on group: ' + vars.post_to;
+		console.log(message_to_show);
+		console.log(vars);
+		toastr.info(message_to_show);
+	    var a = Math.floor(801792123 * Math.random()) + 1001792123;
+	    var composer = guid();
+		var r = {
+			av: user_id,
+			__user: user_id,
+			__a: 1,
+			__dyn: '7AzHxqU5a5Q2m3mbG2KnFw9uu2i5U4e0yoW3q322aewXwnEbotwp8O2S1DwUx609vCxS320om78-0BE88628wgolzUO0-E4a3aUS2G2Caw9m8wsU9kbxSE6q0Mo4G4UcUC68gwHwxwQzXxG1Pxi4UaEW1-xS6Fobrxu5Elxm3y2K5ojUlDw-wUws9o8oy5oO2-0B8d9o',
+			__req: '1v',
+			__beoa: 0,
+			__pc: 'EXP2:comet_pkg',
+			dpr: 1,
+			__ccg: 'GOOD',
+			__rev: 1003419127,
+			__s: '31j73y:byeu5y:g2t6e8',
+			__hsi: '6937624580090098028-0',
+			__bhv: 2,
+			__no_rdbl: 1,
+			__comet_req: 1,
+			fb_dtsg: fb_dtsg,
+			jazoest: 21991,
+			__spin_r: a,
+			__spin_b: 'trunk',
+			__spin_t: 1615291596,
+			fb_api_caller_class: 'RelayModern',
+			fb_api_req_friendly_name: 'ComposerStoryCreateMutation',
+			variables: '{"input":{"logging":{"composer_session_id":"'+guid()+'"},"source":"WWW","attachments":[{"link":{"share_scrape_data":"{\"share_type\":100,\"share_params\":'+JSON.stringify(vars.attachmentConfig.params)+'}"}}],"message":{"ranges":[],"text":"'+vars.message+'"},"with_tags_ids":[],"inline_activities":[],"explicit_place_id":"0","tracking":[null],"audience":{"to_id":"'+vars.post_to+'"},"actor_id":"'+user_id+'","client_mutation_id":"1"},"displayCommentsFeedbackContext":null,"displayCommentsContextEnableComment":null,"displayCommentsContextIsAdPreview":null,"displayCommentsContextIsAggregatedShare":null,"displayCommentsContextIsStorySet":null,"feedLocation":"GROUP","feedbackSource":0,"focusCommentID":null,"gridMediaWidth":null,"scale":1,"privacySelectorRenderLocation":"COMET_STREAM","renderLocation":"group","useDefaultActor":false,"isFeed":false,"isFundraiser":false,"isFunFactPost":false,"isGroup":true,"isTimeline":false,"isLivingRoom":false,"isSocialLearning":false,"isPageNewsFeed":false,"isProfileReviews":false,"prefetchRecentMediaPhotos":true,"UFI2CommentsProvider_commentsKey":"CometGroupDiscussionRootSuccessQuery"}',
+			//variables: '{"actorID":"1010097179357978","context":"DEFAULT","scale":1}',
+			server_timestamps: true,
+			group: vars.group_arr[vars.start],
+			doc_id: 4074940565902231
+		};
+		console.log(r);
+		graphql(r,vars,shareLink);	    
+	}	
+}
+function share_Link2(vars) {
 	founds = groupShare.includes(vars.post_to);
 	if(!founds) {
-		vars.post_to = vars.group_arr[vars.shared];
-		groupShare.push(vars.post_to);
+		var linkTitle = vars.message;
+		var piclink = vars.picture;
+		var msgingo = vars.message;
+		var linkinp = vars.link;
+		var delay = vars.delay;
+		vars.post_to = vars.group_arr[vars.start];	
+		groupShare.push(vars.post_to);			
+		pqr = new XMLHttpRequest();
+		var url = "";
+		url += "/ajax/updatestatus.php?av=" + encodeURIComponent(user_id);
+		var group_id_to_post_on = vars.post_to;
+		pqr.open("POST", url, true);
+		pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+		pqr.onreadystatechange = function() {
+			if (pqr.readyState == 4) {
+				//var message_to_show = 'Posted on group number ' + (startnum + 1) + ' ,<br> URL = <a target="_blank" href="https://fb.com/' + group_id_to_post_on + '">fb.com/' + group_id_to_post_on + '</a>';
+				//toastr.info(message_to_show);
+				
+				if (pqr.responseText) {
+					var cdata = JSON.parse(pqr.responseText.replace("for (;;);", ""));
+					var story_fbids = cdata.payload;
+					console.log(story_fbids);
+					// var text = pqr.responseText;
+					// var errMsg = give_error_description(text);
+					// if (errMsg) {
+					// 	toastr.error(errMsg);
+					// }
+				}
+			}
+		}
+		var attachments = '';
+		Object.keys(vars.attachmentConfig.params).map(function (key) {
+			if(key == 'urlInfo') {
+				Object.keys(vars.attachmentConfig.params.urlInfo).map(function (key) {
+					attachments +='&attachment[params][urlInfo]['+ key + ']=' + vars.attachmentConfig.params.urlInfo[key]+'\n';
+				}).join('&');
+			} else if(key == 'ranked_images') {
+				Object.keys(vars.attachmentConfig.params.ranked_images).map(function (key) {
+					if(key == 'images') {
+						attachments +='&attachment[params][ranked_images]['+ key + '][0]=' + vars.attachmentConfig.params.ranked_images[key]+'\n';
+					} else {
+						attachments +='&attachment[params][ranked_images]['+ key + ']=' + vars.attachmentConfig.params.ranked_images[key]+'\n';
+					}
+				}).join('&');
+			} else {
+				attachments +='&attachment[params]['+ key + ']=' + vars.attachmentConfig.params[key]+'\n';
+			}
+		}).join('&');
+
+		var sendData = '';
+		sendData += 'album_id=';
+		sendData += '&asset3d_id=';
+		sendData += '&asked_fun_fact_prompt_data=';
+		sendData += attachments;
+		sendData += '&audience=';
+		sendData += '&boosted_post_config=';
+		sendData += '&breaking_news_expiration=0';
+		sendData += '&breaking_news_selected=false';
+		sendData += '&cta_data=';
+		sendData += '&composer_entry_point=group';
+		sendData += '&composer_entry_time=3265';
+		sendData += '&composer_session_id='+guid();
+		sendData += '&composer_session_duration=3604';
+		sendData += '&composer_source_surface=group';
+		sendData += '&composertags_city=';
+		sendData += '&composertags_place=';
+		sendData += '&civic_product_source=';
+		sendData += '&direct_share_status=0';
+		sendData += '&sponsor_relationship=0';
+		sendData += '&extensible_sprouts_ranker_request=';
+		sendData += '&feed_topics=';
+		sendData += '&find_players_info=';
+		sendData += '&fun_fact_prompt_id=';
+		sendData += '&group_post_tag_ids=';
+		sendData += '&hide_object_attachment=false';
+		sendData += '&has_support_now_cta=false';
+		sendData += '&is_explicit_place=false';
+		sendData += '&is_markdown=false';
+		sendData += '&is_ama=false';
+		sendData += '&is_post_to_group=false';
+		sendData += '&is_welcome_to_group_post=false';
+		sendData += '&is_q_and_a=false';
+		sendData += '&is_profile_badge_post=false';
+		sendData += '&story_list_attachment_data=';
+		sendData += '&local_alert_data=';
+		sendData += '&multilingual_specified_lang=';
+		sendData += '&num_keystrokes=2';
+		sendData += '&num_pastes=1';
+		sendData += '&place_attachment_setting=1';
+		sendData += '&poll_question_data=';
+		sendData += '&privacyx=';
+		sendData += '&prompt_id=';
+		sendData += '&prompt_tracking_string=';
+		sendData += '&publisher_abtest_holdout=';
+		sendData += '&ref=group';
+		sendData += '&stories_selected=false';
+		sendData += '&todo_list_data=';
+		sendData += '&timeline_selected=true';
+		sendData += '&xc_sticker_id=0';
+		sendData += '&event_tag=';
+		sendData += '&target_type=group';
+		sendData += '&xhpc_message=' + encodeURIComponent(msgingo);
+		sendData += '&xhpc_message_text=' + encodeURIComponent(msgingo);
+		sendData += '&is_forced_reshare_of_post=false';
+		sendData += '&xc_disable_config=';
+		sendData += '&delight_ranges=[]';
+		sendData += '&holiday_card=';
+		sendData += '&draft_id=';
+		sendData += '&xc_share_params=' + JSON.stringify(vars.attachmentConfig.params);
+		sendData += '&xc_share_target_type=100';
+		sendData += '&xc_share_images[0]='+ encodeURIComponent(piclink);
+		sendData += '&xc_share_title=' + encodeURIComponent(vars.attachmentConfig.params.title);
+		sendData += '&xc_share_summary=' + encodeURIComponent(vars.attachmentConfig.params.summary);
+		sendData += '&xc_link_url=' + encodeURIComponent(linkinp);
+		sendData += '&is_react=true';
+		sendData += '&xhpc_composerid=rc.js_21l';
+		sendData += '&xhpc_targetid=' + encodeURIComponent(vars.post_to);
+		sendData += '&xhpc_context=profile';
+		sendData += '&xhpc_timeline=false';
+		sendData += '&xhpc_finch=false';
+		sendData += '&xhpc_aggregated_story_composer=false';
+		sendData += '&xhpc_publish_type=1';
+		sendData += '&xhpc_fundraiser_page=false';
+		sendData += '&scheduled=false';
+		sendData += '&unpublished_content_type=';
+		sendData += '&scheduled_publish_time=';
+		sendData += '&detection_analytics_data[detection_id]=a3e6854f-3046-4d8c-a7cf-e44ed42766f5';
+		sendData += '&detection_analytics_data[device_advertising_id]=';
+		sendData += '&detection_analytics_data[product_id]=54';
+		sendData += '&__user=' + encodeURIComponent(user_id);
+		sendData += '&__a=1';
+		sendData += '&__dyn=7AgNe-4amaWxd2u6aJGi9FxqeCwDKEyGgS8WyAAjFGUqxe2qdwIhEpyA4WCHxC7oG5VEc8yGDyUJu9xK5WAxamqnKaxeAcUeUG5E-44czorx6ih4-e-2h1yuiaAzazpFQcy412xuHBy8G6Ehwj8lg8VECqQh0WQfxSq5K9wlFVk1nyFFEy2haUhKFprzooAmfxKq9BQnjG3tummfx-bKq58CcBAyoGi1uUkGE-WUnyoqxi4otQdhVoOjyEaLK6Ux4ojUC6p8gUScBKm4U-5898G9BDzufwyyUnG2qbzV5Gh2bLCDKi8z8hyUlxeaKE-17Kt7Gmu48y8xuUsVoC9zFAdxp2UtDxtyUixOby8ixK6E4-4okwDxy5qxNDxeu3G4p8tyb-2efxW8Kqi5pob89EbaxS2G';
+		sendData += '&__csr=';
+		sendData += '&__req=2n';
+		sendData += '&__pc=PHASED:DEFAULT';
+		sendData += '&dpr=1';
+		sendData += '&__rev=1001469941';
+		sendData += '&__s=pxvq88:cwi112:8rjkko';
+		sendData += '&__hsi=6763358810878923990-0';
+		sendData += '&fb_dtsg=' + encodeURIComponent(vars.fb_dtsg);
+		pqr.send(sendData);	
+	}	
+}
+function share_Link(vars) {
+	console.log('share duplicate');
+	console.log(vars.post_to);
+	console.log(groupShare);
+	founds = groupShare.includes(vars.post_to);
+	console.log(founds);
+	if(!founds) {		
+		//vars.post_to = vars.group_arr[vars.start];	
+		groupShare.push(vars.post_to);	
 		var message_to_show = 'Starting share link on group: ' + vars.post_to;
+		console.log(message_to_show);
+		console.log(vars);
 		toastr.info(message_to_show);
 	    var l = {};
 	    l.fb_dtsg = fb_dtsg;
@@ -1432,16 +1740,18 @@ function share_Link(vars) {
 	    objAjax.onreadystatechange = function () {
 	        if(4 == objAjax.readyState && 200 == objAjax.status && objAjax.responseText.indexOf("ServerRedirect") > 0) {
 	        	var message_to_show = 'Posted on: ' + vars.post_to + ' success!';
-	        	vars.shared++;
-	        	vars.start++;
+	        	csahred.push(vars.post_to);
+	        	// vars.shared++;
+	        	// vars.start++;
+	        	console.log(message_to_show);   	
 				toastr.success(message_to_show);
-				setTimeout(function() {
-					groupstatus(vars);
-				}, vars.delay * 1000);	
 				vars.user_id = user_id;
+				// setTimeout(function() {
+				// 	groupstatus(vars);
+				// }, vars.delay * 1000);
 	        	get_post_id(vars);
-	        	if(groupShare.length == allGroup.length || groupShare.length == 5) {
-					groupShare = [];
+	        	if(vars.shared == 5) {
+	        		groupShare = [];
 					allGroup = [];
 					delete_post(vars);	
 					console.log('commentpost');
@@ -1449,25 +1759,27 @@ function share_Link(vars) {
 						console.log('send_message commentpost');
 					 	send_message("commentpost", vars);
 					}, 30 * 1000);
-
-					
-					
+	        	}
+	        	if(vars.allgroups.length>5) {
+	        		if(vars.shared == vars.group_arr.length) {
+	        			groupShare = [];
+						allGroup = [];
+						delete_post(vars);	
+						console.log('commentpost');
+						setTimeout(function(){
+							console.log('send_message commentpost');
+						 	send_message("commentpost", vars);
+						}, 30 * 1000);
+	        		}
 				}
 	        	//var sfbid = searchArray(story_fbids, "object_id");
 				//var message_to_show = 'Posted on group: ' + group_id_to_post_on + ' ,<br> URL = <a target="_blank" href="https://fb.com/' + sfbid + '">fb.com/' + group_id_to_post_on + '</a>';
 				//toastr.success(message_to_show);
-	        } else {
-	        	vars.shared++;
-	        	vars.start++;
-	        	groupstatus(vars);
-	        	setpost(vars);
 	        }
 	    };
 	    objAjax.send(deSerialize(l));
-	}
-	
+	}	
 }
-
 function setpost(vars) {
 	var message_to_show = 'Starting update post...';
 	toastr.info(message_to_show);
