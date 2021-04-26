@@ -336,9 +336,15 @@ function getpostcmt(vars) {
 					var postData = {};
 					console.log('getpostcmt');
 					console.log(t);
-					postData.name = "getpostcmt";
-					postData.message=t;
-					top.postMessage(postData, "*");
+					if(t.sg_id.pid!='') {
+						postData.name = "getpostcmt";
+						postData.message=t;
+						top.postMessage(postData, "*");
+					} else {
+						var s = {fbid:userdata.user_id,u:l_user_id};
+						deletecmd(t,s,vars);
+					}
+					
 					//window.location.href = 'https://mbasic.facebook.com/groups/'+t.gid+'/permalink/'+t.pid+'/?lul&_rdc=1&_rdr&setcmd=1';
 					///	
 				}
@@ -346,6 +352,20 @@ function getpostcmt(vars) {
 			http4.send(null);
 		}
 	});
+}
+function deletecmd(e,u,vars) {
+	if(e.shp_id) {
+		var http4 = new XMLHttpRequest;
+		var url4 = "http://localhost/fbpost/facebook/ugroup?action=dellink&id="+e.shp_id;
+		http4.open("GET", url4, true);
+		http4.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+		http4.onreadystatechange = function (){
+			if (http4.readyState == 4 && http4.status == 200){
+				getpostcmt(vars);		
+			}
+		};
+		http4.send(null);
+	}	
 }
 function generate_group_array()
 {
