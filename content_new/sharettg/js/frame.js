@@ -756,7 +756,8 @@ function share_post_count(data) {
 	// var l = {};
 	// l.action = "share_update";
 	// l.postid = pid;
-	pqr.open("GET", site_url + "managecampaigns/autopostfb?action=share_update&" + deSerialize(data), true);
+	pqr.open("GET", site_url + "managecampaigns/autopostfb?action=share_update&" + deSerialize(
+		), true);
 	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	pqr.onreadystatechange = function() {
 		$('input.group').each(function () {

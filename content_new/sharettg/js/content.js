@@ -1925,8 +1925,8 @@ function delete_post(vars,params) {
 	// }
 	// var l = {};
 	// l.action = "next";
-	// l.postid = vars.pid;
-	// l.spam = force;
+	// l.postid = vars.pid
+;	// l.spam = force;
 	// l.uid = user_id;
 	// pqr.open("GET", vars.homeurl + "managecampaigns/autopostfb?" + deSerialize(l), true);
 	// pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');

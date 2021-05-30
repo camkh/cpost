@@ -81,6 +81,8 @@ function start(toolName,newTab){
 		tabRun(aafrao,url);
 	} if(toolName=="amiga"){
 		tabRun(amiga,null);
+	} if(toolName=="append"){
+		tabRun(append,null);
 	} if(toolName=="cmt"){
 		tabRun(cmt,null);
 	} else if(toolName=="clickpoke"){
@@ -536,6 +538,37 @@ function clickpoke(){
 }
 function amiga(){
 	var dirName='amiga';
+	//jquery
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
+	//generating user id and fb_dtsg
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/fbdtsg.js"
+	});
+	//for loading variables
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/var.js"
+	});
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//start content script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/content.js"
+	});
+	//starting language check
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/lang.js"
+	});
+}
+function append(){
+	var dirName='append';
 	//jquery
 	chrome.tabs.executeScript(null, {
 		file: "/global/js/jquery.js"

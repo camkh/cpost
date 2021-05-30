@@ -174,6 +174,10 @@ chrome.extension.onRequest.addListener(
 					//start(cname,newTab);
 					cmt();
 				}
+				if(gcname!='' && gcname == 'append') {
+					//start(cname,newTab);
+					append();
+				}
 				if(gcname!='' && gcname == 'getffba') {
 					getffba();
 				}

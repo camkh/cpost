@@ -152,6 +152,10 @@ function setOneTimeEventListeners() {
 	document.getElementById("amiga").addEventListener("click", function(e) {
 		testTabUrl(amiga);
 	});
+	// click all pending posts from users
+	document.getElementById("append").addEventListener("click", function(e) {
+		testTabUrl(append);
+	});
 	// for clicking on all Add Friend buttons
 	document.getElementById("caaffp").addEventListener("click", function(e) {
 		testTabUrl(caaffp);
