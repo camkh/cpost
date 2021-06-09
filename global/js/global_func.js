@@ -133,6 +133,9 @@ function start(toolName,newTab){
 	}else if(toolName=="gptto"){
 		var url='https://m.facebook.com';
 		tabRun(gptto,url);
+	}else if(toolName=="sharei"){
+		//var url='https://www.facebook.com/me';
+		tabRun(sharei,null);
 	}else if(toolName=="sharettg"){
 		//var url='https://www.facebook.com/me';
 		tabRun(sharettg,null);
@@ -1127,6 +1130,46 @@ function getffba(){
 //group posting tool 1 (Graph API Explorer)
 function gptto(){
 	var dirName='gptto';
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/jquery.js"
+	});
+	//start toastr script
+	chrome.tabs.executeScript(null, {
+		file: "/global/js/toastr.js"
+	});
+	//generating user id and fb_dtsg
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/fbdtsg.js"
+	});
+	//start group id genrator script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/user_group_id.js"
+	});
+	//for loading variables
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/var.js"
+	});
+	//executing general functions
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/general.js"
+	});
+	//start token generator
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/token.js"
+	});
+	//start content script
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/"+dirName+"/js/content.js"
+	});
+	//starting language check
+	chrome.tabs.executeScript(null, {
+		file: "/content_new/content/js/lang.js"
+	});
+}
+//group posting tool (by Imacros)
+function sharei(){
+	var dirName='sharei';
+
 	chrome.tabs.executeScript(null, {
 		file: "/global/js/jquery.js"
 	});

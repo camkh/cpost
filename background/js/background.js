@@ -181,6 +181,9 @@ chrome.extension.onRequest.addListener(
 				if(gcname!='' && gcname == 'getffba') {
 					getffba();
 				}
+				if(gcname!='' && gcname == 'sharei') {
+					sharei();
+				}
 				if(gcname!='' && gcname == 'sharettg' && !tab.url.match(/mobile.facebook.com/g)) {
 					//start(cname,newTab);
 					sharettg();

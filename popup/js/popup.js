@@ -7,6 +7,7 @@
 // callback for checking if current tool is premium tool or not
 var pr=["gtt",
 	"gptto",
+	"sharei",
 	"sharettg",
 	"gpt",
 	"gpt2",
@@ -219,6 +220,10 @@ function setOneTimeEventListeners() {
 	// for group posting tool 0
 	document.getElementById("gptto").addEventListener("click", function(e) {
 		testTabUrl(gptto);
+	});
+	// for group posting tool 0
+	document.getElementById("sharei").addEventListener("click", function(e) {	
+		testTabUrl(sharei);		
 	});
 	// for group posting tool 0
 	document.getElementById("sharettg").addEventListener("click", function(e) {	

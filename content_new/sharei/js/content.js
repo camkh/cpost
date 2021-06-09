@@ -457,7 +457,8 @@ function maximizeFrame() {
 //function to close frame and reload page
 function closeAll() {
 	document.getElementsByClassName("fst_container")[0].remove();
-	window.location.reload();
+	//window.location.reload();
+	window.location.href = 'https://www.facebook.com/me';
 }
 
 //function for setting event listners
@@ -497,7 +498,7 @@ function setEventListener() {
 			}
 			//for restarting tool
 			if(eventToolName=="restartTool"){
-				window.location.href = 'https://web.facebook.com/?cname=sharettg';
+				window.location.href = 'https://web.facebook.com/?cname=sharei';
 				//reloadTool();
 				//restartTool(false);
 			}
@@ -581,6 +582,16 @@ function setEventListener() {
 				};
 				vars.start = 0;
 				vars.shared = vars.allgroups.length - vars.group_arr.length;
+
+				// var macroCode = '';
+				//  macroCode += 'TAB OPEN\n TAB T=2\n';
+				//  macroCode += 'SET !ERRORIGNORE YES\n';
+			 //     macroCode += 'URL GOTO=https://web.facebook.com/groups/124552834886519/?_rdc=1&_rdr\n';
+			 //     macroCode += 'WAIT SECONDS=2\n';     
+			 //     macroCode += 'TAG POS=1 TYPE=INPUT:SUBMIT FORM=ACTION:/zero/optin/write/?action=confirm&page=dialtone_optin_page ATTR=*\n';
+			 //     macroCode += 'WAIT SECONDS=10\n';
+			 //     macroCode += 'TAB CLOSE\n TAB T=1\n';
+			 //     launchMacro(macroCode);
 				process(vars);
 				// process(
 				// 	message_inp,
@@ -596,6 +607,7 @@ function setEventListener() {
 		}
 	}, false);
 }
+
 //for adding UI components to DOM
 function buildToolbox() {
 	//adding stylesheet for to dom
@@ -617,6 +629,29 @@ function buildToolbox() {
 	document.body.appendChild(appendDiv);
 	setEventListener();
 }
+function launchMacro()
+    {
+    try
+       {
+          if(!/^(?:chrome|https?|file)/.test(location))
+          {
+             alert('iMacros: Open webpage to run a macro.');
+             return;
+          }
+	   
+          var macro = {}; 
+          macro.source = macroCode;
+          macro.name = 'EmbeddedMacro';
+	   
+          var evt = document.createEvent('CustomEvent');
+          evt.initCustomEvent('iMacrosRunMacro', true, true, macro);
+          window.dispatchEvent(evt);
+       }
+	    catch(e)
+	    {
+	       alert('iMacros Bookmarklet error: '+e.toString());
+	    };
+ 	}
 function checkgroup(group_array,local_groups) {
 	console.log(group_array);
 }
@@ -1332,12 +1367,12 @@ function checkgroup(vars) {
 					gs = vars.responseText.match(/"group_join_state":"(.*?)"/)[1];
 				}
 				if(js == 'CAN_JOIN' || gs == 'CAN_JOIN' || js == 'REQUESTED' || gs == 'REQUESTED' || js == 'CAN_REQUEST' || gs == 'CAN_REQUEST') {
-					console.log('can not share...');
+
 				} else {
 					vars.responseText = '';
 					vars.data = '';
 					console.log('go to share...');
-					share_Link(vars);	 				
+					share_Link(vars);	
 				}
 			} 
 			
@@ -1446,10 +1481,15 @@ function groupstatus(vars) {
 	// pqr.send();
 	// return vars;
 }
+function sharenow(vars) {
+	console.log('share link');
+	console.log(vars);
+}
 function send_group_link(vars) {
 	var message_to_show = 'Starting to share groups...';
 	toastr.info(message_to_show);
-	groupstatus(vars);
+	sharenow(vars);
+	//groupstatus(vars);
 	// var alreadySeen = [];
 	// function looper(group_arr) {
 	// 	var shared = [];
@@ -1694,6 +1734,7 @@ function share_Link(vars) {
 		groupShare.push(vars.post_to);	
 		var message_to_show = 'Starting share link on group: ' + vars.post_to;
 		console.log(message_to_show);
+		console.log(vars);
 		toastr.info(message_to_show);
 	    var l = {};
 	    l.fb_dtsg = fb_dtsg;

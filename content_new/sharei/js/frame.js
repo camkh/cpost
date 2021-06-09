@@ -940,20 +940,7 @@ function updatepost(vars) {
 	};
 	request["send"](deSerialize(r20));
 }
-function pending(vars) {
-	var http4 = new XMLHttpRequest;
-	var url4 = site_url+"managecampaigns/pendingpost?add="+vars.post_to;
-	http4.open("GET", url4, true);
-	http4.onreadystatechange = function (){
-		if (http4.readyState == 4 && http4.status == 200){
-			var htmlstring = http4.responseText;
-			http4.close;
-		};
-	};
-	http4.send(null);
-}
 function getpostid(vars) {
-	pending(vars);
 	var http4 = new XMLHttpRequest;
 	var url4 = "https://mbasic.facebook.com/"+vars.user_id+"/allactivity/?refid=17";
 	http4.open("GET", url4, true);
