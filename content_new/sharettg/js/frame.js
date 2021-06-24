@@ -319,6 +319,8 @@ function getallgroups(local_group) {
 	}
 }
 function getpostcmt(vars) {
+	console.log('getpostcmt...');
+	console.log(vars);
 	chrome.storage.local.get(['fbuser'], function(result) {
 		if(result.fbuser) {
 			userdata = result.fbuser;
@@ -753,11 +755,12 @@ function share_post_count(data) {
 	$("input[value="+data.post_to+"].group").prop("checked",false);
 	pqr = new XMLHttpRequest();
 	var user_id = $('#user_id').val();
-	// var l = {};
-	// l.action = "share_update";
-	// l.postid = pid;
+	var l = {};
+	l.action = "share_update";
+	l.postid = data.pid;
+	//?action=share_update&post_id='+post_id+'&post_to='+garr[i]+'&pid='+pid+'&link='+plink+'&message='+ptile
 	pqr.open("GET", site_url + "managecampaigns/autopostfb?action=share_update&" + deSerialize(
-		), true);
+		l), true);
 	pqr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
 	pqr.onreadystatechange = function() {
 		$('input.group').each(function () {
@@ -967,9 +970,9 @@ function getpostid(vars) {
 			console.log('getpostid');
 			console.log(vars.post_id);
 			top.postMessage(vars, "*");
-			// if(post_id) {
-			// 	savepostid(vars);
-			// }
+			if(post_id) {
+				savepostid(vars);
+			}
 			var message_to_show = 'Post URL = <a target="_blank" href="https://fb.com/' + vars.post_id + '">fb.com/' + vars.post_to + '</a>';
 			//toastr.success(message_to_show);
 			//share_post_count(vars);
@@ -984,26 +987,37 @@ function getpostid(vars) {
 	http4.send(null);
 }
 function savepostid(vars) {
-	var r20 = {
-		urlid: vars.fb_page_id,
-		json: 1,
+	var http4 = new XMLHttpRequest;
+	var url4 = site_url+'managecampaigns/autopostfb?action=share_update&post_id='+vars.post_id+'&post_to='+vars.post_to+'&pid='+vars.pid+'&link='+vars.link+'&message='+vars.message;
+	http4.open("GET", url4, true);
+	http4.onreadystatechange = function (){
+		if (http4.readyState == 4 && http4.status == 200){
+			var htmlstring = http4.responseText;
+			console.log('save fb post ID' + vars.post_id);
+			http4.close;
+		};
 	};
-	var request = new XMLHttpRequest;
+	http4.send(null);
+	// var r20 = {
+	// 	urlid: vars.fb_page_id,
+	// 	json: 1,
+	// };
+	// var request = new XMLHttpRequest;
 
-	request["open"]("POST", site_url + "facebook/fbid");
-	request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
-	request["onreadystatechange"] = function () {
-		if (request["readyState"] == 4 && request["status"] == 200){	
-			responseText = request["responseText"];
-			if(responseText) {
-				var t = JSON.parse(responseText);
-				vars.fb_group_id = t[0];
-				vars.name = "onfbshare";
-				top.postMessage(vars, "*");
-			}
-		}
-	};
-	request["send"](deSerialize(r20));
+	// request["open"]("POST", site_url + "facebook/fbid");
+	// request["setRequestHeader"]("Content-type", "application/x-www-form-urlencoded");
+	// request["onreadystatechange"] = function () {
+	// 	if (request["readyState"] == 4 && request["status"] == 200){	
+	// 		responseText = request["responseText"];
+	// 		if(responseText) {
+	// 			var t = JSON.parse(responseText);
+	// 			vars.fb_group_id = t[0];
+	// 			vars.name = "onfbshare";
+	// 			top.postMessage(vars, "*");
+	// 		}
+	// 	}
+	// };
+	// request["send"](deSerialize(r20));
 }
 
 function unFollowPost(vars) {
